@@ -19,6 +19,12 @@ class Player {
     //Increases the amount of points the player has
     void AddPoints(int a);
 
+    //Get the players current money balance
+    const int& GetMoney() const;
+
+    //Get the players current points
+    const int& GetPoints() const;
+
  private:
     //Username of the player
     std::string username_;
