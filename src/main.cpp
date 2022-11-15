@@ -6,7 +6,9 @@
 #include "test.cpp"
 
 int main(int, char**) {
-  std::cout << "moi" << std::endl;
+  auto t = test();
+  t.test1();
+  t.test2();
   return 0;
 }
 
