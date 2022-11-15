@@ -8,7 +8,7 @@ void Player::AddMoney(int a) {
 }
 
 bool Player::Pay(int a) {
-    if(a <= money_) {
+    if(a < money_) {
         money_ -= a;
         return true;
     } else return false;
