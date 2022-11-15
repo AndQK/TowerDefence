@@ -1,0 +1,1 @@
+/usr/bin/g++ -g -rdynamic CMakeFiles/TowerDefense.dir/src/Map.cpp.o CMakeFiles/TowerDefense.dir/src/Player.cpp.o CMakeFiles/TowerDefense.dir/src/main.cpp.o -o TowerDefense 

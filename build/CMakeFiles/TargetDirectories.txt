@@ -1,0 +1,5 @@
+/home/viivi/Tower_defense/build/CMakeFiles/TowerDefense.dir
+/home/viivi/Tower_defense/build/CMakeFiles/package.dir
+/home/viivi/Tower_defense/build/CMakeFiles/package_source.dir
+/home/viivi/Tower_defense/build/CMakeFiles/edit_cache.dir
+/home/viivi/Tower_defense/build/CMakeFiles/rebuild_cache.dir
