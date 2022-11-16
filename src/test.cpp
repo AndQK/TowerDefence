@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include "Game.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
 
@@ -50,6 +51,14 @@ class test {
     std::cout << "The players amount of points is now " << p.GetPoints()
               << " should be 100." << std::endl;
     std::cout << "End!" << std::endl;
+  }
+
+  void test3() {
+    auto game = Game("Matias");
+    game.getPlayer().AddMoney(50);
+    std::cout << "Get the players money: " << game.getPlayer().GetMoney()
+              << " Should be 50." << std::endl;
+    game.startGame();
   }
 };
 
