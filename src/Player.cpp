@@ -15,6 +15,6 @@ bool Player::Pay(int a) {
 
 void Player::AddPoints(int a) { points_ += a; }
 
-const int& Player::GetMoney() const { return money_; };
+const int& Player::GetMoney() const { return money_; }
 
-const int& Player::GetPoints() const { return points_; };
+const int& Player::GetPoints() const { return points_; }

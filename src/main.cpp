@@ -3,6 +3,7 @@
 int main(int, char**) {
   auto t = test();
   t.test1();
-  t.test2();
+  t.testPlayer();
+  t.testEnemies();
   return 0;
 }
