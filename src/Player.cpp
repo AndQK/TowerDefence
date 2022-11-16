@@ -11,7 +11,6 @@ bool Player::Pay(int a) {
     return true;
   } else
     return false;
-    //hello
 }
 
 void Player::AddPoints(int a) { points_ += a; }
