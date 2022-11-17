@@ -1,6 +1,7 @@
 #ifndef TOWER_DEFENSE_TEST
 #define TOWER_DEFENSE_TEST
 
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 #include "Game.hpp"
@@ -59,6 +60,22 @@ class test {
     std::cout << "Get the players money: " << game.getPlayer().GetMoney()
               << " Should be 50." << std::endl;
     game.startGame();
+  }
+  void test4() {
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Ando on paras!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Red);
+    sf::Event event;
+    while (window.isOpen()) {
+      while (window.pollEvent(event)) {
+        if (sf::Event::Closed == event.type) {
+          window.close();
+        }
+      }
+      window.clear();
+      window.draw(shape);
+      window.display();
+    }
   }
 };
 

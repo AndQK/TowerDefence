@@ -9,6 +9,7 @@ int main(int, char**) {
   auto t = test();
   t.test1();
   t.test2();
+  t.test4();
   t.test3();
   return 0;
 }
