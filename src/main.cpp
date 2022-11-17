@@ -7,7 +7,12 @@
 
 int main(int, char**) {
   auto t = test();
-  t.testGraphics();
+  t.testEnemies();
+  t.testMap();
+  t.testPlayer();
+  // t.testGame();
+  // t.testGraphics();
+  t.testEnemyMovement();
   return 0;
 }
 

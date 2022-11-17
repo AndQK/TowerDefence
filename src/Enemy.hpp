@@ -2,21 +2,22 @@
 #define TOWER_DEFENSE_ENEMY
 
 #include "Coordinate.hpp"
+#include "Game.hpp"
 
 class Enemy {
  public:
   explicit Enemy(float speed, int health, Coordinate place,
                  int worth);  // add coordinate and image, make explicit?
 
-  // virtual ~Vehicle() {};, do we need this?
+  Enemy(float speed, int health, Coordinate place, int worth, Game game);
 
   // A tower hits the enemy and damages them decreasing their health.
   void getHit(int amount);
 
-  // The enemy moves to their next position.
-  void Move(Coordinate c);
+  // The enemy moves to towards their next position.
+  bool Move();
 
-  //Slows the enemy down.
+  // Slows the enemy down.
   void Slow(double s);
 
   // Get the enemy's speed
@@ -44,6 +45,15 @@ class Enemy {
   /**How many points the enemy is worth.
    * Only used if we develop the game further.*/
   int worth_;
+
+  // Tracks which node on the map the enemy is currently heading towards.
+  int currentNode_;
+
+  // The current direction as an unit vector stored in Coordinate class.
+  Coordinate direction_;
+
+  // Tracks which game the enemy belongs to.
+  Game game_;
 
   // The image of the enemy.
   // PNG image;

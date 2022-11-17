@@ -113,12 +113,13 @@ class test {
   }
 
   void testGame() {
-    auto game = Game("Matias");
+    auto game = Game("Matias", Map());
     game.getPlayer().AddMoney(50);
     std::cout << "Get the players money: " << game.getPlayer().GetMoney()
               << " Should be 50." << std::endl;
     game.startGame();
   }
+
   void testGraphics() {
     int pos = 0;
     sf::RenderWindow window(sf::VideoMode(800, 600), "Ando on paras!");
@@ -126,7 +127,7 @@ class test {
     shape.setPosition(pos, pos);
     shape.setFillColor(sf::Color::Red);
     sf::Event event;
-    while (window.isOpen() && pos < 500) {
+    while (window.isOpen() && pos < 300) {
       while (window.pollEvent(event)) {
         if (sf::Event::Closed == event.type) {
           window.close();
@@ -138,6 +139,68 @@ class test {
       pos++;
       shape.setPosition(pos, pos);
       usleep(5000);
+    }
+  }
+
+  void testEnemyMovement() {
+    auto map = Map();
+    map.AddCoordinate(Coordinate(100, 150));
+    map.AddCoordinate(Coordinate(150, 300));
+    map.AddCoordinate(Coordinate(250, 50));
+    map.AddCoordinate(Coordinate(100, 50));
+    map.AddCoordinate(Coordinate(600, 500));
+    Game game = Game("Gargamel", map);
+    auto enemy = Enemy(2.0, 3, Coordinate(0, 0), 5, game);
+
+    sf::RenderWindow window(sf::VideoMode(1000, 600), "Tower Defense!");
+    window.setPosition(sf::Vector2(50, 50));
+
+    std::vector<sf::CircleShape> nodes;
+    sf::CircleShape node1(10.f);
+    sf::CircleShape node2(10.f);
+    sf::CircleShape node3(10.f);
+    sf::CircleShape node4(10.f);
+    sf::CircleShape node5(10.f);
+    node1.setFillColor(sf::Color::Blue);
+    node2.setFillColor(sf::Color::Blue);
+    node3.setFillColor(sf::Color::Blue);
+    node4.setFillColor(sf::Color::Blue);
+    node5.setFillColor(sf::Color::Magenta);
+    node1.setPosition(map.GetNode(0).getX(), map.GetNode(0).getY());
+    node2.setPosition(map.GetNode(1).getX(), map.GetNode(1).getY());
+    node3.setPosition(map.GetNode(2).getX(), map.GetNode(2).getY());
+    node4.setPosition(map.GetNode(3).getX(), map.GetNode(3).getY());
+    node5.setPosition(map.GetNode(4).getX(), map.GetNode(4).getY());
+    nodes.push_back(node1);
+    nodes.push_back(node2);
+    nodes.push_back(node3);
+    nodes.push_back(node4);
+    nodes.push_back(node5);
+
+    sf::CircleShape shape(20.f);
+    shape.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
+    shape.setFillColor(sf::Color::Red);
+    sf::Event event;
+    while (window.isOpen()) {
+      while (window.pollEvent(event)) {
+        if (sf::Event::Closed == event.type) {
+          window.close();
+        }
+      }
+      window.clear();
+      window.draw(shape);
+      for (auto n : nodes) {
+        window.draw(n);
+      }
+      window.display();
+
+      auto moved = enemy.Move();
+      if (!moved) {
+        usleep(2000000);
+        break;
+      }
+      shape.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
+      usleep(10000);
     }
   }
 };

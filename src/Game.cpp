@@ -2,17 +2,15 @@
 
 #include <unistd.h>
 
-Game::Game(const std::string& name) : player_(Player(name)) {
-  map_ = Map();
-  std::vector<Coordinate> coords{Coordinate(0, 0), Coordinate(1, 1),
-                                 Coordinate(2, 5)};
-  map_.AddCoordinates(coords);
-}
+Game::Game(const std::string& name, const Map& map)
+    : player_(Player(name)), map_(map) {}
+
+Game::Game() : player_(Player("Default name")), map_(Map()) {}
 
 void Game::startGame() {
   int i = 0;
   double time_elapsed = 0;
-  int SLEEP_TIME = 125000;
+  int SLEEP_TIME = 75000;
   // Simulates the frames
   while (i <= 30) {
     if (i % 5 == 0) {
