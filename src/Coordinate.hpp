@@ -13,7 +13,8 @@ class Coordinate {
     return Coordinate(this->x_ + c2.x_, this->y_ + c2.y_);
   }
 
-  // Overloading the - operator for subtracting multiple Coordinates together.
+  // Overloading the - operator for subtracting multiple Coordinates from one
+  // another.
   Coordinate operator-(const Coordinate& c2) {
     return Coordinate(this->x_ - c2.x_, this->y_ - c2.y_);
   }
