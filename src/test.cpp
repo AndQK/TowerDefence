@@ -1,6 +1,7 @@
 #ifndef TOWER_DEFENSE_TEST
 #define TOWER_DEFENSE_TEST
 
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 #include "EasyEnemy.hpp"
@@ -13,7 +14,7 @@
 
 class test {
  public:
-  void test1() {
+  void testMap() {
     std::cout << "Testing coordinates added one by one!" << std::endl;
 
     auto m = Map();
@@ -109,12 +110,28 @@ class test {
     std::cout << "End!" << std::endl;
   }
 
-  void test3() {
+  void testGame() {
     auto game = Game("Matias");
     game.getPlayer().AddMoney(50);
     std::cout << "Get the players money: " << game.getPlayer().GetMoney()
               << " Should be 50." << std::endl;
     game.startGame();
+  }
+  void testGraphics() {
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Ando on paras!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Red);
+    sf::Event event;
+    while (window.isOpen()) {
+      while (window.pollEvent(event)) {
+        if (sf::Event::Closed == event.type) {
+          window.close();
+        }
+      }
+      window.clear();
+      window.draw(shape);
+      window.display();
+    }
   }
 };
 

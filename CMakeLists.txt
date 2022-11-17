@@ -22,11 +22,20 @@ file(GLOB SOURCES_H "src/*.h")
 set(SOURCES ${SOURCES_C} ${SOURCES_CPP} ${SOURCES_H} ${SOURCES_HPP})
 message(STATUS "SRC directory source code files: \n\t-- HEADERS: ${SOURCES_H}${SOURCES_HPP}\n\t-- C SOURCES: ${SOURCES_C}\n\t-- CPP SOURCE:${SOURCES_CPP}\n\t-- ALL:${SOURCES}")
 
+# Find SFML shared libraries
+find_package(SFML 2.5 
+  COMPONENTS 
+    system window graphics network audio REQUIRED
+  )
+
 add_executable(TowerDefense)
 
 target_sources(TowerDefense PUBLIC ${SOURCES})
 target_include_directories(TowerDefense PUBLIC .)
 target_include_directories(TowerDefense PUBLIC src)
+
+# Link executable to required SFML libraries
+target_link_libraries(TowerDefense sfml-graphics)
 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
