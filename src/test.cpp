@@ -81,7 +81,6 @@ class test {
                  "be 0 (not -1) and speed 0.5 (not 0). They are:"
               << e.GetHealth() << ", " << e.GetSpeed() << std::endl;
 
-
     std::cout << "Testing Enemy subclasses!" << std::endl;
 
     auto easy = EasyEnemy(Coordinate(1, 1));
@@ -101,9 +100,10 @@ class test {
 
     hard.getHit(2);
     hard.Slow(0.5);
-    std::cout << "The HardEnemy got hit by 2 and slowed by 0.5, health should now "
-                 "be 3 and speed 2.5. They are:"
-              << hard.GetHealth() << ", " << hard.GetSpeed() << std::endl;
+    std::cout
+        << "The HardEnemy got hit by 2 and slowed by 0.5, health should now "
+           "be 3 and speed 2.5. They are:"
+        << hard.GetHealth() << ", " << hard.GetSpeed() << std::endl;
 
     std::cout << "End!" << std::endl;
   }
