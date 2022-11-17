@@ -1,6 +1,8 @@
 #ifndef TOWER_DEFENSE_TEST
 #define TOWER_DEFENSE_TEST
 
+#include <unistd.h>
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -118,11 +120,13 @@ class test {
     game.startGame();
   }
   void testGraphics() {
+    int pos = 0;
     sf::RenderWindow window(sf::VideoMode(800, 600), "Ando on paras!");
     sf::CircleShape shape(100.f);
+    shape.setPosition(pos, pos);
     shape.setFillColor(sf::Color::Red);
     sf::Event event;
-    while (window.isOpen()) {
+    while (window.isOpen() && pos < 500) {
       while (window.pollEvent(event)) {
         if (sf::Event::Closed == event.type) {
           window.close();
@@ -131,6 +135,9 @@ class test {
       window.clear();
       window.draw(shape);
       window.display();
+      pos++;
+      shape.setPosition(pos, pos);
+      usleep(5000);
     }
   }
 };
