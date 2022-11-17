@@ -7,7 +7,10 @@
 class Game {
  public:
   // Initialize a new game.
-  Game(const std::string& name);
+  Game(const std::string& name, const Map& map);
+
+  // Default constructor
+  Game();
 
   // Starting the game, the main loop is in this function
   void startGame();
