@@ -1,4 +1,5 @@
 #include "test.cpp"
+#include <SFML/Graphics.hpp>
 
 int main(int, char**) {
   auto t = test();
