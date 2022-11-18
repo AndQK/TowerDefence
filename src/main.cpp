@@ -1,9 +1,20 @@
+#ifndef TOWER_DEFENSE_MAIN
+#define TOWER_DEFENSE_MAIN
+
+#include <iostream>
+
 #include "test.cpp"
 #include <SFML/Graphics.hpp>
 
 int main(int, char**) {
   auto t = test();
-  t.test1();
-  t.test2();
+  t.testEnemies();
+  t.testMap();
+  t.testPlayer();
+  // t.testGame();
+  // t.testGraphics();
+  t.testEnemyMovement();
   return 0;
 }
+
+#endif
