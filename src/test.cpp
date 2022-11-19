@@ -150,7 +150,7 @@ class test {
     map.AddCoordinate(Coordinate(100, 50));
     map.AddCoordinate(Coordinate(600, 500));
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(2.0, 3, Coordinate(0, 0), 5, game);
+    auto enemy = Enemy(2.5, 3, Coordinate(0, 0), 5, &game);
 
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Tower Defense!");
     window.setPosition(sf::Vector2(50, 50));
@@ -166,11 +166,11 @@ class test {
     node3.setFillColor(sf::Color::Blue);
     node4.setFillColor(sf::Color::Blue);
     node5.setFillColor(sf::Color::Magenta);
-    node1.setPosition(map.GetNode(0).getX(), map.GetNode(0).getY());
-    node2.setPosition(map.GetNode(1).getX(), map.GetNode(1).getY());
-    node3.setPosition(map.GetNode(2).getX(), map.GetNode(2).getY());
-    node4.setPosition(map.GetNode(3).getX(), map.GetNode(3).getY());
-    node5.setPosition(map.GetNode(4).getX(), map.GetNode(4).getY());
+    node1.setPosition(map.GetNode(0).getX() - 5, map.GetNode(0).getY() - 5);
+    node2.setPosition(map.GetNode(1).getX() - 5, map.GetNode(1).getY() - 5);
+    node3.setPosition(map.GetNode(2).getX() - 5, map.GetNode(2).getY() - 5);
+    node4.setPosition(map.GetNode(3).getX() - 5, map.GetNode(3).getY() - 5);
+    node5.setPosition(map.GetNode(4).getX() - 5, map.GetNode(4).getY() - 5);
     nodes.push_back(node1);
     nodes.push_back(node2);
     nodes.push_back(node3);
@@ -199,7 +199,8 @@ class test {
         usleep(2000000);
         break;
       }
-      shape.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
+      shape.setPosition(enemy.GetCoord().getX() - 10,
+                        enemy.GetCoord().getY() - 10);
       usleep(10000);
     }
   }
