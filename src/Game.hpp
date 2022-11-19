@@ -1,6 +1,9 @@
 #ifndef TOWER_DEFENSE_GAME
 #define TOWER_DEFENSE_GAME
 
+#include <vector>
+
+#include "Enemy.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
 
@@ -24,6 +27,9 @@ class Game {
  private:
   Player player_;
   Map map_;
+
+  // Vector of enemies currently in game.
+  std::vector<Enemy> enemies_;
 };
 
 #endif
