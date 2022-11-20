@@ -12,6 +12,7 @@
 #include "HardEnemy.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
+#include "Projectile.hpp"
 #include "SplittingEnemy.hpp"
 
 class test {
@@ -114,10 +115,10 @@ class test {
 
   void testGame() {
     auto game = Game("Matias", Map());
-    game.getPlayer().AddMoney(50);
-    std::cout << "Get the players money: " << game.getPlayer().GetMoney()
+    game.GetPlayer().AddMoney(50);
+    std::cout << "Get the players money: " << game.GetPlayer().GetMoney()
               << " Should be 50." << std::endl;
-    game.startGame();
+    game.StartGame();
   }
 
   void testGraphics() {
@@ -166,11 +167,11 @@ class test {
     node3.setFillColor(sf::Color::Blue);
     node4.setFillColor(sf::Color::Blue);
     node5.setFillColor(sf::Color::Magenta);
-    node1.setPosition(map.GetNode(0).getX() - 5, map.GetNode(0).getY() - 5);
-    node2.setPosition(map.GetNode(1).getX() - 5, map.GetNode(1).getY() - 5);
-    node3.setPosition(map.GetNode(2).getX() - 5, map.GetNode(2).getY() - 5);
-    node4.setPosition(map.GetNode(3).getX() - 5, map.GetNode(3).getY() - 5);
-    node5.setPosition(map.GetNode(4).getX() - 5, map.GetNode(4).getY() - 5);
+    node1.setPosition(map.GetNode(0).getX() - 10, map.GetNode(0).getY() - 10);
+    node2.setPosition(map.GetNode(1).getX() - 10, map.GetNode(1).getY() - 10);
+    node3.setPosition(map.GetNode(2).getX() - 10, map.GetNode(2).getY() - 10);
+    node4.setPosition(map.GetNode(3).getX() - 10, map.GetNode(3).getY() - 10);
+    node5.setPosition(map.GetNode(4).getX() - 10, map.GetNode(4).getY() - 10);
     nodes.push_back(node1);
     nodes.push_back(node2);
     nodes.push_back(node3);
@@ -199,9 +200,55 @@ class test {
         usleep(2000000);
         break;
       }
-      shape.setPosition(enemy.GetCoord().getX() - 10,
-                        enemy.GetCoord().getY() - 10);
+      shape.setPosition(enemy.GetCoord().getX() - 20,
+                        enemy.GetCoord().getY() - 20);
       usleep(10000);
+    }
+  }
+
+  void testProjectiles() {
+    Map map = Map();
+    map.AddCoordinate(Coordinate(700, 300));
+    Game game = Game("Gargamel", map);
+    auto enemy = Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
+    game.AddEnemy(enemy);
+    Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
+                                       Coordinate(-1, 0), bomb, game);
+
+    sf::CircleShape proj(20.f);
+    sf::CircleShape enem(50.f);
+    enem.setPosition(enemy.GetCoord().getX() - 50,
+                     enemy.GetCoord().getY() - 50);
+    proj.setPosition(projectile.GetPosition().getX() - 20,
+                     projectile.GetPosition().getY() - 20);
+    enem.setFillColor(sf::Color::Red);
+    proj.setFillColor(sf::Color::Blue);
+
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Projectile test");
+    window.setPosition(sf::Vector2(100, 100));
+    sf::Event event;
+    while (window.isOpen()) {
+      while (window.pollEvent(event)) {
+        if (sf::Event::Closed == event.type) {
+          window.close();
+        }
+      }
+      if (!enemy.Move()) {
+        window.close();
+        usleep(1000000);
+      }
+      enem.setPosition(enemy.GetCoord().getX() - 50,
+                       enemy.GetCoord().getY() - 50);
+
+      projectile.Move();
+      proj.setPosition(projectile.GetPosition().getX() - 20,
+                       projectile.GetPosition().getY() - 20);
+
+      window.clear();
+      window.draw(enem);
+      window.draw(proj);
+      window.display();
+      usleep(5000);
     }
   }
 };

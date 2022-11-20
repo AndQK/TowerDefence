@@ -7,7 +7,7 @@ Game::Game(const std::string& name, const Map& map)
 
 Game::Game() : player_(Player("Default name")), map_(Map()) {}
 
-void Game::startGame() {
+void Game::StartGame() {
   int i = 0;
   double time_elapsed = 0;
   int SLEEP_TIME = 75000;
@@ -25,9 +25,13 @@ void Game::startGame() {
   }
 }
 
-Player& Game::getPlayer() { return player_; }
+void Game::AddEnemy(Enemy& enemy) { enemies_.push_back(&enemy); }
 
-Map Game::getMap() const {
+Player& Game::GetPlayer() { return player_; }
+
+Map Game::GetMap() const {
   auto m = map_;
   return m;
 }
+
+std::vector<Enemy*> Game::GetEnemies() { return enemies_; }

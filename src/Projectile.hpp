@@ -8,8 +8,11 @@ enum ProjectileType { normal, bomb, slow };
 
 class Projectile {
  public:
-  Projectile(double speed, double damage, const Coordinate& direction,
-             ProjectileType type, Game& game);
+  Projectile(double speed, double damage, const Coordinate& position,
+             const Coordinate& direction, ProjectileType type, Game& game);
+
+  // Gets the current position of the projectile
+  Coordinate GetPosition();
 
   // Checks if the projectile has hit any enemies on the game.
   bool hitTarget();
@@ -32,6 +35,8 @@ class Projectile {
   // The type of the projectile, etc bomb or slow
   ProjectileType type_;
 
+  // Distance where the collision between projectiles and enemies happen.
+  // Could be changed to be different with different enemies.s
   const double COLLISION_DISTANCE = 50;
 };
 
