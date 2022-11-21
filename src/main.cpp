@@ -11,10 +11,11 @@ int main(int, char**) {
   t.testEnemies();
   t.testMap();
   t.testPlayer();
-  // t.testGame();
-  // t.testGraphics();
-  //t.testEnemyMovement();
   t.testSprites();
+  t.testGame();
+  t.testGraphics();
+  t.testEnemyMovement();
+  t.testProjectiles();
   return 0;
 }
 

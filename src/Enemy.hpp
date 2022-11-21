@@ -2,14 +2,15 @@
 #define TOWER_DEFENSE_ENEMY
 
 #include "Coordinate.hpp"
-#include "Game.hpp"
+
+class Game;
 
 class Enemy {
  public:
   explicit Enemy(float speed, int health, Coordinate place,
                  int worth);  // add coordinate and image, make explicit?
 
-  Enemy(float speed, int health, Coordinate place, int worth, Game game);
+  Enemy(float speed, int health, Coordinate place, int worth, Game* game);
 
   // A tower hits the enemy and damages them decreasing their health.
   void getHit(int amount);
@@ -53,7 +54,7 @@ class Enemy {
   Coordinate direction_;
 
   // Tracks which game the enemy belongs to.
-  Game game_;
+  Game* game_;
 
   // The image of the enemy.
   // PNG image;
