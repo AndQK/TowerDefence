@@ -1,10 +1,10 @@
 #ifndef TOWER_DEFENSE_MAIN
 #define TOWER_DEFENSE_MAIN
 
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 #include "test.cpp"
-#include <SFML/Graphics.hpp>
 
 int main(int, char**) {
   auto t = test();
@@ -13,7 +13,8 @@ int main(int, char**) {
   t.testPlayer();
   // t.testGame();
   // t.testGraphics();
-  t.testEnemyMovement();
+  //t.testEnemyMovement();
+  t.testSprites();
   return 0;
 }
 

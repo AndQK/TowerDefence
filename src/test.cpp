@@ -203,6 +203,130 @@ class test {
       usleep(10000);
     }
   }
+  void testSprites() {
+    auto map = Map();
+    map.AddCoordinate(Coordinate(145, 340));
+    map.AddCoordinate(Coordinate(160, 97));
+    map.AddCoordinate(Coordinate(276, 97));
+    map.AddCoordinate(Coordinate(274, 470));
+    map.AddCoordinate(Coordinate(104, 482));
+    map.AddCoordinate(Coordinate(104, 600));
+    map.AddCoordinate(Coordinate(535, 598));
+    map.AddCoordinate(Coordinate(535, 422));
+    map.AddCoordinate(Coordinate(427, 405));
+    map.AddCoordinate(Coordinate(420, 161));
+    map.AddCoordinate(Coordinate(605, 153));
+
+    std::vector<sf::CircleShape> nodes;
+    sf::CircleShape node1(10.f);
+    sf::CircleShape node2(10.f);
+    sf::CircleShape node3(10.f);
+    sf::CircleShape node4(10.f);
+    sf::CircleShape node5(10.f);
+    sf::CircleShape node6(10.f);
+    sf::CircleShape node7(10.f);
+    sf::CircleShape node8(10.f);
+    sf::CircleShape node9(10.f);
+    sf::CircleShape node10(10.f);
+    sf::CircleShape node11(10.f);
+
+    for (auto i = 0; i < 11; i++) {
+    }
+    node1.setFillColor(sf::Color::Blue);
+    node2.setFillColor(sf::Color::Blue);
+    node3.setFillColor(sf::Color::Blue);
+    node4.setFillColor(sf::Color::Blue);
+    node5.setFillColor(sf::Color::Blue);
+    node6.setFillColor(sf::Color::Blue);
+    node7.setFillColor(sf::Color::Blue);
+    node8.setFillColor(sf::Color::Blue);
+    node9.setFillColor(sf::Color::Blue);
+    node10.setFillColor(sf::Color::Blue);
+    node11.setFillColor(sf::Color::Blue);
+
+    node1.setPosition(map.GetNode(0).getX(), map.GetNode(0).getY());
+    node2.setPosition(map.GetNode(1).getX(), map.GetNode(1).getY());
+    node3.setPosition(map.GetNode(2).getX(), map.GetNode(2).getY());
+    node4.setPosition(map.GetNode(3).getX(), map.GetNode(3).getY());
+    node5.setPosition(map.GetNode(4).getX(), map.GetNode(4).getY());
+    node6.setPosition(map.GetNode(5).getX(), map.GetNode(5).getY());
+    node7.setPosition(map.GetNode(6).getX(), map.GetNode(6).getY());
+    node8.setPosition(map.GetNode(7).getX(), map.GetNode(7).getY());
+    node9.setPosition(map.GetNode(8).getX(), map.GetNode(8).getY());
+    node10.setPosition(map.GetNode(9).getX(), map.GetNode(9).getY());
+    node11.setPosition(map.GetNode(10).getX(), map.GetNode(10).getY());
+
+    nodes.push_back(node1);
+    nodes.push_back(node2);
+    nodes.push_back(node3);
+    nodes.push_back(node4);
+    nodes.push_back(node5);
+    nodes.push_back(node6);
+    nodes.push_back(node7);
+    nodes.push_back(node8);
+    nodes.push_back(node9);
+    nodes.push_back(node10);
+    nodes.push_back(node11);
+    for (auto i : nodes) {
+      i.setOrigin(i.getPosition());
+    }
+
+    Game game = Game("Gargamel", map);
+    auto enemy = Enemy(2.0, 3, Coordinate(35.f, 339.f), 5, game);
+    sf::Texture mapTexture;
+    if (!mapTexture.loadFromFile("graphics/Level1.png")) {
+      std::cout << "unable to load texture from file" << std::endl;
+      exit(-1);
+    }
+    unsigned int x = mapTexture.getSize().x;
+    unsigned int y = mapTexture.getSize().y;
+    sf::Sprite mapSprite;
+    mapSprite.setTexture(mapTexture);
+    mapSprite.setScale(0.5, 0.5);
+
+    sf::RenderWindow window(sf::VideoMode(x / 2, y / 2), "TowerDefence");
+    sf::Texture enemyTexture;
+    if (!enemyTexture.loadFromFile("graphics/enemy1.png")) {
+      std::cout << "unable to load enemy texture from file" << std::endl;
+      exit(-1);
+    }
+    window.setPosition(sf::Vector2(50, 50));
+    sf::Sprite enemySprite;
+    enemySprite.setTexture(enemyTexture);
+    enemySprite.setScale(0.05, 0.05);
+    enemySprite.setOrigin(enemySprite.getPosition());
+    enemySprite.setPosition(35.f, 339.f);
+    enemySprite.rotate(90.f);
+    while (window.isOpen()) {
+      sf::Event event;
+      while (window.pollEvent(event)) {
+        if (sf::Event::Closed == event.type) {
+          window.close();
+        }
+        if (sf::Event::MouseButtonPressed == event.type) {
+          if (event.mouseButton.button == sf::Mouse::Left) {
+            std::cout << "The left button was pressed" << std::endl;
+            std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+            std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+          }
+        }
+      }
+      window.clear();
+      window.draw(mapSprite);
+      window.draw(enemySprite);
+      for (auto i : nodes) {
+        window.draw(i);
+      }
+      window.display();
+      auto moved = enemy.Move();
+      if (!moved) {
+        usleep(2000000);
+        break;
+      }
+      enemySprite.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
+      usleep(10000);
+    }
+  }
 };
 
 #endif
