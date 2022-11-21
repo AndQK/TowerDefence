@@ -205,6 +205,52 @@ class test {
       usleep(10000);
     }
   }
+  
+  void testProjectiles() {
+    Map map = Map();
+    map.AddCoordinate(Coordinate(700, 300));
+    Game game = Game("Gargamel", map);
+    auto enemy = Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
+    game.AddEnemy(enemy);
+    Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
+                                       Coordinate(-1, 0), bomb, game);
+
+    sf::CircleShape proj(20.f);
+    sf::CircleShape enem(50.f);
+    enem.setPosition(enemy.GetCoord().getX() - 50,
+                     enemy.GetCoord().getY() - 50);
+    proj.setPosition(projectile.GetPosition().getX() - 20,
+                     projectile.GetPosition().getY() - 20);
+    enem.setFillColor(sf::Color::Red);
+    proj.setFillColor(sf::Color::Blue);
+
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Projectile test");
+    window.setPosition(sf::Vector2(100, 100));
+    sf::Event event;
+    while (window.isOpen()) {
+      while (window.pollEvent(event)) {
+        if (sf::Event::Closed == event.type) {
+          window.close();
+        }
+      }
+      if (!enemy.Move()) {
+        window.close();
+        usleep(1000000);
+      }
+      enem.setPosition(enemy.GetCoord().getX() - 50,
+                       enemy.GetCoord().getY() - 50);
+
+      projectile.Move();
+      proj.setPosition(projectile.GetPosition().getX() - 20,
+                       projectile.GetPosition().getY() - 20);
+
+      window.clear();
+      window.draw(enem);
+      window.draw(proj);
+      window.display();
+      usleep(5000);
+    }
+  }
   void testSprites() {
     auto map = Map();
     map.AddCoordinate(Coordinate(145, 340));
@@ -327,52 +373,6 @@ class test {
       }
       enemySprite.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
       usleep(10000);
-    }
-  }
-
-  void testProjectiles() {
-    Map map = Map();
-    map.AddCoordinate(Coordinate(700, 300));
-    Game game = Game("Gargamel", map);
-    auto enemy = Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
-    game.AddEnemy(enemy);
-    Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
-                                       Coordinate(-1, 0), bomb, game);
-
-    sf::CircleShape proj(20.f);
-    sf::CircleShape enem(50.f);
-    enem.setPosition(enemy.GetCoord().getX() - 50,
-                     enemy.GetCoord().getY() - 50);
-    proj.setPosition(projectile.GetPosition().getX() - 20,
-                     projectile.GetPosition().getY() - 20);
-    enem.setFillColor(sf::Color::Red);
-    proj.setFillColor(sf::Color::Blue);
-
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Projectile test");
-    window.setPosition(sf::Vector2(100, 100));
-    sf::Event event;
-    while (window.isOpen()) {
-      while (window.pollEvent(event)) {
-        if (sf::Event::Closed == event.type) {
-          window.close();
-        }
-      }
-      if (!enemy.Move()) {
-        window.close();
-        usleep(1000000);
-      }
-      enem.setPosition(enemy.GetCoord().getX() - 50,
-                       enemy.GetCoord().getY() - 50);
-
-      projectile.Move();
-      proj.setPosition(projectile.GetPosition().getX() - 20,
-                       projectile.GetPosition().getY() - 20);
-
-      window.clear();
-      window.draw(enem);
-      window.draw(proj);
-      window.display();
-      usleep(5000);
     }
   }
 };
