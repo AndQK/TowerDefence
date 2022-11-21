@@ -8,14 +8,14 @@
 
 int main(int, char**) {
   auto t = test();
-  t.testEnemies();
-  t.testMap();
-  t.testPlayer();
+  //t.testEnemies();
+  //t.testMap();
+  //t.testPlayer();
   t.testSprites();
-  t.testGame();
-  t.testGraphics();
-  t.testEnemyMovement();
-  t.testProjectiles();
+  //t.testGame();
+  //t.testGraphics();
+  //t.testEnemyMovement();
+  //t.testProjectiles();
   return 0;
 }
 
