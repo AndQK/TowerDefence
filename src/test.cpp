@@ -205,7 +205,7 @@ class test {
       usleep(10000);
     }
   }
-  
+
   void testProjectiles() {
     Map map = Map();
     map.AddCoordinate(Coordinate(700, 300));
@@ -253,17 +253,17 @@ class test {
   }
   void testSprites() {
     auto map = Map();
-    map.AddCoordinate(Coordinate(145, 340));
-    map.AddCoordinate(Coordinate(160, 97));
-    map.AddCoordinate(Coordinate(276, 97));
-    map.AddCoordinate(Coordinate(274, 470));
-    map.AddCoordinate(Coordinate(104, 482));
-    map.AddCoordinate(Coordinate(104, 600));
-    map.AddCoordinate(Coordinate(535, 598));
-    map.AddCoordinate(Coordinate(535, 422));
-    map.AddCoordinate(Coordinate(427, 405));
-    map.AddCoordinate(Coordinate(420, 161));
-    map.AddCoordinate(Coordinate(605, 153));
+    map.AddCoordinate(Coordinate(164, 348));
+    map.AddCoordinate(Coordinate(164, 98));
+    map.AddCoordinate(Coordinate(292, 98));
+    map.AddCoordinate(Coordinate(295, 479));
+    map.AddCoordinate(Coordinate(87, 479));
+    map.AddCoordinate(Coordinate(94, 615));
+    map.AddCoordinate(Coordinate(542, 615));
+    map.AddCoordinate(Coordinate(549, 413));
+    map.AddCoordinate(Coordinate(418, 413));
+    map.AddCoordinate(Coordinate(418, 157));
+    map.AddCoordinate(Coordinate(625, 157));
 
     std::vector<sf::CircleShape> nodes;
     sf::CircleShape node1(10.f);
@@ -278,8 +278,6 @@ class test {
     sf::CircleShape node10(10.f);
     sf::CircleShape node11(10.f);
 
-    for (auto i = 0; i < 11; i++) {
-    }
     node1.setFillColor(sf::Color::Blue);
     node2.setFillColor(sf::Color::Blue);
     node3.setFillColor(sf::Color::Blue);
@@ -315,12 +313,9 @@ class test {
     nodes.push_back(node9);
     nodes.push_back(node10);
     nodes.push_back(node11);
-    for (auto i : nodes) {
-      i.setOrigin(i.getPosition());
-    }
 
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(2.0, 3, Coordinate(35.f, 339.f), 5, game);
+    auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game);
     sf::Texture mapTexture;
     if (!mapTexture.loadFromFile("graphics/Level1.png")) {
       std::cout << "unable to load texture from file" << std::endl;
@@ -340,11 +335,14 @@ class test {
     }
     window.setPosition(sf::Vector2(50, 50));
     sf::Sprite enemySprite;
+
+    float radiusX = enemyTexture.getSize().x / 2;
+    float radiusY = enemyTexture.getSize().y / 2;
+
     enemySprite.setTexture(enemyTexture);
     enemySprite.setScale(0.05, 0.05);
-    enemySprite.setOrigin(enemySprite.getPosition());
+    enemySprite.setOrigin(radiusX, radiusY);
     enemySprite.setPosition(35.f, 339.f);
-    enemySprite.rotate(90.f);
     while (window.isOpen()) {
       sf::Event event;
       while (window.pollEvent(event)) {
@@ -359,6 +357,17 @@ class test {
           }
         }
       }
+
+      auto moved = enemy.Move();
+      if (!moved) {
+        usleep(2000000);
+      }
+      auto oldCoord = enemySprite.getPosition();
+      enemySprite.setOrigin(radiusX, radiusY);
+      enemySprite.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
+
+      enemySprite.setRotation(enemy.getAngle());
+      std::cout << enemy.getAngle() << std::endl;
       window.clear();
       window.draw(mapSprite);
       window.draw(enemySprite);
@@ -366,13 +375,55 @@ class test {
         window.draw(i);
       }
       window.display();
-      auto moved = enemy.Move();
-      if (!moved) {
-        usleep(2000000);
-        break;
-      }
-      enemySprite.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
       usleep(10000);
+    }
+  }
+  void testRotate() {
+    float r = 0;
+    sf::RenderWindow window(sf::VideoMode(800, 600), "TowerDefence");
+    sf::Texture enemyTexture;
+    if (!enemyTexture.loadFromFile("graphics/enemy1.png")) {
+      std::cout << "unable to load enemy texture from file" << std::endl;
+      exit(-1);
+    }
+    window.setPosition(sf::Vector2(50, 50));
+
+    while (window.isOpen()) {
+      sf::Event event;
+      while (window.pollEvent(event)) {
+        if (sf::Event::Closed == event.type) {
+          window.close();
+        }
+        if (sf::Event::MouseButtonPressed == event.type) {
+          if (event.mouseButton.button == sf::Mouse::Left) {
+            std::cout << "The left button was pressed" << std::endl;
+            std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+            std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+          }
+        }
+      }
+      sf::Sprite enemySprite;
+
+      // float radiusX = 10.f;
+      // float radiusY = 10.f;
+
+      float radiusX = enemyTexture.getSize().x / 2;
+      float radiusY = enemyTexture.getSize().y / 2;
+
+      enemySprite.setTexture(enemyTexture);
+      enemySprite.setScale(0.05f, 0.05f);
+      enemySprite.setOrigin(radiusX, radiusY);
+      enemySprite.setPosition(100.f, 100.f);
+
+      // enemySprite.rotate(90.f);
+      // enemySprite.setOrigin(radiusX, radiusY);
+      enemySprite.rotate(r);
+      window.clear();
+      window.draw(enemySprite);
+      window.display();
+
+      r += 2.f;
+      // usleep(1000);
     }
   }
 };
