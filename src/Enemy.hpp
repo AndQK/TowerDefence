@@ -33,6 +33,8 @@ class Enemy {
   // Get the enemy's worth
   const int& GetWorth() const;
 
+  float getAngle();
+
  private:
   // Moving speed of the enemy.
   float speed_;

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <math.h>
 
 #include "test.cpp"
 
@@ -17,6 +18,7 @@ int main(int, char**) {
   //t.testEnemyMovement();
   //t.testProjectiles();
   t.testTowers();
+  //t.testRotate();
   return 0;
 }
 
