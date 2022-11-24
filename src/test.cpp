@@ -14,6 +14,7 @@
 #include "Player.hpp"
 #include "Projectile.hpp"
 #include "SplittingEnemy.hpp"
+#include "Tower.hpp"
 
 class test {
  public:
@@ -113,6 +114,27 @@ class test {
     std::cout << "End!" << std::endl;
   }
 
+  void testTowers() {
+    std::cout << "Testing Tower class!" << std::endl;
+
+    auto e = Enemy(5.0, 3, Coordinate(1, 1), 5);
+    auto t = Tower(100, 3, 2, Coordinate(1, 1), 1);
+
+    std::cout << "Tower should be (100, 3, 2, 1) is (" << t.GetCost() << ", "
+              << t.GetSpeed() << ", " << t.GetDamage() << ", " << t.GetRange()
+              << ")." << std::endl;
+
+    t.Attack(e); //these do not work
+    t.Slow(e);
+
+    std::cout
+        << "The enemy got hit by 2 and slowed by 2, should now be (1, 3), "
+           "is: ("
+        << e.GetHealth() << ", " << e.GetSpeed() << ")." << std::endl;
+
+    std::cout << "End!" << std::endl;
+  }
+
   void testGame() {
     auto game = Game("Matias", Map());
     game.GetPlayer().AddMoney(50);
@@ -205,7 +227,7 @@ class test {
       usleep(10000);
     }
   }
-  
+
   void testProjectiles() {
     Map map = Map();
     map.AddCoordinate(Coordinate(700, 300));
@@ -320,7 +342,7 @@ class test {
     }
 
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(2.0, 3, Coordinate(35.f, 339.f), 5, game);
+    auto enemy = Enemy(2.0, 3, Coordinate(35.f, 339.f), 5, &game);
     sf::Texture mapTexture;
     if (!mapTexture.loadFromFile("graphics/Level1.png")) {
       std::cout << "unable to load texture from file" << std::endl;
