@@ -124,7 +124,7 @@ class test {
               << t.GetSpeed() << ", " << t.GetDamage() << ", " << t.GetRange()
               << ")." << std::endl;
 
-    t.Attack(e); //these do not work
+    t.Attack(e); 
     t.Slow(e);
 
     std::cout
