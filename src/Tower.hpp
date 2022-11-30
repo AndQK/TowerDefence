@@ -14,10 +14,10 @@ class Tower {
         Game* game);
 
   // Attacks the enemies in its range.
-  void Attack(Enemy e);
+  void Attack(Enemy &e);
 
   // Slows down the enemy.
-  void Slow(Enemy e);
+  void Slow(Enemy &e);
 
   // Enables the player to move the tower during the game.
   void Move(Coordinate c);
