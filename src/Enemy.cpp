@@ -10,6 +10,7 @@ Enemy::Enemy(float speed, int health, Coordinate place, int worth)
       place_(place),
       worth_(worth),
       currentNode_(0),
+      distance_(0),
       game_(new Game()),  // Error here
       direction_(Coordinate(0, 0)) {
   std::cout << "Creating enemy" << std::endl;
@@ -53,6 +54,7 @@ bool Enemy::Move() {
 
   // Move towards the next node with the speed_
   place_ = place_ + (direction_ * speed_);
+  distance_ += speed_;
   return true;
 }
 
@@ -60,6 +62,7 @@ void Enemy::Slow(double s) {
   auto t = s;
   if (speed_ - t > 0) speed_ -= s;
 }
+
 float Enemy::getAngle() {
   if ((direction_.getY() > -0.2 && direction_.getY() < 0.2) && direction_.getX() > 0.0) {
     /*float angle =
@@ -76,6 +79,7 @@ float Enemy::getAngle() {
   else if (direction_.getY() < 0.0 && (direction_.getX() > -0.2 && direction_.getX() < 0.2)) {
       return 0.0f;
     }
+  return 0.0f;
 }
 
   const float& Enemy::GetSpeed() const { return speed_; }
@@ -88,3 +92,5 @@ float Enemy::getAngle() {
 
   // Get the enemy's worth
   const int& Enemy::GetWorth() const { return worth_; }
+
+  const int& Enemy::GetDistance() const { return distance_; }

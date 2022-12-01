@@ -17,7 +17,7 @@ int main(int, char**) {
   //t.testGraphics();
   //t.testEnemyMovement();
   //t.testProjectiles();
-  t.testTowers();
+  //t.testTowers();
   //t.testRotate();
   return 0;
 }
