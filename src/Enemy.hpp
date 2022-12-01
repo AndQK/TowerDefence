@@ -33,6 +33,8 @@ class Enemy {
   // Get the enemy's worth
   const int& GetWorth() const;
 
+  const int& GetDistance() const;
+
   float getAngle();
 
  private:
@@ -57,6 +59,9 @@ class Enemy {
 
   // Tracks which game the enemy belongs to.
   Game* game_;
+
+  //How far along the game the enemy is.
+  int distance_;
 
   // The image of the enemy.
   // PNG image;
