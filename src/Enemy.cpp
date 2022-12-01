@@ -64,20 +64,6 @@ void Enemy::Slow(double s) {
 }
 
 float Enemy::getAngle() {
-  /*if ((direction_.getY() > -0.2 && direction_.getY() < 0.2) &&
-  direction_.getX() > 0.0) { float angle = atan(direction_.getY() /
-  direction_.getX()) * 180 / 3.14159265; return angle; return 90.f;
-  }
-  else if ((direction_.getY() > -0.2 && direction_.getY() < 0.2) &&
-  direction_.getX() < 0.0) { return 270.f;
-  }
-  else if (direction_.getY() > 0.0 && (direction_.getX() > -0.2 &&
-  direction_.getX() < 0.2)) { return 180.f;
-  }
-  else if (direction_.getY() < 0.0 && (direction_.getX() > -0.2 &&
-  direction_.getX() < 0.2)) { return 0.0f;
-    }*/
-
   double PI = 3.1415926535;
   double y = direction_.getY();
   double x = -direction_.getX();
