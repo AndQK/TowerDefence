@@ -13,18 +13,18 @@ int Level::initial_lives() const { return initial_lives_; }
 
 int Level::enemies_killed() const { return enemies_killed_; }
 
-/*std::vector<int> Level::killing_enemies(int time){
- std::vector<int> enemies = {};
-   auto size = enemy_.size();
-   for (int i = enemies_killed_; i < size; ++i) {
-       auto t = enemy_[i];
-       if (t.first < time) {
-           enemies.push_back(t.second);
-          enemies_killed_++;
-       } else
-           break;
-   }
-   return enemies;
-}*/
+std::vector<int> Level::killing_enemies(int time) {
+  std::vector<int> enemies = {};
+  auto size = enemy_.size();
+  for (int i = enemies_killed_; i < size; ++i) {
+    auto t = enemy_[i];
+    // if (t.first < time) {
+    //     enemies.push_back(t.second);
+    //     enemies_killed_++;
+    // } else
+    //     break;
+  }
+  return enemies;
+}
 
 bool Level::done() { return enemies_killed_ == enemy_.size(); }

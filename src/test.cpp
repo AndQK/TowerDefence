@@ -15,6 +15,7 @@
 #include "Projectile.hpp"
 #include "SplittingEnemy.hpp"
 #include "guiFunctions.hpp"
+#include "Tower.hpp"
 
 class test {
  public:
@@ -110,6 +111,27 @@ class test {
         << "The HardEnemy got hit by 2 and slowed by 0.5, health should now "
            "be 3 and speed 2.5. They are:"
         << hard.GetHealth() << ", " << hard.GetSpeed() << std::endl;
+
+    std::cout << "End!" << std::endl;
+  }
+
+  void testTowers() {
+    std::cout << "Testing Tower class!" << std::endl;
+
+    auto e = Enemy(5.0, 3, Coordinate(1, 1), 5);
+    auto t = Tower(100, 3, 2, Coordinate(1, 1), 1);
+
+    std::cout << "Tower should be (100, 3, 2, 1) is (" << t.GetCost() << ", "
+              << t.GetSpeed() << ", " << t.GetDamage() << ", " << t.GetRange()
+              << ")." << std::endl;
+
+    t.Attack(e);
+    t.Slow(e);
+
+    std::cout
+        << "The enemy got hit by 2 and slowed by 2, should now be (1, 3), "
+           "is: ("
+        << e.GetHealth() << ", " << e.GetSpeed() << ")." << std::endl;
 
     std::cout << "End!" << std::endl;
   }
