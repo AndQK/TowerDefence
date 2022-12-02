@@ -10,6 +10,7 @@ Plan for this week for everyone is to get fully started on the project according
 
 We have not yet deviated from the project plan. After getting feedback from our supervisor there could be some modifications.
 
+
 MEETING WEDNESDAY 23.11.2022:
 
 Present: all members
@@ -21,5 +22,18 @@ We had some problems with git since we aren't very familiar with pushing and pul
 Next week Samuli will mostly be connecting the GUI and Game class to other class to get the classes to work together and bring the game together. Antonio will continue working on the GUI. He will begin building the GUI class which is how we can connect the Game class to it. Viivi will work on the abstract class tower and the towers that belong to it next week. Edris will plan what the game menu will look like and what kind of effects will happen when someone looses the game. He will also plan some sound effects.
 
 A big deviation to our plan is that we decided to switch from qt to smfl, since the use of qt made it more difficult to progress with our project.
+
+
+MEETING THURSDAY 1.12.2022:
+
+Present: Ando, Samuli, Viivi
+
+Edris is in the US so a meeting time suitable for everyone was not possible.
+
+This was the week that we were supposed to get most of the aspects of the game done, but they took longer than expected. Also everyone was very busy with other school work and studying for exams since it is the last week of school before exam week. Edris was able to design the game menu picture and implement it. Viivi did the abstract class Tower and its subclasses SlowingTower, BasicTower and BombTower. She also started to work on the towers hitting the enemies with projectiles. Samuli did a lot of work last week so that he could do a little less this week. Samuli has worked with projectiles and thought about how hitting enemies could work. He has also been helping everyone with their parts. Antonio has worked on GUI functions, as in tested how the players inputs work. He has also worked on the panel that the player will eventually play with. 
+
+Our biggest problem has been the strict schedule for the project and having time to implement it. 
+
+Next week and the week after that project demos are coming up and the final commit has to be done already next Friday. Viivi will finish hitting the enemies with projectiles. Ando will finish the GUI. Samuli will help others in their parts and finalize the game. During the following week Edris will try to get the sound effects to work.
 
 
