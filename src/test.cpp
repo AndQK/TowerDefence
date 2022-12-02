@@ -14,6 +14,7 @@
 #include "Player.hpp"
 #include "Projectile.hpp"
 #include "SplittingEnemy.hpp"
+#include "guiFunctions.hpp"
 
 class test {
  public:
@@ -424,6 +425,106 @@ class test {
 
       r += 2.f;
       // usleep(1000);
+    }
+  }
+
+  void testGuiFunctions() {
+    int currentScreen = 0;
+
+    sf::Texture mapTexture;
+    if (!mapTexture.loadFromFile("graphics/Level1.png")) {
+      std::cout << "unable to load texture from file" << std::endl;
+      exit(-1);
+    }
+    sf::Texture mainMenuTexture;
+    if (!mainMenuTexture.loadFromFile("graphics/mainMenu.png")) {
+      std::cout << "unable to load texture form file" << std::endl;
+      exit(-1);
+    }
+
+    std::vector<sf::Texture> towerTextures;
+
+    sf::Texture diamondTowerTexture;
+    if (!diamondTowerTexture.loadFromFile("graphics/diamondGun.png")) {
+      std::cout << "unable to load tower texture from file" << std::endl;
+      exit(-1);
+    }
+
+    sf::Texture teslaTowerTexture;
+    if (!teslaTowerTexture.loadFromFile("graphics/tesla.png")) {
+      std::cout << "unable to load tower texture from file" << std::endl;
+      exit(-1);
+    }
+
+    sf::Texture turretTowerTexture;
+    if (!turretTowerTexture.loadFromFile("graphics/turret.png")) {
+      std::cout << "unable to load tower texture from file" << std::endl;
+      exit(-1);
+    }
+
+    sf::Texture rocketTowerTexture;
+    if (!rocketTowerTexture.loadFromFile("graphics/rocketGreen.png")) {
+      std::cout << "unable to load tower texture from file" << std::endl;
+      exit(-1);
+    }
+    sf::Texture iceTowerTexture;
+    if (!iceTowerTexture.loadFromFile("graphics/iceRocket.png")) {
+      std::cout << "unable to load tower texture from file" << std::endl;
+      exit(-1);
+    }
+    sf::Font font;
+    if (!font.loadFromFile("graphics/ARLRDBD.TTF")) {
+      std::cout << "unable to load font from file" << std::endl;
+      exit(-1);
+    }
+
+    towerTextures.push_back(diamondTowerTexture);
+    towerTextures.push_back(teslaTowerTexture);
+    towerTextures.push_back(turretTowerTexture);
+    towerTextures.push_back(rocketTowerTexture);
+    towerTextures.push_back(iceTowerTexture);
+
+    sf::RenderWindow window(sf::VideoMode(mapTexture.getSize().x / 2 + 200,
+                                          mapTexture.getSize().y / 2),
+                            "TowerDefence");
+    window.setPosition(sf::Vector2(50, 50));
+    while (window.isOpen()) {
+      window.clear();
+      switch (currentScreen) {
+        case 0:  // main menu:
+          createAndDrawGameMenu(window, mainMenuTexture);
+          break;
+        case 1:  // game screen:
+          std::vector<sf::Vector2f> coordinates =
+              createAndDrawGameScreen(window, mapTexture, towerTextures);
+          createAndDrawPlayerInfo(window, 0, 0, 0, font);
+          break;
+      }
+      sf::Event event;
+      while (window.pollEvent(event)) {
+        if (sf::Event::Closed == event.type) {
+          window.close();
+        }
+        if (sf::Event::MouseButtonPressed == event.type) {
+          if (event.mouseButton.button == sf::Mouse::Left) {
+            int x = event.mouseButton.x;
+            int y = event.mouseButton.y;
+            switch (currentScreen) {
+              case 0:
+                if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
+                  currentScreen = 1;
+                  std::cout << "changing scene" << std::endl;
+                }
+                break;
+              case 1:
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      }
+      window.display();
     }
   }
 };
