@@ -26,6 +26,12 @@ class Player {
   // Get the players current points
   const int& GetPoints() const;
 
+  // Get the players current health
+  const int& GetHealth() const;
+
+  // reduces players health
+  void reduceHealth();
+
  private:
   // Username of the player
   std::string username_;
@@ -35,6 +41,9 @@ class Player {
 
   // The players money
   int money_;
+
+  // The players health
+  int health_;
 };
 
 #endif
