@@ -47,6 +47,9 @@ class Game {
   // Gets the enemies currently in the game.
   std::vector<Enemy*> GetEnemies();
 
+  // Gets the towers currently in the game.
+  std::vector<Tower*> GetTowers();
+
   void RemoveProjectile(Projectile* projectile);
 
   void RemoveEnemy(Enemy& enemy);
