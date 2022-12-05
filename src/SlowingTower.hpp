@@ -31,9 +31,9 @@ class SlowingTower : public Tower {
       auto dir = (a - b) / dist;
       std::cout << dist << std::endl;
       auto proj =
-          Projectile(3, this->GetDamage(), this->GetPlace(), dir, slow, game);
+          Projectile(3, this->GetDamage(), this->GetPlace(), dir, slow, this->GetGame());
 
-      game->AddProjectile(proj);
+      game->AddProjectile(proj); //does not work
     }
   };
 };

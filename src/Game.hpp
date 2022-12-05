@@ -36,6 +36,14 @@ class Game {
   // Gets the enemies currently in the game.
   std::vector<Enemy*> GetEnemies();
 
+  void RemoveProjectile(Projectile* projectile);
+
+  void RemoveEnemy(Enemy& enemy);
+
+  //~Game();
+
+  std::vector<Projectile*> GetProjectiles();
+
  private:
   Player player_;
   Map map_;
