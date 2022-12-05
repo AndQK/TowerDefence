@@ -141,6 +141,8 @@ class test {
     nodes.push_back(node4);
     nodes.push_back(node5);
 
+    std::vector<sf::CircleShape> projectiles;
+
     sf::CircleShape shape(20.f);
     shape.setPosition(enemy->GetCoord().getX(), enemy->GetCoord().getY());
     shape.setFillColor(sf::Color::Red);
@@ -154,13 +156,26 @@ class test {
       window.clear();
       window.draw(shape);
       window.draw(towerShape);
-      for (auto n : nodes) {
-        window.draw(n);
+      if (game.GetProjectiles().size() > projectiles.size()) {
+        sf::CircleShape p(5.f);
+        p.setFillColor(sf::Color::Cyan);
+        p.setPosition(game.GetProjectiles().back()->GetPosition().getX() - 5,
+                      game.GetProjectiles().back()->GetPosition().getY() - 5);
+        projectiles.push_back(p);
       }
+
+      for (int i = 0; i < projectiles.size(); i++) {
+        projectiles.at(i).setPosition(
+            game.GetProjectiles().at(i)->GetPosition().getX() - 5,
+            game.GetProjectiles().at(i)->GetPosition().getY() - 5);
+        window.draw(projectiles.at(i));
+      }
+      for (auto n : nodes) window.draw(n);
+
       window.display();
       tower->Defend();
-      /**for (auto i : game.GetProjectiles())
-        i->Move();*/
+
+      for (auto i : game.GetProjectiles()) i->Move();
 
       auto moved = enemy->Move();
       if (!moved) {

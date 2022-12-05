@@ -40,8 +40,6 @@ void Tower::Shoot(ProjectileType type) {
     auto a = i->GetCoord();
     auto b = this->GetPlace();
     auto dist = (a - b).getLength();
-    // auto distance = ((i->GetCoord()) - place_).getLength();
-    // std::cout << dist;
     if (dist < this->GetRange()) inRange.push_back(i);
   }
   std::sort(inRange.begin(), inRange.end());
@@ -52,10 +50,8 @@ void Tower::Shoot(ProjectileType type) {
     auto b = this->GetPlace();
     auto dist = (a - b).getLength();
     auto dir = (a - b) / dist;
-    std::cout << dist << std::endl;
     auto proj = new Projectile(3, this->GetDamage(), this->GetPlace(), dir,
                                type, this->GetGame());
-
     game->AddProjectile(proj);
   }
 }
