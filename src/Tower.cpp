@@ -50,7 +50,7 @@ void Tower::Shoot(ProjectileType type) {
     auto b = this->GetPlace();
     auto dist = (a - b).getLength();
     auto dir = (a - b) / dist;
-    auto proj = new Projectile(3, this->GetDamage(), this->GetPlace(), dir,
+    auto proj = new Projectile(7, this->GetDamage(), this->GetPlace(), dir,
                                type, this->GetGame());
     game->AddProjectile(proj);
   }

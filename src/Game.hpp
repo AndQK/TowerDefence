@@ -52,7 +52,7 @@ class Game {
 
   void RemoveProjectile(Projectile* projectile);
 
-  void RemoveEnemy(Enemy& enemy);
+  void RemoveEnemy(Enemy* enemy);
 
   std::vector<Projectile*> GetProjectiles();
 

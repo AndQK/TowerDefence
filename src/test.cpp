@@ -109,7 +109,7 @@ class test {
     map.AddCoordinate(Coordinate(800, 100));
 
     Game game = Game("Gargamel", map);
-    auto enemy = new Enemy(2.5, 3, Coordinate(0, 0), 5, &game);
+    auto enemy = new Enemy(2.5, 50, Coordinate(0, 0), 5, &game);
     game.AddEnemy(enemy);
     auto tower = new SlowingTower(Coordinate(100, 100), &game);
     auto tower2 = new SlowingTower(Coordinate(600, 400), &game);
