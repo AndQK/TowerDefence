@@ -2,6 +2,8 @@
 
 #include <unistd.h>
 
+#include <algorithm>
+
 Game::Game(const std::string& name, const Map& map)
     : player_(Player(name)), map_(map) {}
 
@@ -30,7 +32,9 @@ void Game::AddEnemy(Enemy& enemy) { enemies_.push_back(&enemy); }
 void Game::AddTower(Tower& tower) { towers_.push_back(&tower); }
 
 void Game::AddProjectile(Projectile& projectile) {
-  projectiles_.push_back(&projectile);
+  auto p = Projectile(3, 1, Coordinate(1, 2), Coordinate(1, 2), slow, this);
+  projectiles_.push_back(&p);  // this option does not work either, deletes
+                               // projectile after this function ends
 }
 
 Player& Game::GetPlayer() { return player_; }
@@ -40,5 +44,21 @@ Map Game::GetMap() const {
   return m;
 }
 
+void Game::RemoveProjectile(Projectile* projectile) {
+  projectiles_.erase(
+      std::remove_if(projectiles_.begin(), projectiles_.end(),
+                     [&](Projectile* p) { return p = projectile; }),
+      projectiles_.end());
+}
+
+void RemoveEnemy(Enemy& enemy);
+
+/**Game::~Game() {
+  for (auto i : projectiles_) {
+    delete i;
+  }
+}*/
 
 std::vector<Enemy*> Game::GetEnemies() { return enemies_; }
+
+std::vector<Projectile*> Game::GetProjectiles() { return projectiles_; }

@@ -13,10 +13,10 @@
 #include "Map.hpp"
 #include "Player.hpp"
 #include "Projectile.hpp"
-#include "SplittingEnemy.hpp"
-#include "guiFunctions.hpp"
-#include "Tower.hpp"
 #include "SlowingTower.hpp"
+#include "SplittingEnemy.hpp"
+#include "Tower.hpp"
+#include "guiFunctions.hpp"
 
 class test {
  public:
@@ -159,6 +159,8 @@ class test {
       }
       window.display();
       tower.Defend();
+      /**for (auto i : game.GetProjectiles()) 
+        i->Move();*/
 
       auto moved = enemy.Move();
       if (!moved) {
