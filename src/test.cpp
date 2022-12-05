@@ -14,8 +14,8 @@
 #include "Player.hpp"
 #include "Projectile.hpp"
 #include "SplittingEnemy.hpp"
-#include "guiFunctions.hpp"
 #include "Tower.hpp"
+#include "guiFunctions.hpp"
 
 class test {
  public:
@@ -352,7 +352,7 @@ class test {
 
     sf::RenderWindow window(sf::VideoMode(x / 2, y / 2), "TowerDefence");
     sf::Texture enemyTexture;
-    if (!enemyTexture.loadFromFile("graphics/enemy1.png")) {
+    if (!enemyTexture.loadFromFile("../graphics/enemy1.png")) {
       std::cout << "unable to load enemy texture from file" << std::endl;
       exit(-1);
     }

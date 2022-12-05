@@ -1,6 +1,7 @@
 #ifndef TOWER_DEFENSE_GAME
 #define TOWER_DEFENSE_GAME
 
+#include <chrono>
 #include <vector>
 
 #include "Enemy.hpp"
@@ -33,6 +34,8 @@ class Game {
  private:
   Player player_;
   Map map_;
+
+  const int FPS = 100;
 
   // Vector of enemies currently in game.
   std::vector<Enemy*> enemies_;
