@@ -27,11 +27,18 @@ void Game::StartGame() {
 
 void Game::AddEnemy(Enemy& enemy) { enemies_.push_back(&enemy); }
 
+void Game::AddTower(Tower& tower) { towers_.push_back(&tower); }
+
+void Game::AddProjectile(Projectile& projectile) {
+  projectiles_.push_back(&projectile);
+}
+
 Player& Game::GetPlayer() { return player_; }
 
 Map Game::GetMap() const {
   auto m = map_;
   return m;
 }
+
 
 std::vector<Enemy*> Game::GetEnemies() { return enemies_; }

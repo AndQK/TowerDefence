@@ -7,13 +7,15 @@ class Game;
 
 class Enemy {
  public:
-  explicit Enemy(float speed, int health, Coordinate place,
-                 int worth);  // add coordinate and image, make explicit?
+  /**explicit Enemy(float speed, int health, Coordinate place,
+                 int worth);  */
 
   Enemy(float speed, int health, Coordinate place, int worth, Game* game);
 
   // A tower hits the enemy and damages them decreasing their health.
   void getHit(int amount);
+
+  bool operator<(const Enemy& e1);
 
   // The enemy moves to towards their next position.
   bool Move();
@@ -60,7 +62,7 @@ class Enemy {
   // Tracks which game the enemy belongs to.
   Game* game_;
 
-  //How far along the game the enemy is.
+  // How far along the game the enemy is.
   int distance_;
 
   // The image of the enemy.

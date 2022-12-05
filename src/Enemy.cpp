@@ -4,17 +4,17 @@
 
 #include "Game.hpp"
 
-Enemy::Enemy(float speed, int health, Coordinate place, int worth)
+/**Enemy::Enemy(float speed, int health, Coordinate place, int worth)
     : speed_(speed),
       health_(health),
       place_(place),
       worth_(worth),
       currentNode_(0),
       distance_(0),
-      game_(new Game()),  // Error here
+      game_(new Game()),  
       direction_(Coordinate(0, 0)) {
   std::cout << "Creating enemy" << std::endl;
-}
+}*/
 
 Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game)
     : speed_(speed),
@@ -32,6 +32,13 @@ void Enemy::getHit(int amount) {
     health_ = 0;
   else
     health_ -= amount;
+}
+
+bool operator<(const Enemy& e1, const Enemy& e2) {
+  if (e2.GetDistance() == e1.GetDistance()) {
+    return e1.GetDistance();
+  }
+  return e2.GetDistance() < e1.GetDistance();
 }
 
 bool Enemy::Move() {
@@ -64,33 +71,34 @@ void Enemy::Slow(double s) {
 }
 
 float Enemy::getAngle() {
-  if ((direction_.getY() > -0.2 && direction_.getY() < 0.2) && direction_.getX() > 0.0) {
+  if ((direction_.getY() > -0.2 && direction_.getY() < 0.2) &&
+      direction_.getX() > 0.0) {
     /*float angle =
         atan(direction_.getY() / direction_.getX()) * 180 / 3.14159265;
     return angle;*/
     return 90.f;
-  }
-  else if ((direction_.getY() > -0.2 && direction_.getY() < 0.2) && direction_.getX() < 0.0) {
+  } else if ((direction_.getY() > -0.2 && direction_.getY() < 0.2) &&
+             direction_.getX() < 0.0) {
     return 270.f;
+  } else if (direction_.getY() > 0.0 &&
+             (direction_.getX() > -0.2 && direction_.getX() < 0.2)) {
+    return 180.f;
+  } else if (direction_.getY() < 0.0 &&
+             (direction_.getX() > -0.2 && direction_.getX() < 0.2)) {
+    return 0.0f;
   }
-  else if (direction_.getY() > 0.0 && (direction_.getX() > -0.2 && direction_.getX() < 0.2)) {
-      return 180.f;
-  }
-  else if (direction_.getY() < 0.0 && (direction_.getX() > -0.2 && direction_.getX() < 0.2)) {
-      return 0.0f;
-    }
   return 0.0f;
 }
 
-  const float& Enemy::GetSpeed() const { return speed_; }
+const float& Enemy::GetSpeed() const { return speed_; }
 
-  // Get the enemy's health
-  const int& Enemy::GetHealth() const { return health_; }
+// Get the enemy's health
+const int& Enemy::GetHealth() const { return health_; }
 
-  // Get the enemy's coordinates
-  const Coordinate& Enemy::GetCoord() const { return place_; }
+// Get the enemy's coordinates
+const Coordinate& Enemy::GetCoord() const { return place_; }
 
-  // Get the enemy's worth
-  const int& Enemy::GetWorth() const { return worth_; }
+// Get the enemy's worth
+const int& Enemy::GetWorth() const { return worth_; }
 
-  const int& Enemy::GetDistance() const { return distance_; }
+const int& Enemy::GetDistance() const { return distance_; }

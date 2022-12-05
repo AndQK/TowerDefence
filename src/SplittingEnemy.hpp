@@ -5,7 +5,7 @@
 
 class SplittingEnemy : public Enemy {
  public:
-  SplittingEnemy(Coordinate place);
+  SplittingEnemy(Coordinate place, Game* game);
 };
 
 #endif
