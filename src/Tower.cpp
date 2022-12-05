@@ -29,7 +29,9 @@ void Tower::Shoot(ProjectileType type) {
                  std::chrono::steady_clock::now() - this->lastShot)
                  .count();
   // Check if enough time elapsed since last shot.
-  if (elapsedTimeInMicroseconds / 1000000 < (1.0f / speed_)) return;
+  if (elapsedTimeInMicroseconds / 1000000 < (1.0f / speed_)) {
+    return;
+  }
 
   lastShot = std::chrono::steady_clock::now();
   Game* game = this->GetGame();
@@ -50,7 +52,7 @@ void Tower::Shoot(ProjectileType type) {
     auto b = this->GetPlace();
     auto dist = (a - b).getLength();
     auto dir = (a - b) / dist;
-    auto proj = new Projectile(3, this->GetDamage(), this->GetPlace(), dir,
+    auto proj = new Projectile(5, this->GetDamage(), this->GetPlace(), dir,
                                type, this->GetGame());
     game->AddProjectile(proj);
   }

@@ -4,18 +4,6 @@
 
 #include "Game.hpp"
 
-/**Enemy::Enemy(float speed, int health, Coordinate place, int worth)
-    : speed_(speed),
-      health_(health),
-      place_(place),
-      worth_(worth),
-      currentNode_(0),
-      distance_(0),
-      game_(new Game()),  
-      direction_(Coordinate(0, 0)) {
-  std::cout << "Creating enemy" << std::endl;
-}*/
-
 Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game)
     : speed_(speed),
       health_(health),
@@ -28,9 +16,11 @@ Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game)
 }
 
 void Enemy::getHit(int amount) {
-  if (health_ < amount)
+  std::cout << "Enemy has " << health_ << " health." << std::endl;
+  if (health_ < amount) {
     health_ = 0;
-  else
+    game_->RemoveEnemy(this);
+  } else
     health_ -= amount;
 }
 
@@ -48,8 +38,8 @@ bool Enemy::Move() {
   // last node.
   if (distance < speed_ * 1.5) {
     if (currentNode_ >= (*game_).GetMap().GetNofNodes() - 1) {
-      std::cout << "Reached final destination, remove health and destroy enemy."
-                << std::endl;
+      game_->RemoveEnemy(this);
+      game_->GetPlayer().reduceHealth();
       return false;
     } else {
       currentNode_++;

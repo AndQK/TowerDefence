@@ -19,8 +19,6 @@ bool Projectile::hitTarget() {
   for (auto enemy : e) {
     if ((pos_ - enemy->GetCoord()).getLength() < COLLISION_DISTANCE) {
       enemy->getHit(damage_);
-      std::cout << "Enemy hit with " << damage_ << " damage. Remove projectile."
-                << std::endl;
       return true;
     }
   }

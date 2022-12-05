@@ -44,6 +44,8 @@ void Game::sustainFramerate(std::chrono::steady_clock::time_point beg,
       std::chrono::duration_cast<std::chrono::microseconds>(end - beg).count();
   if (elapsedTimeInMicroseconds < microSecondsPerFrame)
     usleep(microSecondsPerFrame - elapsedTimeInMicroseconds);
+  else
+    std::cout << "Doing under 100fps" << std::endl;
 }
 
 void Game::Update() {
@@ -69,15 +71,18 @@ Map Game::GetMap() const {
 }
 
 void Game::RemoveProjectile(Projectile* projectile) {
-  /** TODO needs fixind **/
   auto remove = std::find_if(projectiles_.begin(), projectiles_.end(),
                              [&](Projectile* p) { return p == projectile; });
   delete (*remove);
-  auto iter = projectiles_.erase(remove);
-  std::cout << "removed succesfully" << std::endl;
+  projectiles_.erase(remove);
 }
 
-void RemoveEnemy(Enemy& enemy);
+void Game::RemoveEnemy(Enemy* enemy) {
+  auto remove = std::find_if(enemies_.begin(), enemies_.end(),
+                             [&](Enemy* e) { return e == enemy; });
+  delete (*remove);
+  enemies_.erase(remove);
+}
 
 Game::~Game() {
   for (auto p : projectiles_) delete p;
