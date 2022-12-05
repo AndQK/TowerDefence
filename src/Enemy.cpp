@@ -4,18 +4,6 @@
 
 #include "Game.hpp"
 
-/**Enemy::Enemy(float speed, int health, Coordinate place, int worth)
-    : speed_(speed),
-      health_(health),
-      place_(place),
-      worth_(worth),
-      currentNode_(0),
-      distance_(0),
-      game_(new Game()),
-      direction_(Coordinate(0, 0)) {
-  std::cout << "Creating enemy" << std::endl;
-}*/
-
 Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game)
     : speed_(speed),
       health_(health),
