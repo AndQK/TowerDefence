@@ -9,7 +9,9 @@ class SlowingTower : public Tower {
       : Tower(100, 5, 1, place, 250, game){};
 
   void Defend() {
-    Game* game = this->GetGame();
+    this->Shoot(slow);
+
+    /*Game* game = this->GetGame();
     std::vector<Enemy*> e = game->GetEnemies();
     std::vector<Enemy*> inRange;
 
@@ -30,11 +32,11 @@ class SlowingTower : public Tower {
       auto dist = (a - b).getLength();
       auto dir = (a - b) / dist;
       std::cout << dist << std::endl;
-      auto proj =
-          Projectile(3, this->GetDamage(), this->GetPlace(), dir, slow, this->GetGame());
+      auto proj = new Projectile(3, this->GetDamage(), this->GetPlace(), dir,
+                                 slow, this->GetGame());
 
-      game->AddProjectile(proj); //does not work
-    }
+      game->AddProjectile(proj);
+    }*/
   };
 };
 
