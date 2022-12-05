@@ -13,6 +13,7 @@
 #include "Map.hpp"
 #include "Player.hpp"
 #include "Projectile.hpp"
+#include "SlowingTower.hpp"
 #include "SplittingEnemy.hpp"
 #include "Tower.hpp"
 #include "guiFunctions.hpp"
@@ -68,74 +69,6 @@ class test {
     std::cout << "End!" << std::endl;
   }
 
-  void testEnemies() {
-    std::cout << "Testing Enemy class!" << std::endl;
-
-    auto e = Enemy(1.0, 3, Coordinate(1, 1), 5);
-    std::cout << "The enemy has been initialized with speed, health and worth: "
-              << e.GetSpeed() << ", " << e.GetHealth() << ", " << e.GetWorth()
-              << " accordingly." << std::endl;
-
-    e.getHit(2);
-    e.Slow(0.5);
-    std::cout << "The enemy got hit by 2 and slowed by 0.5, health should now "
-                 "be 1 and speed 0.5. They are:"
-              << e.GetHealth() << ", " << e.GetSpeed() << std::endl;
-
-    e.getHit(2);
-    e.Slow(0.5);
-    std::cout << "The enemy got hit by 2 and slowed by 0.5, health should now "
-                 "be 0 (not -1) and speed 0.5 (not 0). They are:"
-              << e.GetHealth() << ", " << e.GetSpeed() << std::endl;
-
-    std::cout << "Testing Enemy subclasses!" << std::endl;
-
-    auto easy = EasyEnemy(Coordinate(1, 1));
-    std::cout << "EasyEnemy should be (1.0, 1, 3) is (" << easy.GetSpeed()
-              << ", " << easy.GetHealth() << ", " << easy.GetWorth() << ")."
-              << std::endl;
-
-    auto splitting = SplittingEnemy(Coordinate(1, 1));
-    std::cout << "SplittingEnemy should be (2.0, 3, 5) is ("
-              << splitting.GetSpeed() << ", " << splitting.GetHealth() << ", "
-              << splitting.GetWorth() << ")." << std::endl;
-
-    auto hard = HardEnemy(Coordinate(1, 1));
-    std::cout << "HardEnemy should be (3.0, 5, 10) is (" << hard.GetSpeed()
-              << ", " << hard.GetHealth() << ", " << hard.GetWorth() << ")."
-              << std::endl;
-
-    hard.getHit(2);
-    hard.Slow(0.5);
-    std::cout
-        << "The HardEnemy got hit by 2 and slowed by 0.5, health should now "
-           "be 3 and speed 2.5. They are:"
-        << hard.GetHealth() << ", " << hard.GetSpeed() << std::endl;
-
-    std::cout << "End!" << std::endl;
-  }
-
-  void testTowers() {
-    std::cout << "Testing Tower class!" << std::endl;
-
-    auto e = Enemy(5.0, 3, Coordinate(1, 1), 5);
-    auto t = Tower(100, 3, 2, Coordinate(1, 1), 1);
-
-    std::cout << "Tower should be (100, 3, 2, 1) is (" << t.GetCost() << ", "
-              << t.GetSpeed() << ", " << t.GetDamage() << ", " << t.GetRange()
-              << ")." << std::endl;
-
-    t.Attack(e);
-    t.Slow(e);
-
-    std::cout
-        << "The enemy got hit by 2 and slowed by 2, should now be (1, 3), "
-           "is: ("
-        << e.GetHealth() << ", " << e.GetSpeed() << ")." << std::endl;
-
-    std::cout << "End!" << std::endl;
-  }
-
   void testGame() {
     auto game = Game("Matias", Map());
     game.GetPlayer().AddMoney(50);
@@ -175,6 +108,9 @@ class test {
     map.AddCoordinate(Coordinate(600, 500));
     Game game = Game("Gargamel", map);
     auto enemy = Enemy(2.5, 3, Coordinate(0, 0), 5, &game);
+    game.AddEnemy(enemy);
+    auto tower = SlowingTower(Coordinate(100, 100), &game);
+    game.AddTower(tower);
 
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Tower Defense!");
     window.setPosition(sf::Vector2(50, 50));
@@ -185,16 +121,20 @@ class test {
     sf::CircleShape node3(10.f);
     sf::CircleShape node4(10.f);
     sf::CircleShape node5(10.f);
+    sf::CircleShape towerShape(10.f);
     node1.setFillColor(sf::Color::Blue);
     node2.setFillColor(sf::Color::Blue);
     node3.setFillColor(sf::Color::Blue);
     node4.setFillColor(sf::Color::Blue);
     node5.setFillColor(sf::Color::Magenta);
+    towerShape.setFillColor(sf::Color::Green);
     node1.setPosition(map.GetNode(0).getX() - 10, map.GetNode(0).getY() - 10);
     node2.setPosition(map.GetNode(1).getX() - 10, map.GetNode(1).getY() - 10);
     node3.setPosition(map.GetNode(2).getX() - 10, map.GetNode(2).getY() - 10);
     node4.setPosition(map.GetNode(3).getX() - 10, map.GetNode(3).getY() - 10);
     node5.setPosition(map.GetNode(4).getX() - 10, map.GetNode(4).getY() - 10);
+    towerShape.setPosition(tower.GetPlace().getX() - 10,
+                           tower.GetPlace().getY() - 10);
     nodes.push_back(node1);
     nodes.push_back(node2);
     nodes.push_back(node3);
@@ -213,10 +153,12 @@ class test {
       }
       window.clear();
       window.draw(shape);
+      window.draw(towerShape);
       for (auto n : nodes) {
         window.draw(n);
       }
       window.display();
+      tower.Defend();
 
       auto moved = enemy.Move();
       if (!moved) {
@@ -225,6 +167,7 @@ class test {
       }
       shape.setPosition(enemy.GetCoord().getX() - 20,
                         enemy.GetCoord().getY() - 20);
+
       usleep(10000);
     }
   }
@@ -236,7 +179,7 @@ class test {
     auto enemy = Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
     game.AddEnemy(enemy);
     Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
-                                       Coordinate(-1, 0), bomb, game);
+                                       Coordinate(-1, 0), bomb, &game);
 
     sf::CircleShape proj(20.f);
     sf::CircleShape enem(50.f);
@@ -340,7 +283,7 @@ class test {
     Game game = Game("Gargamel", map);
     auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game);
     sf::Texture mapTexture;
-    if (!mapTexture.loadFromFile("graphics/Level1.png")) {
+    if (!mapTexture.loadFromFile("../graphics/Level1.png")) {
       std::cout << "unable to load texture from file" << std::endl;
       exit(-1);
     }
@@ -405,7 +348,7 @@ class test {
     float r = 0;
     sf::RenderWindow window(sf::VideoMode(800, 600), "TowerDefence");
     sf::Texture enemyTexture;
-    if (!enemyTexture.loadFromFile("graphics/enemy1.png")) {
+    if (!enemyTexture.loadFromFile("../graphics/enemy1.png")) {
       std::cout << "unable to load enemy texture from file" << std::endl;
       exit(-1);
     }

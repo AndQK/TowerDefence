@@ -7,6 +7,8 @@
 #include "Enemy.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
+#include "Projectile.hpp"
+#include "Tower.hpp"
 
 class Game {
  public:
@@ -21,6 +23,10 @@ class Game {
 
   // Adds enemy to the current game
   void AddEnemy(Enemy& enemy);
+
+  void AddTower(Tower& tower);
+
+  void AddProjectile(Projectile& projectile);
 
   // Gets the current player
   Player& GetPlayer();
@@ -39,6 +45,8 @@ class Game {
 
   // Vector of enemies currently in game.
   std::vector<Enemy*> enemies_;
+  std::vector<Tower*> towers_;
+  std::vector<Projectile*> projectiles_;
 };
 
 #endif

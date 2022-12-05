@@ -5,7 +5,7 @@
 
 class HardEnemy : public Enemy {
  public:
-  HardEnemy(Coordinate place);
+  HardEnemy(Coordinate place, Game* game);
 };
 
 #endif
