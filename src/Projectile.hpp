@@ -37,7 +37,7 @@ class Projectile {
 
   // Distance where the collision between projectiles and enemies happen.
   // Could be changed to be different with different enemies.s
-  const double COLLISION_DISTANCE = 50;
+  const double COLLISION_DISTANCE = 35;
 };
 
 #endif

@@ -106,11 +106,27 @@ class test {
     map.AddCoordinate(Coordinate(250, 50));
     map.AddCoordinate(Coordinate(100, 50));
     map.AddCoordinate(Coordinate(600, 500));
+    map.AddCoordinate(Coordinate(800, 100));
+
     Game game = Game("Gargamel", map);
     auto enemy = new Enemy(2.5, 3, Coordinate(0, 0), 5, &game);
     game.AddEnemy(enemy);
     auto tower = new SlowingTower(Coordinate(100, 100), &game);
+    auto tower2 = new SlowingTower(Coordinate(600, 400), &game);
     game.AddTower(tower);
+    game.AddTower(tower2);
+
+    std::vector<sf::CircleShape> towers;
+    sf::CircleShape towerShape(10.f);
+    sf::CircleShape towerShape2(10.f);
+    towerShape.setFillColor(sf::Color::Green);
+    towerShape2.setFillColor(sf::Color::Green);
+    towerShape.setPosition(tower->GetPlace().getX() - 10,
+                           tower->GetPlace().getY() - 10);
+    towerShape2.setPosition(tower2->GetPlace().getX() - 10,
+                            tower2->GetPlace().getY() - 10);
+    towers.push_back(towerShape);
+    towers.push_back(towerShape2);
 
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Tower Defense!");
     window.setPosition(sf::Vector2(50, 50));
@@ -121,31 +137,32 @@ class test {
     sf::CircleShape node3(10.f);
     sf::CircleShape node4(10.f);
     sf::CircleShape node5(10.f);
-    sf::CircleShape towerShape(10.f);
+    sf::CircleShape node6(10.f);
     node1.setFillColor(sf::Color::Blue);
     node2.setFillColor(sf::Color::Blue);
     node3.setFillColor(sf::Color::Blue);
     node4.setFillColor(sf::Color::Blue);
-    node5.setFillColor(sf::Color::Magenta);
-    towerShape.setFillColor(sf::Color::Green);
+    node5.setFillColor(sf::Color::Blue);
+    node6.setFillColor(sf::Color::Magenta);
     node1.setPosition(map.GetNode(0).getX() - 10, map.GetNode(0).getY() - 10);
     node2.setPosition(map.GetNode(1).getX() - 10, map.GetNode(1).getY() - 10);
     node3.setPosition(map.GetNode(2).getX() - 10, map.GetNode(2).getY() - 10);
     node4.setPosition(map.GetNode(3).getX() - 10, map.GetNode(3).getY() - 10);
     node5.setPosition(map.GetNode(4).getX() - 10, map.GetNode(4).getY() - 10);
-    towerShape.setPosition(tower->GetPlace().getX() - 10,
-                           tower->GetPlace().getY() - 10);
+    node6.setPosition(map.GetNode(5).getX() - 10, map.GetNode(5).getY() - 10);
+
     nodes.push_back(node1);
     nodes.push_back(node2);
     nodes.push_back(node3);
     nodes.push_back(node4);
     nodes.push_back(node5);
+    nodes.push_back(node6);
 
     std::vector<sf::CircleShape> projectiles;
 
-    sf::CircleShape shape(20.f);
-    shape.setPosition(enemy->GetCoord().getX(), enemy->GetCoord().getY());
-    shape.setFillColor(sf::Color::Red);
+    sf::CircleShape enemyShape(20.f);
+    enemyShape.setPosition(enemy->GetCoord().getX(), enemy->GetCoord().getY());
+    enemyShape.setFillColor(sf::Color::Red);
     sf::Event event;
     while (window.isOpen()) {
       while (window.pollEvent(event)) {
@@ -154,8 +171,8 @@ class test {
         }
       }
       window.clear();
-      window.draw(shape);
-      window.draw(towerShape);
+      window.draw(enemyShape);
+      for (auto t : towers) window.draw(t);
       if (game.GetProjectiles().size() > projectiles.size()) {
         sf::CircleShape p(5.f);
         p.setFillColor(sf::Color::Cyan);
@@ -164,7 +181,7 @@ class test {
         projectiles.push_back(p);
       }
 
-      for (int i = 0; i < projectiles.size(); i++) {
+      for (int i = 0; i < game.GetProjectiles().size(); i++) {
         projectiles.at(i).setPosition(
             game.GetProjectiles().at(i)->GetPosition().getX() - 5,
             game.GetProjectiles().at(i)->GetPosition().getY() - 5);
@@ -173,17 +190,17 @@ class test {
       for (auto n : nodes) window.draw(n);
 
       window.display();
-      tower->Defend();
 
       for (auto i : game.GetProjectiles()) i->Move();
+      for (auto i : game.GetTowers()) i->Defend();
 
       auto moved = enemy->Move();
       if (!moved) {
         usleep(2000000);
         break;
       }
-      shape.setPosition(enemy->GetCoord().getX() - 20,
-                        enemy->GetCoord().getY() - 20);
+      enemyShape.setPosition(enemy->GetCoord().getX() - 20,
+                             enemy->GetCoord().getY() - 20);
 
       usleep(10000);
     }

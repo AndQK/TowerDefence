@@ -69,10 +69,12 @@ Map Game::GetMap() const {
 }
 
 void Game::RemoveProjectile(Projectile* projectile) {
-  projectiles_.erase(
-      std::remove_if(projectiles_.begin(), projectiles_.end(),
-                     [&](Projectile* p) { return p = projectile; }),
-      projectiles_.end());
+  /** TODO needs fixind **/
+  auto remove = std::find_if(projectiles_.begin(), projectiles_.end(),
+                             [&](Projectile* p) { return p == projectile; });
+  delete (*remove);
+  auto iter = projectiles_.erase(remove);
+  std::cout << "removed succesfully" << std::endl;
 }
 
 void RemoveEnemy(Enemy& enemy);
@@ -84,5 +86,7 @@ Game::~Game() {
 }
 
 std::vector<Enemy*> Game::GetEnemies() { return enemies_; }
+
+std::vector<Tower*> Game::GetTowers() { return towers_; }
 
 std::vector<Projectile*> Game::GetProjectiles() { return projectiles_; }
