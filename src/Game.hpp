@@ -1,6 +1,8 @@
 #ifndef TOWER_DEFENSE_GAME
 #define TOWER_DEFENSE_GAME
 
+#include <unistd.h>
+
 #include <chrono>
 #include <vector>
 
@@ -27,6 +29,12 @@ class Game {
   void AddTower(Tower& tower);
 
   void AddProjectile(Projectile& projectile);
+
+  void sustainFramerate(std::chrono::steady_clock::time_point beg,
+                        std::chrono::steady_clock::time_point end);
+
+  // Update enemies, projectiles and towers in the game.
+  void Update();
 
   // Gets the current player
   Player& GetPlayer();
