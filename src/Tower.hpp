@@ -1,6 +1,7 @@
 #ifndef TOWER_DEFENSE_TOWER
 #define TOWER_DEFENSE_TOWER
 
+#include <chrono>
 #include <vector>
 
 #include "Coordinate.hpp"
@@ -23,7 +24,8 @@ class Tower {
   // Tower defends its ground by attacking or slowing enemies.
   virtual void Defend() = 0;
 
-
+  // Shoot towards enemy with correct projectile type
+  void Shoot(ProjectileType type);
 
   // Enables the player to move the tower during the game.
   void Move(Coordinate c);
@@ -49,8 +51,12 @@ class Tower {
   // The cost of buying the tower.
   int cost_;
 
-  // The speed the tower shoots enemies at.
+  // The speed the tower shoots enemies at. (Projectiles per second)
   int speed_;
+
+  // Time since last shoot
+  std::chrono::steady_clock::time_point lastShot =
+      std::chrono::steady_clock::now();
 
   // The amount of damage the tower deals to hit enemies.
   int damage_;

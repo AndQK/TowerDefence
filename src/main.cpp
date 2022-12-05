@@ -14,9 +14,9 @@ int main(int, char**) {
   // t.testMap();
   // t.testPlayer();
   // t.testSprites();
-  t.testGame();
+  // t.testGame();
   // t.testGraphics();
-  // t.testEnemyMovement();
+  t.testEnemyMovement();
   // t.testProjectiles();
   // t.testRotate();
   // t.testGuiFunctions();

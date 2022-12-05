@@ -20,15 +20,17 @@ class Game {
   // Default constructor
   Game();
 
+  ~Game();
+
   // Starting the game, the main loop is in this function
   void StartGame();
 
   // Adds enemy to the current game
-  void AddEnemy(Enemy& enemy);
+  void AddEnemy(Enemy* enemy);
 
-  void AddTower(Tower& tower);
+  void AddTower(Tower* tower);
 
-  void AddProjectile(Projectile& projectile);
+  void AddProjectile(Projectile* projectile);
 
   void sustainFramerate(std::chrono::steady_clock::time_point beg,
                         std::chrono::steady_clock::time_point end);
@@ -44,6 +46,12 @@ class Game {
 
   // Gets the enemies currently in the game.
   std::vector<Enemy*> GetEnemies();
+
+  void RemoveProjectile(Projectile* projectile);
+
+  void RemoveEnemy(Enemy& enemy);
+
+  std::vector<Projectile*> GetProjectiles();
 
  private:
   Player player_;

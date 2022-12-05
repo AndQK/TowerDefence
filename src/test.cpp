@@ -107,9 +107,9 @@ class test {
     map.AddCoordinate(Coordinate(100, 50));
     map.AddCoordinate(Coordinate(600, 500));
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(2.5, 3, Coordinate(0, 0), 5, &game);
+    auto enemy = new Enemy(2.5, 3, Coordinate(0, 0), 5, &game);
     game.AddEnemy(enemy);
-    auto tower = SlowingTower(Coordinate(100, 100), &game);
+    auto tower = new SlowingTower(Coordinate(100, 100), &game);
     game.AddTower(tower);
 
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Tower Defense!");
@@ -133,8 +133,8 @@ class test {
     node3.setPosition(map.GetNode(2).getX() - 10, map.GetNode(2).getY() - 10);
     node4.setPosition(map.GetNode(3).getX() - 10, map.GetNode(3).getY() - 10);
     node5.setPosition(map.GetNode(4).getX() - 10, map.GetNode(4).getY() - 10);
-    towerShape.setPosition(tower.GetPlace().getX() - 10,
-                           tower.GetPlace().getY() - 10);
+    towerShape.setPosition(tower->GetPlace().getX() - 10,
+                           tower->GetPlace().getY() - 10);
     nodes.push_back(node1);
     nodes.push_back(node2);
     nodes.push_back(node3);
@@ -142,7 +142,7 @@ class test {
     nodes.push_back(node5);
 
     sf::CircleShape shape(20.f);
-    shape.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
+    shape.setPosition(enemy->GetCoord().getX(), enemy->GetCoord().getY());
     shape.setFillColor(sf::Color::Red);
     sf::Event event;
     while (window.isOpen()) {
@@ -158,15 +158,17 @@ class test {
         window.draw(n);
       }
       window.display();
-      tower.Defend();
+      tower->Defend();
+      /**for (auto i : game.GetProjectiles())
+        i->Move();*/
 
-      auto moved = enemy.Move();
+      auto moved = enemy->Move();
       if (!moved) {
         usleep(2000000);
         break;
       }
-      shape.setPosition(enemy.GetCoord().getX() - 20,
-                        enemy.GetCoord().getY() - 20);
+      shape.setPosition(enemy->GetCoord().getX() - 20,
+                        enemy->GetCoord().getY() - 20);
 
       usleep(10000);
     }
@@ -176,15 +178,15 @@ class test {
     Map map = Map();
     map.AddCoordinate(Coordinate(700, 300));
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
+    auto enemy = new Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
     game.AddEnemy(enemy);
     Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
                                        Coordinate(-1, 0), bomb, &game);
 
     sf::CircleShape proj(20.f);
     sf::CircleShape enem(50.f);
-    enem.setPosition(enemy.GetCoord().getX() - 50,
-                     enemy.GetCoord().getY() - 50);
+    enem.setPosition(enemy->GetCoord().getX() - 50,
+                     enemy->GetCoord().getY() - 50);
     proj.setPosition(projectile.GetPosition().getX() - 20,
                      projectile.GetPosition().getY() - 20);
     enem.setFillColor(sf::Color::Red);
@@ -199,12 +201,12 @@ class test {
           window.close();
         }
       }
-      if (!enemy.Move()) {
+      if (!enemy->Move()) {
         window.close();
         usleep(1000000);
       }
-      enem.setPosition(enemy.GetCoord().getX() - 50,
-                       enemy.GetCoord().getY() - 50);
+      enem.setPosition(enemy->GetCoord().getX() - 50,
+                       enemy->GetCoord().getY() - 50);
 
       projectile.Move();
       proj.setPosition(projectile.GetPosition().getX() - 20,

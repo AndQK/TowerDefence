@@ -1,5 +1,9 @@
 #include "Game.hpp"
 
+#include <unistd.h>
+
+#include <algorithm>
+
 Game::Game(const std::string& name, const Map& map)
     : player_(Player(name)), map_(map) {}
 
@@ -49,12 +53,12 @@ void Game::Update() {
   for (auto tower : this->towers_) tower->Defend();
 }
 
-void Game::AddEnemy(Enemy& enemy) { enemies_.push_back(&enemy); }
+void Game::AddEnemy(Enemy* enemy) { enemies_.push_back(enemy); }
 
-void Game::AddTower(Tower& tower) { towers_.push_back(&tower); }
+void Game::AddTower(Tower* tower) { towers_.push_back(tower); }
 
-void Game::AddProjectile(Projectile& projectile) {
-  projectiles_.push_back(&projectile);
+void Game::AddProjectile(Projectile* projectile) {
+  projectiles_.push_back(projectile);
 }
 
 Player& Game::GetPlayer() { return player_; }
@@ -64,4 +68,21 @@ Map Game::GetMap() const {
   return m;
 }
 
+void Game::RemoveProjectile(Projectile* projectile) {
+  projectiles_.erase(
+      std::remove_if(projectiles_.begin(), projectiles_.end(),
+                     [&](Projectile* p) { return p = projectile; }),
+      projectiles_.end());
+}
+
+void RemoveEnemy(Enemy& enemy);
+
+Game::~Game() {
+  for (auto p : projectiles_) delete p;
+  for (auto e : enemies_) delete e;
+  for (auto t : towers_) delete t;
+}
+
 std::vector<Enemy*> Game::GetEnemies() { return enemies_; }
+
+std::vector<Projectile*> Game::GetProjectiles() { return projectiles_; }
