@@ -5,7 +5,7 @@
 
 class EasyEnemy : public Enemy {
  public:
-  EasyEnemy(Coordinate place);
+  EasyEnemy(Coordinate place, Game* game);
 };
 
 #endif

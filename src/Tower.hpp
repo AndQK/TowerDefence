@@ -1,23 +1,29 @@
 #ifndef TOWER_DEFENSE_TOWER
 #define TOWER_DEFENSE_TOWER
 
+#include <vector>
+
 #include "Coordinate.hpp"
 #include "Enemy.hpp"
+#include "Projectile.hpp"
 
 class Game;
 
 class Tower {
  public:
-  explicit Tower(int cost, int speed, int damage, Coordinate place, int range);
-
   Tower(int cost, int speed, int damage, Coordinate place, int range,
         Game* game);
 
   // Attacks the enemies in its range.
-  void Attack(Enemy &e);
+  void Attack(Enemy& e);
 
   // Slows down the enemy.
-  void Slow(Enemy &e);
+  void Slow(Enemy& e);
+
+  // Tower defends its ground by attacking or slowing enemies.
+  virtual void Defend() = 0;
+
+
 
   // Enables the player to move the tower during the game.
   void Move(Coordinate c);
@@ -36,6 +42,8 @@ class Tower {
 
   // Gets the range in which the tower can shoots enemies in.
   const int& GetRange() const;
+
+  Game* GetGame() const;
 
  private:
   // The cost of buying the tower.

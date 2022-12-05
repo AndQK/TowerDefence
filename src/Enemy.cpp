@@ -4,17 +4,17 @@
 
 #include "Game.hpp"
 
-Enemy::Enemy(float speed, int health, Coordinate place, int worth)
+/**Enemy::Enemy(float speed, int health, Coordinate place, int worth)
     : speed_(speed),
       health_(health),
       place_(place),
       worth_(worth),
       currentNode_(0),
       distance_(0),
-      game_(new Game()),  // Error here
+      game_(new Game()),  
       direction_(Coordinate(0, 0)) {
   std::cout << "Creating enemy" << std::endl;
-}
+}*/
 
 Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game)
     : speed_(speed),
@@ -32,6 +32,13 @@ void Enemy::getHit(int amount) {
     health_ = 0;
   else
     health_ -= amount;
+}
+
+bool operator<(const Enemy& e1, const Enemy& e2) {
+  if (e2.GetDistance() == e1.GetDistance()) {
+    return e1.GetDistance();
+  }
+  return e2.GetDistance() < e1.GetDistance();
 }
 
 bool Enemy::Move() {
