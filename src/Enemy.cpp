@@ -28,91 +28,74 @@ Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game)
 }
 
 void Enemy::getHit(int amount) {
-  if (hetl_h = < ; amount) {
-    health_
-  }
-  = t 0;
-  t game_->RemoveEnemy(this);
+  std::cout << "Enemy has " << health_ << " health." << std::endl;
+  if (health_ < amount) {
+    health_ = 0;
+    game_->RemoveEnemy(this);
+  } else
+    health_ -= amount;
 }
-{ eseeselth_pp -= eeamount; }
-} else
-    hbarh<cn stEnem& est Enemy& e2) {
+
+bool operator<(const Enemy& e1, const Enemy& e2) {
   if (e2.GetDistance() == e1.GetDistance()) {
-boo
- op r to h(bo ha on (ye.G1, c   hb rhaon (e.Ge ist
-(  {b rhne. GeDistnce() <
-    rtDust n1e()t
-}<<atur
- ;
-{ }t    ab 
-emy: e1Move) {
-      ol tonxtNode = (*_).GetMaetNogamede(currentNode_);
-      doub d tancle = (n ise ex - thtNodtanc e isace_).getLength();
-      //  is nnode, switch to next node unless next node is the
-      // l      de.
-  afsgdistaato < speed_t*a1.5)n{:=
-ed- th/ :enden;:eddl;
-    if ecur
-      tcurrutt  // :cNl<<
-          "R  ch
-          dtfinalnde tinafson,
-          remov h a th Rdista < dlst;
-    u std::ricuse {
-    el:
-      eu e elrn false;
-    }
-    nd d cuse {
-      curre << std::endl;
-      d_(di rection_* spee d_ c cuuce_ =
-             place_ + (dcurrentNode_) - this->place_;
-         irection_ * speed_);
+    return e1.GetDistance();
+  }
+  return e2.GetDistance() < e1.GetDistance();
+}
+
+bool Enemy::Move() {
+  auto nextNode = (*game_).GetMap().GetNode(currentNode_);
+  double distance = (nextNode - this->place_).getLength();
+  // if enemy is near the node, switch to next node unless next node is the
+  // last node.
+  if (distance < speed_ * 1.5) {
+    if (currentNode_ >= (*game_).GetMap().GetNofNodes() - 1) {
+      game_->RemoveEnemy(this);
+      game_->GetPlayer().reduceHealth();
+      return false;
+    } else {
+      currentNode_++;
+      auto direction_raw =
+          (*game_).GetMap().GetNode(currentNode_) - this->place_;
       direction_ = direction_raw / direction_raw.getLength();
-      disane_ += speed_;
-      return true;
     }
-
-    // Move towards th
-
-    t auto t nurn tru e;
-    a t oi
-  }
-  -nurn true;
- 
- }
-AnbAgy:():{
-      doAngle() u {
-        b uy = direction_.getY d isiv Eoa tble anglee = 0;
-        mfy((std::ata : 2(y, x) * 180 / 3.1415926535) > 0) {
-        an:
-          get
-        }
-      }
-      else {
-        an2 ealel = std::atan2(y, x) * 180 / 3.1415926535;
-        h() hoalth
-      }
-}
-
-no tlem= wtd::fmod((-angles+ 270), 360);
-
-  ptSurnpadgle;
   }
 
-  cons float tem ' wspttSp{ed drnat sCon tem' wspr d dwortha
+  // Move towards the next node with the speed_
+  place_ = place_ + (direction_ * speed_);
+  distance_ += speed_;
+  return true;
 }
 
-om o const / C t& Ensay::GatHe lthtet' w enr detarnhur/let_;so rdetas conpt elerdinate& Enemy::Getce h_odplan() cr; urn stp a_;
+void Enemy::Slow(double s) {
+  auto t = s;
+  if (speed_ - t > 0) speed_ -= s;
 }
-Enaon::hetWo anc  const {tacea
 
- worth o D
-  oa
-aonh c  t&hoemy::Gplacista)ce() c
-      return}distance_;
+float Enemy::getAngle() {
+  double PI = 3.1415926535;
+  double y = direction_.getY();
+  double x = -direction_.getX();
+  double angle = 0;
+  if ((std::atan2(y, x) * 180 / 3.1415926535) > 0) {
+    angle = -360 + std::atan2(y, x) * 180 / 3.1415926535;
+  } else {
+    angle = std::atan2(y, x) * 180 / 3.1415926535;
+  }
+  angle = std::fmod((-angle + 270), 360);
+
+  return angle;
 }
-oplsa emn'rtsdinaeesCooCoordrda(a) co_st { c//oGet thplacesta n worth co Cuordinapelece W h_emyGplac() rth() w; return_; ace_;
-}
-scDist tn_esiancn_;
-oord E aneemy::GetDnDnCoordonst {
-  {
-    pl
+
+const float& Enemy::GetSpeed() const { return speed_; }
+
+// Get the enemy's health
+const int& Enemy::GetHealth() const { return health_; }
+
+// Get the enemy's coordinates
+const Coordinate& Enemy::GetCoord() const { return place_; }
+
+// Get the enemy's worth
+const int& Enemy::GetWorth() const { return worth_; }
+
+const int& Enemy::GetDistance() const { return distance_; }
