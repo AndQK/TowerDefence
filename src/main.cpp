@@ -9,6 +9,7 @@
 
 #include "test.cpp"
 
+
 int main(int, char**) {
   auto t = test();
   // t.testEnemies();
@@ -20,7 +21,7 @@ int main(int, char**) {
   // t.testEnemyMovement();
   // t.testProjectiles();
   // t.testRotate();
-  t.testGuiFunctions();
+  t.testGui();
   return 0;
 }
 

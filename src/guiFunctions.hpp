@@ -1,4 +1,4 @@
-#ifndef TOWER_DEFENCE_GUIFUNCTIONS
+/* #ifndef TOWER_DEFENCE_GUIFUNCTIONS
 #define TOWER_DEFENCE_GUIFUNCTIONS
 
 #include <SFML/Graphics.hpp>
@@ -21,4 +21,4 @@ std::vector<sf::Vector2f> createAndDrawGameScreen(
 void drawDrawables(sf::RenderWindow &window,
                    std::vector<sf::Drawable *> drawables);
 
-#endif
+#endif */
