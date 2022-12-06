@@ -5,7 +5,10 @@
 
 class SlowingTower : public Tower {
  public:
-  SlowingTower(Coordinate place) : Tower(100, 5, 1, place, 4){};
+  SlowingTower(Coordinate place, Game* game)
+      : Tower(100, 8, 1, place, 250, game) {}
+
+  void Defend() { this->Shoot(slow); }
 };
 
 #endif

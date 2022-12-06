@@ -2,14 +2,14 @@
 #define TOWER_DEFENSE_PROJECTILE
 
 #include "Coordinate.hpp"
-#include "Game.hpp"
 
 enum ProjectileType { normal, bomb, slow };
 
+class Game;
 class Projectile {
  public:
   Projectile(double speed, double damage, const Coordinate& position,
-             const Coordinate& direction, ProjectileType type, Game& game);
+             const Coordinate& direction, ProjectileType type, Game* game);
 
   // Gets the current position of the projectile
   Coordinate GetPosition();
@@ -30,14 +30,14 @@ class Projectile {
   double damage_;
 
   // The game that the projectile belongs to.
-  Game game_;
+  Game* game_;
 
   // The type of the projectile, etc bomb or slow
   ProjectileType type_;
 
   // Distance where the collision between projectiles and enemies happen.
   // Could be changed to be different with different enemies.s
-  const double COLLISION_DISTANCE = 50;
+  const double COLLISION_DISTANCE = 35;
 };
 
 #endif

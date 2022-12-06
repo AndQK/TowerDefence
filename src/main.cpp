@@ -5,7 +5,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <math.h>
 
 #include "test.cpp"
 
@@ -15,13 +14,13 @@ int main(int, char**) {
   // t.testEnemies();
   // t.testMap();
   // t.testPlayer();
-  //t.testSprites();
+  // t.testSprites();
   // t.testGame();
   // t.testGraphics();
-  // t.testEnemyMovement();
+  //t.testEnemyMovement();
   // t.testProjectiles();
   // t.testRotate();
-  t.testGui();
+   t.testGui();
   return 0;
 }
 
