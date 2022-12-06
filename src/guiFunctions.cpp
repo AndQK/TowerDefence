@@ -1,5 +1,5 @@
 
-#include "guiFunctions.hpp"
+/*#include "guiFunctions.hpp"
 
 #include <string>
 
@@ -162,4 +162,4 @@ void createAndDrawPlayerInfo(sf::RenderWindow &window, int health, int wave,
 
   drawDrawables(window, drawables);
 
-}
+}*/
