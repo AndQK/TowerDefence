@@ -45,6 +45,8 @@ class Level {
  public:
   Level(int initial_money, Game* game);
 
+  Level();
+
   int initial_money() const;
 
   // updates the level.

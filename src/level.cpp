@@ -30,6 +30,8 @@ void Wave::update() {
 
 bool Wave::ended() { return enemiesSpawned == enemyAmount; }
 
+Level::Level() : initial_money_(100), game_(nullptr), currentWave_(0) {}
+
 Level::Level(int initial_money, Game* game)
     : initial_money_(initial_money), game_(game), currentWave_(0) {
   auto w1 = new Wave(1, game);

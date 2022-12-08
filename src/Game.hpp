@@ -63,7 +63,7 @@ class Game {
  private:
   Player player_;
   Map map_;
-  Level level_ = Level(100, this);
+  Level level_;
 
   int FPS = 100;
 

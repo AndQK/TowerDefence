@@ -50,6 +50,7 @@ void Map::loadCoordinates(std::string file) {
                   << std::endl;
       }
     }
+    myFile.close();
   } else {
     std::cout << "Couldn't open file" << std::endl;
   }
