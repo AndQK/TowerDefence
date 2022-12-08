@@ -2,6 +2,8 @@
 #define TOWER_DEFENSE_MAP
 
 #include <vector>
+#include <sstream>
+#include <fstream>
 
 #include "Coordinate.hpp"
 
@@ -25,6 +27,9 @@ class Map {
   // Gets the amount of nodes.
   // If enemy is on the last node, it means enemy got through the defenses.
   int GetNofNodes() const;
+
+  // loads enemy's path from a file
+  void loadCoordinates(std::string file);
 
  private:
   // Enemies path
