@@ -1,12 +1,12 @@
 #include "Gui.hpp"
 
 Gui::Gui(Game &game) {
-  if (!level_1_Texture_.loadFromFile("graphics/Level1.png")) {
+  if (!level_1_Texture_.loadFromFile("../graphics/Level1.png")) {
     std::cout << "unable to load texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!level_2_Texture_.loadFromFile("graphics/Level2.png")) {
+  if (!level_2_Texture_.loadFromFile("../graphics/Level2.png")) {
     std::cout << "unable to load texture from file" << std::endl;
     exit(-1);
   }
@@ -17,37 +17,37 @@ Gui::Gui(Game &game) {
       }
     */
 
-  if (!mainMenuTexture_.loadFromFile("graphics/mainMenu.png")) {
+  if (!mainMenuTexture_.loadFromFile("../graphics/mainMenu.png")) {
     std::cout << "unable to load texture form file" << std::endl;
     exit(-1);
   }
 
-  if (!diamondTowerTexture_.loadFromFile("graphics/diamondGun.png")) {
+  if (!diamondTowerTexture_.loadFromFile("../graphics/diamondGun.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!teslaTowerTexture_.loadFromFile("graphics/tesla.png")) {
+  if (!teslaTowerTexture_.loadFromFile("../graphics/tesla.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!turretTowerTexture_.loadFromFile("graphics/turret.png")) {
+  if (!turretTowerTexture_.loadFromFile("../graphics/turret.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!rocketTowerTexture_.loadFromFile("graphics/rocketGreen.png")) {
+  if (!rocketTowerTexture_.loadFromFile("../graphics/rocketGreen.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!iceTowerTexture_.loadFromFile("graphics/iceRocket.png")) {
+  if (!iceTowerTexture_.loadFromFile("../graphics/iceRocket.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!font_.loadFromFile("graphics/ARLRDBD.TTF")) {
+  if (!font_.loadFromFile("../graphics/ARLRDBD.TTF")) {
     std::cout << "unable to load font from file" << std::endl;
     exit(-1);
   }
