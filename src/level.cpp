@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <level.hpp>
 
+#include "Game.hpp"
+
 Wave::Wave(int spawnRate, Game* game) : spawnRate_(spawnRate), game_(game) {
   lastSpawn_ = std::chrono::steady_clock::now();
 }
@@ -28,12 +30,12 @@ void Wave::update() {
 
 bool Wave::ended() { return enemiesSpawned == enemyAmount; }
 
-Level::Level(int initial_money, Map& Map, Game* game)
+Level::Level(int initial_money, Game* game)
     : initial_money_(initial_money), game_(game), currentWave_(0) {
   auto w1 = new Wave(1, game);
-  auto e1 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_);
-  auto e2 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_);
-  auto e3 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_);
+  auto e1 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
+  auto e2 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
+  auto e3 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
   w1->addEnemy(e1);
   w1->addEnemy(e2);
   w1->addEnemy(e3);

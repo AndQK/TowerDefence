@@ -11,6 +11,7 @@
 #include "Player.hpp"
 #include "Projectile.hpp"
 #include "Tower.hpp"
+#include "level.hpp"
 
 class Game {
  public:
@@ -32,6 +33,8 @@ class Game {
 
   void AddProjectile(Projectile* projectile);
 
+  void SetLevel(Level& level);
+
   void sustainFramerate(std::chrono::steady_clock::time_point beg,
                         std::chrono::steady_clock::time_point end);
 
@@ -43,6 +46,8 @@ class Game {
 
   // Gets the current map the game is played on
   Map GetMap() const;
+
+  Map GetLevel() const;
 
   // Gets the enemies currently in the game.
   std::vector<Enemy*> GetEnemies();
@@ -58,8 +63,9 @@ class Game {
  private:
   Player player_;
   Map map_;
+  Level level_ = Level(100, this);
 
-  const int FPS = 100;
+  int FPS = 100;
 
   // Vector of enemies currently in game.
   std::vector<Enemy*> enemies_;

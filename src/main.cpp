@@ -16,10 +16,10 @@ int main(int, char**) {
   // t.testSprites();
   // t.testGame();
   // t.testGraphics();
-  t.testEnemyMovement();
+  // t.testEnemyMovement();
   // t.testProjectiles();
   // t.testRotate();
-  // t.testGuiFunctions();
+  t.testGui();
   return 0;
 }
 

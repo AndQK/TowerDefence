@@ -6,15 +6,13 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "EasyEnemy.hpp"
 #include "Enemy.hpp"
 #include "Game.hpp"
-#include "HardEnemy.hpp"
+#include "Gui.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
 #include "Projectile.hpp"
 #include "SlowingTower.hpp"
-#include "SplittingEnemy.hpp"
 #include "Tower.hpp"
 #include "guiFunctions.hpp"
 #include "level.hpp"
@@ -110,8 +108,10 @@ class test {
     map.AddCoordinate(Coordinate(750, 50));
 
     Game game = Game("Gargamel", map);
-    auto level = Level(100, map, &game);
+    auto level = Level(100, &game);
 
+    auto enemy = new Enemy(2.5, 34, Coordinate(0, 0), 5, &game, 0);
+    game.AddEnemy(enemy);
     auto tower = new SlowingTower(Coordinate(100, 100), &game);
     auto tower2 = new SlowingTower(Coordinate(620, 300), &game);
     game.AddTower(tower);
@@ -201,7 +201,7 @@ class test {
                                e->GetCoord().getY() - 20);
       }
       if (game.GetEnemies().empty()) {
-        game.AddEnemy(new Enemy(2.5, 34, Coordinate(0, 0), 5, &game));
+        game.AddEnemy(new Enemy(2.5, 34, Coordinate(0, 0), 5, &game, 0));
       }
 
       usleep(10000);
@@ -212,7 +212,7 @@ class test {
     Map map = Map();
     map.AddCoordinate(Coordinate(700, 300));
     Game game = Game("Gargamel", map);
-    auto enemy = new Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
+    auto enemy = new Enemy(1.0, 3, Coordinate(0, 300), 5, &game, 0);
     game.AddEnemy(enemy);
     Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
                                        Coordinate(-1, 0), bomb, &game);
@@ -317,7 +317,7 @@ class test {
     nodes.push_back(node11);
 
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game);
+    auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game, 0);
     sf::Texture mapTexture;
     if (!mapTexture.loadFromFile("../graphics/Level1.png")) {
       std::cout << "unable to load texture from file" << std::endl;
@@ -428,106 +428,120 @@ class test {
       // usleep(1000);
     }
   }
-
-  void testGuiFunctions() {
-    int currentScreen = 0;
-
-    sf::Texture mapTexture;
-    if (!mapTexture.loadFromFile("graphics/Level1.png")) {
-      std::cout << "unable to load texture from file" << std::endl;
-      exit(-1);
+  void testGui() {
+    auto map = Map();
+    map.loadCoordinates("../path3.txt");
+    for (auto i : map.GetNodes()) {
+      std::cout << i << std::endl;
     }
-    sf::Texture mainMenuTexture;
-    if (!mainMenuTexture.loadFromFile("graphics/mainMenu.png")) {
-      std::cout << "unable to load texture form file" << std::endl;
-      exit(-1);
-    }
+    Game game = Game("Gargamel", map);
+    Level level = Level(100, &game);
+    auto enemy = new Enemy(1.0, 3, map.GetNodes().front(), 5, &game, 0);
+    game.AddEnemy(enemy);
+    Gui gui = Gui(game);
+    gui.run();
+  }
+};
 
-    std::vector<sf::Texture> towerTextures;
+/*void testGuiFunctions() {
+  int currentScreen = 0;
 
-    sf::Texture diamondTowerTexture;
-    if (!diamondTowerTexture.loadFromFile("graphics/diamondGun.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
+  sf::Texture mapTexture;
+  if (!mapTexture.loadFromFile("graphics/Level1.png")) {
+    std::cout << "unable to load texture from file" << std::endl;
+    exit(-1);
+  }
+  sf::Texture mainMenuTexture;
+  if (!mainMenuTexture.loadFromFile("graphics/mainMenu.png")) {
+    std::cout << "unable to load texture form file" << std::endl;
+    exit(-1);
+  }
 
-    sf::Texture teslaTowerTexture;
-    if (!teslaTowerTexture.loadFromFile("graphics/tesla.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
+  std::vector<sf::Texture> towerTextures;
 
-    sf::Texture turretTowerTexture;
-    if (!turretTowerTexture.loadFromFile("graphics/turret.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
+  sf::Texture diamondTowerTexture;
+  if (!diamondTowerTexture.loadFromFile("graphics/diamondGun.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
 
-    sf::Texture rocketTowerTexture;
-    if (!rocketTowerTexture.loadFromFile("graphics/rocketGreen.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
-    sf::Texture iceTowerTexture;
-    if (!iceTowerTexture.loadFromFile("graphics/iceRocket.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
-    sf::Font font;
-    if (!font.loadFromFile("graphics/ARLRDBD.TTF")) {
-      std::cout << "unable to load font from file" << std::endl;
-      exit(-1);
-    }
+  sf::Texture teslaTowerTexture;
+  if (!teslaTowerTexture.loadFromFile("graphics/tesla.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
 
-    towerTextures.push_back(diamondTowerTexture);
-    towerTextures.push_back(teslaTowerTexture);
-    towerTextures.push_back(turretTowerTexture);
-    towerTextures.push_back(rocketTowerTexture);
-    towerTextures.push_back(iceTowerTexture);
+  sf::Texture turretTowerTexture;
+  if (!turretTowerTexture.loadFromFile("graphics/turret.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
 
-    sf::RenderWindow window(sf::VideoMode(mapTexture.getSize().x / 2 + 200,
-                                          mapTexture.getSize().y / 2),
-                            "TowerDefence");
-    window.setPosition(sf::Vector2(50, 50));
-    while (window.isOpen()) {
-      window.clear();
-      switch (currentScreen) {
-        case 0:  // main menu:
-          createAndDrawGameMenu(window, mainMenuTexture);
-          break;
-        case 1:  // game screen:
-          std::vector<sf::Vector2f> coordinates =
-              createAndDrawGameScreen(window, mapTexture, towerTextures);
-          createAndDrawPlayerInfo(window, 0, 0, 0, font);
-          break;
+  sf::Texture rocketTowerTexture;
+  if (!rocketTowerTexture.loadFromFile("graphics/rocketGreen.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
+  sf::Texture iceTowerTexture;
+  if (!iceTowerTexture.loadFromFile("graphics/iceRocket.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
+  sf::Font font;
+  if (!font.loadFromFile("graphics/ARLRDBD.TTF")) {
+    std::cout << "unable to load font from file" << std::endl;
+    exit(-1);
+  }
+
+  towerTextures.push_back(diamondTowerTexture);
+  towerTextures.push_back(teslaTowerTexture);
+  towerTextures.push_back(turretTowerTexture);
+  towerTextures.push_back(rocketTowerTexture);
+  towerTextures.push_back(iceTowerTexture);
+
+  sf::RenderWindow window(sf::VideoMode(mapTexture.getSize().x / 2 + 200,
+                                        mapTexture.getSize().y / 2),
+                          "TowerDefence");
+  window.setPosition(sf::Vector2(50, 50));
+  while (window.isOpen()) {
+    window.clear();
+    switch (currentScreen) {
+      case 0:  // main menu:
+        createAndDrawGameMenu(window, mainMenuTexture);
+        break;
+      case 1:  // game screen:
+        std::vector<sf::Vector2f> coordinates =
+            createAndDrawGameScreen(window, mapTexture, towerTextures);
+        createAndDrawPlayerInfo(window, 0, 0, 0, font);
+        break;
+    }
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      if (sf::Event::Closed == event.type) {
+        window.close();
       }
-      sf::Event event;
-      while (window.pollEvent(event)) {
-        if (sf::Event::Closed == event.type) {
-          window.close();
-        }
-        if (sf::Event::MouseButtonPressed == event.type) {
-          if (event.mouseButton.button == sf::Mouse::Left) {
-            int x = event.mouseButton.x;
-            int y = event.mouseButton.y;
-            switch (currentScreen) {
-              case 0:
-                if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
-                  currentScreen = 1;
-                  std::cout << "changing scene" << std::endl;
-                }
-                break;
-              case 1:
-                break;
-              default:
-                break;
-            }
+      if (sf::Event::MouseButtonPressed == event.type) {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+          int x = event.mouseButton.x;
+          int y = event.mouseButton.y;
+          switch (currentScreen) {
+            case 0:
+              if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
+                currentScreen = 1;
+                std::cout << "changing scene" << std::endl;
+              }
+              break;
+            case 1:
+              break;
+            default:
+              break;
           }
         }
       }
-      window.display();
     }
+    window.display();
   }
-};
+}
+}*/
 
 #endif

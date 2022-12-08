@@ -1,10 +1,14 @@
+#ifndef TOWER_DEFENSE_LEVEL
+#define TOWER_DEFENSE_LEVEL
+
 #include <Map.hpp>
 #include <chrono>
 #include <string>
 #include <vector>
 
 #include "Enemy.hpp"
-#include "Game.hpp"
+
+class Game;
 
 class Wave {
  public:
@@ -39,7 +43,7 @@ class Wave {
 
 class Level {
  public:
-  Level(int initial_money, Map& Map, Game* game);
+  Level(int initial_money, Game* game);
 
   int initial_money() const;
 
@@ -51,7 +55,7 @@ class Level {
   int getCurrentWave();
 
  private:
-  const int initial_money_;
+  int initial_money_;
 
   int currentWave_;
 
@@ -59,3 +63,4 @@ class Level {
 
   std::vector<Wave*> waves_;
 };
+#endif
