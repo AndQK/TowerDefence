@@ -69,4 +69,22 @@ class Enemy {
   // PNG image;
 };
 
+class HardEnemy : public Enemy {
+ public:
+  HardEnemy(Coordinate place, int health, Game* game)
+      : Enemy(3.0, health, place, 10, game){};
+};
+
+class EasyEnemy : public Enemy {
+ public:
+  EasyEnemy(Coordinate place, int health, Game* game)
+      : Enemy(1.0, health, place, 3, game){};
+};
+
+class SplittingEnemy : public Enemy {
+ public:
+  SplittingEnemy(Coordinate place, int health, Game* game)
+      : Enemy(2.0, health, place, 5, game){};
+};
+
 #endif

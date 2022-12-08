@@ -6,15 +6,12 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "EasyEnemy.hpp"
 #include "Enemy.hpp"
 #include "Game.hpp"
-#include "HardEnemy.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
 #include "Projectile.hpp"
 #include "SlowingTower.hpp"
-#include "SplittingEnemy.hpp"
 #include "Tower.hpp"
 #include "Gui.hpp"
 
