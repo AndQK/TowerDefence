@@ -15,7 +15,10 @@
 
 enum Screens { gameMenu, gameLevelMenu, gameScreen, gameEndScreen };
 
-enum Screen { greenTurtle, brownTurtle };
+enum Enemies { greenTurtle, brownTurtle };
+
+
+enum Towers { diamondGun, tesla, turret, rocketGreen, iceTower };
 
 class Gui {
  public:
@@ -45,7 +48,20 @@ class Gui {
   // runs the loop for the window.
   void run();
 
+  // draws enemies
   void drawEnemies(std::vector<Enemy *> enemies);
+
+  // draws towers
+  void drawTowers(std::vector<Tower *> towers);
+
+  // set ups the coordinates for the clickable buttons
+  void setUpCoordinates();
+
+  // Event poller for finding out which button was pressed
+  int towerButtonPoller(int x, int y);
+
+  // listens to user's clicks and acts accordingly
+  void customPollListener(int button);
 
  private:
   sf::RenderWindow *window_;
@@ -65,6 +81,7 @@ class Gui {
   sf::Texture currentLevel_;
   int currentScreen_;
   std::vector<sf::Texture> towerTextures_;
+  std::vector<Coordinate> buttons_;
 };
 
 #endif

@@ -41,7 +41,7 @@ Gui::Gui(Game &game) {
     exit(-1);
   }
 
-  if (!iceTowerTexture_.loadFromFile("graphics/iceRocket.png")) {
+  if (!iceTowerTexture_.loadFromFile("graphics/iceTower.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
@@ -77,6 +77,8 @@ Gui::Gui(Game &game) {
   towerTextures_.push_back(turretTowerTexture_);
   towerTextures_.push_back(rocketTowerTexture_);
   towerTextures_.push_back(iceTowerTexture_);
+  // set ups coordinates for buttons
+  setUpCoordinates();
 }
 
 void Gui::createAndDrawTowerBtn(sf::Vector2f btnLocation, sf::Vector2f btnSize,
@@ -249,6 +251,7 @@ void Gui::run() {
         std::vector<sf::Vector2f> coordinates = createAndDrawGameScreen();
         createAndDrawPlayerInfo(0, 0, 0);
         drawEnemies(game_.GetEnemies());
+        drawTowers(game_.GetTowers());
         game_.Update();
         break;
     }
@@ -269,6 +272,9 @@ void Gui::run() {
                 currentScreen_ = 2;
                 std::cout << "changing screen" << std::endl;
               }
+              break;
+            case gameScreen:
+
               break;
             default:
               break;
@@ -306,5 +312,93 @@ void Gui::drawEnemies(std::vector<Enemy *> enemies) {
     enemySprite.setRotation((*enemy).getAngle());
 
     window_->draw(enemySprite);
+  }
+}
+
+void Gui::drawTowers(std::vector<Tower *> towers) {
+  for (auto tower : towers) {
+    sf::Sprite towerSprite;
+    switch (tower->GetType()) {
+      case iceTower:
+        towerSprite.setTexture(iceTowerTexture_);
+        towerSprite.setOrigin(iceTowerTexture_.getSize().x / 2,
+                              iceTowerTexture_.getSize().y / 2);
+        break;
+      case rocketGreen:
+        towerSprite.setTexture(rocketTowerTexture_);
+        towerSprite.setOrigin(rocketTowerTexture_.getSize().x / 2,
+                              rocketTowerTexture_.getSize().y / 2);
+        break;
+
+      case tesla:
+        towerSprite.setTexture(teslaTowerTexture_);
+        towerSprite.setOrigin(teslaTowerTexture_.getSize().x / 2,
+                              teslaTowerTexture_.getSize().y / 2);
+        break;
+      case turret:
+        towerSprite.setTexture(turretTowerTexture_);
+        towerSprite.setOrigin(turretTowerTexture_.getSize().x / 2,
+                              turretTowerTexture_.getSize().y / 2);
+        break;
+      case diamondGun:
+        towerSprite.setTexture(diamondTowerTexture_);
+        towerSprite.setOrigin(diamondTowerTexture_.getSize().x / 2,
+                              diamondTowerTexture_.getSize().y / 2);
+        break;
+      default:
+        break;
+    }
+
+    towerSprite.setScale(0.09f, 0.09f);
+    towerSprite.setPosition(tower->GetPlace());
+
+    window_->draw(towerSprite);
+  }
+}
+
+void Gui::setUpCoordinates() {
+  int x = window_->getSize().x - 200;
+  buttons_.push_back(Coordinate(x + 15, 300));
+  buttons_.push_back(Coordinate(x + 75, 300));
+  buttons_.push_back(Coordinate(x + 135, 300));
+  buttons_.push_back(Coordinate(x + 33, 365));
+  buttons_.push_back(Coordinate(x + 116, 365));
+}
+
+int Gui::towerButtonPoller(int x, int y) {
+  for (size_t i = 0; i < buttons_.size(); i++) {
+    auto button = buttons_[i];
+    if ((x >= button.getX() && x <= button.getX() + 50) &&
+        (y >= button.getY() && y <= button.getY() + 50)) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+void Gui::customPollListener(int button) {
+  switch (button) {
+    case diamondGun:
+      if (game_.GetPlayer().Pay(50)) {
+      }
+      break;
+    case tesla:
+      if (game_.GetPlayer().Pay(100)) {
+      }
+      break;
+    case turret:
+      if (game_.GetPlayer().Pay(130)) {
+      }
+      break;
+    case rocketGreen:
+      if (game_.GetPlayer().Pay(150)) {
+      }
+      break;
+    case iceTower:
+      if (game_.GetPlayer().Pay(210)) {
+      }
+      break;
+    default:
+      break;
   }
 }
