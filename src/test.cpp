@@ -13,7 +13,7 @@
 #include "Projectile.hpp"
 #include "SlowingTower.hpp"
 #include "Tower.hpp"
-#include "guiFunctions.hpp"
+#include "Gui.hpp"
 
 class test {
  public:
@@ -103,11 +103,27 @@ class test {
     map.AddCoordinate(Coordinate(250, 50));
     map.AddCoordinate(Coordinate(100, 50));
     map.AddCoordinate(Coordinate(600, 500));
+    map.AddCoordinate(Coordinate(750, 50));
+
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(2.5, 3, Coordinate(0, 0), 5, &game);
+    auto enemy = new Enemy(2.5, 34, Coordinate(0, 0), 5, &game);
     game.AddEnemy(enemy);
-    auto tower = SlowingTower(Coordinate(100, 100), &game);
+    auto tower = new SlowingTower(Coordinate(100, 100), &game);
+    auto tower2 = new SlowingTower(Coordinate(620, 300), &game);
     game.AddTower(tower);
+    game.AddTower(tower2);
+
+    std::vector<sf::CircleShape> towerShapes;
+    sf::CircleShape towerShape(10.f);
+    sf::CircleShape towerShape2(10.f);
+    towerShape.setFillColor(sf::Color::Green);
+    towerShape2.setFillColor(sf::Color::Green);
+    towerShape.setPosition(tower->GetPlace().getX() - 10,
+                           tower->GetPlace().getY() - 10);
+    towerShape2.setPosition(tower2->GetPlace().getX() - 10,
+                            tower2->GetPlace().getY() - 10);
+    towerShapes.push_back(towerShape);
+    towerShapes.push_back(towerShape2);
 
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Tower Defense!");
     window.setPosition(sf::Vector2(50, 50));
@@ -118,29 +134,31 @@ class test {
     sf::CircleShape node3(10.f);
     sf::CircleShape node4(10.f);
     sf::CircleShape node5(10.f);
-    sf::CircleShape towerShape(10.f);
+    sf::CircleShape node6(10.f);
     node1.setFillColor(sf::Color::Blue);
     node2.setFillColor(sf::Color::Blue);
     node3.setFillColor(sf::Color::Blue);
     node4.setFillColor(sf::Color::Blue);
-    node5.setFillColor(sf::Color::Magenta);
-    towerShape.setFillColor(sf::Color::Green);
+    node5.setFillColor(sf::Color::Blue);
+    node6.setFillColor(sf::Color::Magenta);
     node1.setPosition(map.GetNode(0).getX() - 10, map.GetNode(0).getY() - 10);
     node2.setPosition(map.GetNode(1).getX() - 10, map.GetNode(1).getY() - 10);
     node3.setPosition(map.GetNode(2).getX() - 10, map.GetNode(2).getY() - 10);
     node4.setPosition(map.GetNode(3).getX() - 10, map.GetNode(3).getY() - 10);
     node5.setPosition(map.GetNode(4).getX() - 10, map.GetNode(4).getY() - 10);
-    towerShape.setPosition(tower.GetPlace().getX() - 10,
-                           tower.GetPlace().getY() - 10);
+    node6.setPosition(map.GetNode(5).getX() - 10, map.GetNode(5).getY() - 10);
     nodes.push_back(node1);
     nodes.push_back(node2);
     nodes.push_back(node3);
     nodes.push_back(node4);
     nodes.push_back(node5);
+    nodes.push_back(node6);
 
-    sf::CircleShape shape(20.f);
-    shape.setPosition(enemy.GetCoord().getX(), enemy.GetCoord().getY());
-    shape.setFillColor(sf::Color::Red);
+    std::vector<sf::CircleShape> projectiles;
+
+    sf::CircleShape enemyShape(20.f);
+    enemyShape.setPosition(enemy->GetCoord().getX(), enemy->GetCoord().getY());
+    enemyShape.setFillColor(sf::Color::Red);
     sf::Event event;
     while (window.isOpen()) {
       while (window.pollEvent(event)) {
@@ -149,23 +167,37 @@ class test {
         }
       }
       window.clear();
-      window.draw(shape);
-      window.draw(towerShape);
-      for (auto n : nodes) {
-        window.draw(n);
-      }
-      window.display();
-      tower.Defend();
-      /**for (auto i : game.GetProjectiles()) 
-        i->Move();*/
+      window.draw(enemyShape);
+      for (auto t : towerShapes) window.draw(t);
+      for (auto n : nodes) window.draw(n);
 
-      auto moved = enemy.Move();
-      if (!moved) {
-        usleep(2000000);
-        break;
+      if (game.GetProjectiles().size() > projectiles.size()) {
+        sf::CircleShape p(5.f);
+        p.setFillColor(sf::Color::Cyan);
+        p.setPosition(game.GetProjectiles().back()->GetPosition().getX() - 5,
+                      game.GetProjectiles().back()->GetPosition().getY() - 5);
+        projectiles.push_back(p);
       }
-      shape.setPosition(enemy.GetCoord().getX() - 20,
-                        enemy.GetCoord().getY() - 20);
+
+      for (int i = 0; i < game.GetProjectiles().size(); i++) {
+        projectiles.at(i).setPosition(
+            game.GetProjectiles().at(i)->GetPosition().getX() - 5,
+            game.GetProjectiles().at(i)->GetPosition().getY() - 5);
+        window.draw(projectiles.at(i));
+      }
+
+      window.display();
+      for (auto t : game.GetTowers()) t->Defend();
+      for (auto p : game.GetProjectiles()) p->Move();
+
+      for (auto e : game.GetEnemies()) {
+        auto moved = e->Move();
+        enemyShape.setPosition(e->GetCoord().getX() - 20,
+                               e->GetCoord().getY() - 20);
+      }
+      if (game.GetEnemies().empty()) {
+        game.AddEnemy(new Enemy(2.5, 34, Coordinate(0, 0), 5, &game));
+      }
 
       usleep(10000);
     }
@@ -175,15 +207,15 @@ class test {
     Map map = Map();
     map.AddCoordinate(Coordinate(700, 300));
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
+    auto enemy = new Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
     game.AddEnemy(enemy);
     Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
                                        Coordinate(-1, 0), bomb, &game);
 
     sf::CircleShape proj(20.f);
     sf::CircleShape enem(50.f);
-    enem.setPosition(enemy.GetCoord().getX() - 50,
-                     enemy.GetCoord().getY() - 50);
+    enem.setPosition(enemy->GetCoord().getX() - 50,
+                     enemy->GetCoord().getY() - 50);
     proj.setPosition(projectile.GetPosition().getX() - 20,
                      projectile.GetPosition().getY() - 20);
     enem.setFillColor(sf::Color::Red);
@@ -198,12 +230,12 @@ class test {
           window.close();
         }
       }
-      if (!enemy.Move()) {
+      if (!enemy->Move()) {
         window.close();
         usleep(1000000);
       }
-      enem.setPosition(enemy.GetCoord().getX() - 50,
-                       enemy.GetCoord().getY() - 50);
+      enem.setPosition(enemy->GetCoord().getX() - 50,
+                       enemy->GetCoord().getY() - 50);
 
       projectile.Move();
       proj.setPosition(projectile.GetPosition().getX() - 20,
@@ -391,106 +423,113 @@ class test {
       // usleep(1000);
     }
   }
+  void testGui() {
+    auto map = Map();
+    Game game = Game("Gargamel", map);
+    Gui gui = Gui(game);
+    gui.run();
+  }
+};
 
-  void testGuiFunctions() {
-    int currentScreen = 0;
+/*void testGuiFunctions() {
+  int currentScreen = 0;
 
-    sf::Texture mapTexture;
-    if (!mapTexture.loadFromFile("graphics/Level1.png")) {
-      std::cout << "unable to load texture from file" << std::endl;
-      exit(-1);
+  sf::Texture mapTexture;
+  if (!mapTexture.loadFromFile("graphics/Level1.png")) {
+    std::cout << "unable to load texture from file" << std::endl;
+    exit(-1);
+  }
+  sf::Texture mainMenuTexture;
+  if (!mainMenuTexture.loadFromFile("graphics/mainMenu.png")) {
+    std::cout << "unable to load texture form file" << std::endl;
+    exit(-1);
+  }
+
+  std::vector<sf::Texture> towerTextures;
+
+  sf::Texture diamondTowerTexture;
+  if (!diamondTowerTexture.loadFromFile("graphics/diamondGun.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
+
+  sf::Texture teslaTowerTexture;
+  if (!teslaTowerTexture.loadFromFile("graphics/tesla.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
+
+  sf::Texture turretTowerTexture;
+  if (!turretTowerTexture.loadFromFile("graphics/turret.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
+
+  sf::Texture rocketTowerTexture;
+  if (!rocketTowerTexture.loadFromFile("graphics/rocketGreen.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
+  sf::Texture iceTowerTexture;
+  if (!iceTowerTexture.loadFromFile("graphics/iceRocket.png")) {
+    std::cout << "unable to load tower texture from file" << std::endl;
+    exit(-1);
+  }
+  sf::Font font;
+  if (!font.loadFromFile("graphics/ARLRDBD.TTF")) {
+    std::cout << "unable to load font from file" << std::endl;
+    exit(-1);
+  }
+
+  towerTextures.push_back(diamondTowerTexture);
+  towerTextures.push_back(teslaTowerTexture);
+  towerTextures.push_back(turretTowerTexture);
+  towerTextures.push_back(rocketTowerTexture);
+  towerTextures.push_back(iceTowerTexture);
+
+  sf::RenderWindow window(sf::VideoMode(mapTexture.getSize().x / 2 + 200,
+                                        mapTexture.getSize().y / 2),
+                          "TowerDefence");
+  window.setPosition(sf::Vector2(50, 50));
+  while (window.isOpen()) {
+    window.clear();
+    switch (currentScreen) {
+      case 0:  // main menu:
+        createAndDrawGameMenu(window, mainMenuTexture);
+        break;
+      case 1:  // game screen:
+        std::vector<sf::Vector2f> coordinates =
+            createAndDrawGameScreen(window, mapTexture, towerTextures);
+        createAndDrawPlayerInfo(window, 0, 0, 0, font);
+        break;
     }
-    sf::Texture mainMenuTexture;
-    if (!mainMenuTexture.loadFromFile("graphics/mainMenu.png")) {
-      std::cout << "unable to load texture form file" << std::endl;
-      exit(-1);
-    }
-
-    std::vector<sf::Texture> towerTextures;
-
-    sf::Texture diamondTowerTexture;
-    if (!diamondTowerTexture.loadFromFile("graphics/diamondGun.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
-
-    sf::Texture teslaTowerTexture;
-    if (!teslaTowerTexture.loadFromFile("graphics/tesla.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
-
-    sf::Texture turretTowerTexture;
-    if (!turretTowerTexture.loadFromFile("graphics/turret.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
-
-    sf::Texture rocketTowerTexture;
-    if (!rocketTowerTexture.loadFromFile("graphics/rocketGreen.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
-    sf::Texture iceTowerTexture;
-    if (!iceTowerTexture.loadFromFile("graphics/iceRocket.png")) {
-      std::cout << "unable to load tower texture from file" << std::endl;
-      exit(-1);
-    }
-    sf::Font font;
-    if (!font.loadFromFile("graphics/ARLRDBD.TTF")) {
-      std::cout << "unable to load font from file" << std::endl;
-      exit(-1);
-    }
-
-    towerTextures.push_back(diamondTowerTexture);
-    towerTextures.push_back(teslaTowerTexture);
-    towerTextures.push_back(turretTowerTexture);
-    towerTextures.push_back(rocketTowerTexture);
-    towerTextures.push_back(iceTowerTexture);
-
-    sf::RenderWindow window(sf::VideoMode(mapTexture.getSize().x / 2 + 200,
-                                          mapTexture.getSize().y / 2),
-                            "TowerDefence");
-    window.setPosition(sf::Vector2(50, 50));
-    while (window.isOpen()) {
-      window.clear();
-      switch (currentScreen) {
-        case 0:  // main menu:
-          createAndDrawGameMenu(window, mainMenuTexture);
-          break;
-        case 1:  // game screen:
-          std::vector<sf::Vector2f> coordinates =
-              createAndDrawGameScreen(window, mapTexture, towerTextures);
-          createAndDrawPlayerInfo(window, 0, 0, 0, font);
-          break;
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      if (sf::Event::Closed == event.type) {
+        window.close();
       }
-      sf::Event event;
-      while (window.pollEvent(event)) {
-        if (sf::Event::Closed == event.type) {
-          window.close();
-        }
-        if (sf::Event::MouseButtonPressed == event.type) {
-          if (event.mouseButton.button == sf::Mouse::Left) {
-            int x = event.mouseButton.x;
-            int y = event.mouseButton.y;
-            switch (currentScreen) {
-              case 0:
-                if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
-                  currentScreen = 1;
-                  std::cout << "changing scene" << std::endl;
-                }
-                break;
-              case 1:
-                break;
-              default:
-                break;
-            }
+      if (sf::Event::MouseButtonPressed == event.type) {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+          int x = event.mouseButton.x;
+          int y = event.mouseButton.y;
+          switch (currentScreen) {
+            case 0:
+              if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
+                currentScreen = 1;
+                std::cout << "changing scene" << std::endl;
+              }
+              break;
+            case 1:
+              break;
+            default:
+              break;
           }
         }
       }
-      window.display();
     }
+    window.display();
   }
-};
+}
+}*/
 
 #endif

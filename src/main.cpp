@@ -8,18 +8,19 @@
 
 #include "test.cpp"
 
+
 int main(int, char**) {
   auto t = test();
   // t.testEnemies();
   // t.testMap();
   // t.testPlayer();
-  //t.testSprites();
+  // t.testSprites();
   // t.testGame();
   // t.testGraphics();
-  t.testEnemyMovement();
+  //t.testEnemyMovement();
   // t.testProjectiles();
   // t.testRotate();
-  //t.testGuiFunctions();
+   t.testGui();
   return 0;
 }
 
