@@ -11,7 +11,7 @@
       worth_(worth),
       currentNode_(0),
       distance_(0),
-      game_(new Game()),  
+      game_(new Game()),
       direction_(Coordinate(0, 0)) {
   std::cout << "Creating enemy" << std::endl;
 }*/
