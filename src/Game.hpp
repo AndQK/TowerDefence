@@ -59,7 +59,7 @@ class Game {
   Player player_;
   Map map_;
 
-  const int FPS = 100;
+  int FPS = 100;
 
   // Vector of enemies currently in game.
   std::vector<Enemy*> enemies_;

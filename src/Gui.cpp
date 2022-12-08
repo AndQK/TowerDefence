@@ -11,11 +11,10 @@ Gui::Gui(Game &game) {
     exit(-1);
   }
 
-  /*if (!level_3_Texture_.loadFromFile("graphics/Level3.png")) {
-        std::cout << "unable to load texture from file" << std::endl;
-        exit(-1);
-      }
-    */
+  if (!level_3_Texture_.loadFromFile("graphics/Level3.png")) {
+    std::cout << "unable to load texture from file" << std::endl;
+    exit(-1);
+  }
 
   if (!mainMenuTexture_.loadFromFile("graphics/mainMenu.png")) {
     std::cout << "unable to load texture form file" << std::endl;
@@ -47,13 +46,23 @@ Gui::Gui(Game &game) {
     exit(-1);
   }
 
+  if (!greenTurtle_.loadFromFile("graphics/greenTurtle.png")) {
+    std::cout << "unable to load enemy texture from file" << std::endl;
+    exit(-1);
+  }
+  if (!brownTurtle_.loadFromFile("graphics/brownTurtle.png")) {
+    std::cout << "unable to load enemy texture form file" << std::endl;
+    exit(-1);
+  }
+
   if (!font_.loadFromFile("graphics/ARLRDBD.TTF")) {
     std::cout << "unable to load font from file" << std::endl;
     exit(-1);
   }
+
   // by default:
   currentScreen_ = Screens::gameMenu;
-  currentLevel_ = level_1_Texture_;
+  currentLevel_ = level_3_Texture_;
 
   window_ =
       new sf::RenderWindow(sf::VideoMode(level_1_Texture_.getSize().x / 2 + 200,
@@ -182,10 +191,14 @@ std::vector<sf::Vector2f> Gui::createAndDrawGameScreen() {
   // Width and height for buttons
   std::vector<sf::Vector2f> btnSizes;
 
+  // a factor for keeping the game screen size the same with different maps.
+  float dx = level_1_Texture_.getSize().x * 0.5 / currentLevel_.getSize().x;
+  float dy = level_1_Texture_.getSize().y * 0.5 / currentLevel_.getSize().y;
+
   // initialising a map sprite with a texture
   sf::Sprite mapSprite;
   mapSprite.setTexture(currentLevel_);
-  mapSprite.setScale(0.5f, 0.5f);
+  mapSprite.setScale(dx, dy);
 
   // panel's width and height
   int width = 200;
@@ -229,12 +242,14 @@ void Gui::run() {
   while (window_->isOpen()) {
     window_->clear();
     switch (currentScreen_) {
-      case 0:  // main menu:
+      case gameMenu:  // main menu:
         createAndDrawGameMenu();
         break;
-      case 2:  // game screen:
+      case gameScreen:  // game screen:
         std::vector<sf::Vector2f> coordinates = createAndDrawGameScreen();
         createAndDrawPlayerInfo(0, 0, 0);
+        drawEnemies(game_.GetEnemies());
+        game_.Update();
         break;
     }
     sf::Event event;
@@ -247,13 +262,13 @@ void Gui::run() {
           int x = event.mouseButton.x;
           int y = event.mouseButton.y;
           switch (currentScreen_) {
-            case 0:
+            case gameMenu:
+
+              // checking that the click happened in the right place
               if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
                 currentScreen_ = 2;
                 std::cout << "changing screen" << std::endl;
               }
-              break;
-            case 2:
               break;
             default:
               break;
@@ -262,5 +277,34 @@ void Gui::run() {
       }
     }
     window_->display();
+    usleep(10000);
+  }
+}
+
+void Gui::drawEnemies(std::vector<Enemy *> enemies) {
+  for (auto enemy : enemies) {
+    sf::Sprite enemySprite;
+    switch ((*enemy).GetType()) {
+      case greenTurtle:
+        enemySprite.setTexture(greenTurtle_);
+        enemySprite.setOrigin(greenTurtle_.getSize().x / 2,
+                              greenTurtle_.getSize().y / 2);
+
+        break;
+      case brownTurtle:
+        enemySprite.setTexture(brownTurtle_);
+        enemySprite.setOrigin(brownTurtle_.getSize().x / 2,
+                              brownTurtle_.getSize().y / 2);
+        break;
+      default:
+        break;
+    }
+
+    enemySprite.setScale(0.05f, 0.05f);
+    enemySprite.setPosition((*enemy).GetCoord().getX(),
+                            (*enemy).GetCoord().getY());
+    enemySprite.setRotation((*enemy).getAngle());
+
+    window_->draw(enemySprite);
   }
 }

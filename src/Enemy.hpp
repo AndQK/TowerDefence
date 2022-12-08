@@ -10,7 +10,8 @@ class Enemy {
   /**explicit Enemy(float speed, int health, Coordinate place,
                  int worth);  */
 
-  Enemy(float speed, int health, Coordinate place, int worth, Game* game);
+  Enemy(float speed, int health, Coordinate place, int worth, Game* game,
+        int type);
 
   // A tower hits the enemy and damages them decreasing their health.
   void getHit(int amount);
@@ -39,6 +40,11 @@ class Enemy {
 
   float getAngle();
 
+  int getCurrentNode() { return currentNode_; }
+
+  // Get the enemy's type
+  const int& GetType() const;
+
  private:
   // Moving speed of the enemy.
   float speed_;
@@ -65,6 +71,10 @@ class Enemy {
   // How far along the game the enemy is.
   int distance_;
 
+  // the type of the enemy
+
+  int type_;
+
   // The image of the enemy.
   // PNG image;
 };
@@ -72,19 +82,19 @@ class Enemy {
 class HardEnemy : public Enemy {
  public:
   HardEnemy(Coordinate place, int health, Game* game)
-      : Enemy(3.0, health, place, 10, game){};
+      : Enemy(3.0, health, place, 10, game, 0){};
 };
 
 class EasyEnemy : public Enemy {
  public:
   EasyEnemy(Coordinate place, int health, Game* game)
-      : Enemy(1.0, health, place, 3, game){};
+      : Enemy(1.0, health, place, 3, game, 0){};
 };
 
 class SplittingEnemy : public Enemy {
  public:
   SplittingEnemy(Coordinate place, int health, Game* game)
-      : Enemy(2.0, health, place, 5, game){};
+      : Enemy(2.0, health, place, 5, game, 0){};
 };
 
 #endif

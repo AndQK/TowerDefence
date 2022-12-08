@@ -8,12 +8,12 @@
 
 #include "Enemy.hpp"
 #include "Game.hpp"
+#include "Gui.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
 #include "Projectile.hpp"
 #include "SlowingTower.hpp"
 #include "Tower.hpp"
-#include "Gui.hpp"
 
 class test {
  public:
@@ -106,7 +106,7 @@ class test {
     map.AddCoordinate(Coordinate(750, 50));
 
     Game game = Game("Gargamel", map);
-    auto enemy = new Enemy(2.5, 34, Coordinate(0, 0), 5, &game);
+    auto enemy = new Enemy(2.5, 34, Coordinate(0, 0), 5, &game, 0);
     game.AddEnemy(enemy);
     auto tower = new SlowingTower(Coordinate(100, 100), &game);
     auto tower2 = new SlowingTower(Coordinate(620, 300), &game);
@@ -196,7 +196,7 @@ class test {
                                e->GetCoord().getY() - 20);
       }
       if (game.GetEnemies().empty()) {
-        game.AddEnemy(new Enemy(2.5, 34, Coordinate(0, 0), 5, &game));
+        game.AddEnemy(new Enemy(2.5, 34, Coordinate(0, 0), 5, &game, 0));
       }
 
       usleep(10000);
@@ -207,7 +207,7 @@ class test {
     Map map = Map();
     map.AddCoordinate(Coordinate(700, 300));
     Game game = Game("Gargamel", map);
-    auto enemy = new Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
+    auto enemy = new Enemy(1.0, 3, Coordinate(0, 300), 5, &game, 0);
     game.AddEnemy(enemy);
     Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
                                        Coordinate(-1, 0), bomb, &game);
@@ -312,7 +312,7 @@ class test {
     nodes.push_back(node11);
 
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game);
+    auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game, 0);
     sf::Texture mapTexture;
     if (!mapTexture.loadFromFile("../graphics/Level1.png")) {
       std::cout << "unable to load texture from file" << std::endl;
@@ -425,7 +425,13 @@ class test {
   }
   void testGui() {
     auto map = Map();
+    map.loadCoordinates("path3.txt");
+    for (auto i: map.GetNodes()) {
+      std::cout << i << std::endl;
+    }
     Game game = Game("Gargamel", map);
+    auto enemy = new Enemy(1.0, 3, map.GetNodes().front(), 5, &game, 0);
+    game.AddEnemy(enemy);
     Gui gui = Gui(game);
     gui.run();
   }
