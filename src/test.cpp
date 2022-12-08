@@ -17,6 +17,7 @@
 #include "SplittingEnemy.hpp"
 #include "Tower.hpp"
 #include "guiFunctions.hpp"
+#include "level.hpp"
 
 class test {
  public:
@@ -109,8 +110,8 @@ class test {
     map.AddCoordinate(Coordinate(750, 50));
 
     Game game = Game("Gargamel", map);
-    auto enemy = new Enemy(2.5, 34, Coordinate(0, 0), 5, &game);
-    game.AddEnemy(enemy);
+    auto level = Level(100, map, &game);
+
     auto tower = new SlowingTower(Coordinate(100, 100), &game);
     auto tower2 = new SlowingTower(Coordinate(620, 300), &game);
     game.AddTower(tower);
@@ -160,7 +161,7 @@ class test {
     std::vector<sf::CircleShape> projectiles;
 
     sf::CircleShape enemyShape(20.f);
-    enemyShape.setPosition(enemy->GetCoord().getX(), enemy->GetCoord().getY());
+    enemyShape.setPosition(0, 0);
     enemyShape.setFillColor(sf::Color::Red);
     sf::Event event;
     while (window.isOpen()) {
@@ -188,6 +189,7 @@ class test {
             game.GetProjectiles().at(i)->GetPosition().getY() - 5);
         window.draw(projectiles.at(i));
       }
+      level.update();
 
       window.display();
       for (auto t : game.GetTowers()) t->Defend();
