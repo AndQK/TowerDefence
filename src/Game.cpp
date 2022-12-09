@@ -55,6 +55,8 @@ void Game::Update() {
   for (auto tower : this->towers_) tower->Defend();
 }
 
+void Game::SetLevel(Level& level) { level_ = level; }
+
 void Game::AddEnemy(Enemy* enemy) { enemies_.push_back(enemy); }
 
 void Game::AddTower(Tower* tower) { towers_.push_back(tower); }
@@ -89,6 +91,8 @@ Game::~Game() {
   for (auto e : enemies_) delete e;
   for (auto t : towers_) delete t;
 }
+
+Level& Game::GetLevel() { return level_; }
 
 std::vector<Enemy*> Game::GetEnemies() { return enemies_; }
 

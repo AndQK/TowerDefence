@@ -1,46 +1,72 @@
-#include <vector>
-#include <string>
+#ifndef TOWER_DEFENSE_LEVEL
+#define TOWER_DEFENSE_LEVEL
+
 #include <Map.hpp>
+#include <chrono>
+#include <string>
 #include <vector>
 
+#include "Enemy.hpp"
 
+class Game;
 
+class Wave {
+ public:
+  Wave(float spawnRate, Game* game);
 
+  void addEnemy(Enemy* e);
+
+  void update();
+
+  void startWave();
+
+  bool ended();
+
+  bool started();
+
+  void updateLastSpawn();
+
+ private:
+  // Enemies' spawn rate (spawns per second.)
+  float spawnRate_;
+
+  Game* game_;
+
+  std::chrono::steady_clock::time_point lastSpawn_;
+
+  std::vector<Enemy*> enemies_;
+
+  int enemyAmount;
+
+  bool started_ = false;
+
+  int enemiesSpawned = 0;
+};
 
 class Level {
-public:
-    
+ public:
+  Level(int initial_money, Game* game);
 
-   Level(int initial_money, int initial_lives, int enemies_killed,
-                 Map &Map, std::vector<int> enemy);
+  Level();
 
-    /// Initial money
-    /// \return
-    int initial_money() const;
+  ~Level();
 
-    /// Initial lives
-    /// \return
-    int initial_lives() const;
+  int initial_money() const;
 
-    /// Count of how many enemies have spawned.
-    int enemies_killed() const;
+  // updates the level.
+  void update();
 
-    /// Spawn new enemies according to game time
-    /// \param time
-    /// \return Collection of enemy type pointers to use for spawning new
-    ///         enemies.
-    std::vector<int> killing_enemies(int time);
+  void removeWave(Wave* w);
 
+  int getCurrentWave();
 
-    /// True if all enemies have killed else false.
-    bool done();
+ private:
+  int initial_money_;
 
-private:
-    const int initial_money_;
-    const int initial_lives_;
+  int currentWave_;
 
-    /// Counter for how many enemies have already killed
-    int enemies_killed_;
-    std::vector<int> enemy_;
-  
+  Game* game_;
+
+  std::vector<Wave*> waves_;
 };
+#endif
