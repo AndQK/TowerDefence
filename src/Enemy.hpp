@@ -42,6 +42,10 @@ class Enemy {
 
   int getCurrentNode() { return currentNode_; }
 
+  void setCurrentNode(int node) { currentNode_ = node; }
+
+  void setDistance(int dist) { distance_ = dist; }
+
   // Get the enemy's type
   const int& GetType() const;
 

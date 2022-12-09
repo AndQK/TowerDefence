@@ -4,7 +4,8 @@
 
 #include "Game.hpp"
 
-Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game, int type)
+Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game,
+             int type)
     : speed_(speed),
       health_(health),
       place_(place),
@@ -19,7 +20,28 @@ Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game, i
 void Enemy::getHit(int amount) {
   if (health_ < amount) {
     health_ = 0;
-    game_->RemoveEnemy(this);
+    if (this->GetType() != 1)
+      game_->RemoveEnemy(this);
+    else {
+      Coordinate c = this->place_;
+      auto n = this->getCurrentNode();
+      auto dist = this->GetDistance();
+      auto a =
+          new EasyEnemy(Coordinate(c.getX() + 15, c.getY() + 15), 100, game_);
+      auto b = new EasyEnemy(c, 100, game_);
+      auto d =
+          new EasyEnemy(Coordinate(c.getX() - 15, c.getY() - 15), 100, game_);
+      a->setCurrentNode(n);
+      b->setCurrentNode(n);
+      d->setCurrentNode(n);
+      a->setDistance(dist);
+      b->setDistance(dist);
+      d->setDistance(dist);
+      game_->AddEnemy(a);
+      game_->AddEnemy(b);
+      game_->AddEnemy(d);
+      game_->RemoveEnemy(this);
+    }
   } else
     health_ -= amount;
 }
@@ -34,12 +56,15 @@ bool operator<(const Enemy& e1, const Enemy& e2) {
 bool Enemy::Move() {
   auto nextNode = (*game_).GetMap().GetNode(currentNode_);
   double distance = (nextNode - this->place_).getLength();
+  auto direction_raw = (*game_).GetMap().GetNode(currentNode_) - this->place_;
+  direction_ = direction_raw / direction_raw.getLength();
   // if enemy is near the node, switch to next node unless next node is the
   // last node.
   if (distance < speed_ * 1.5) {
     if (currentNode_ >= (*game_).GetMap().GetNofNodes() - 1) {
       game_->RemoveEnemy(this);
       game_->GetPlayer().reduceHealth();
+      std::cout << game_->GetPlayer().GetHealth() << std::endl;
       return false;
     } else {
       currentNode_++;
@@ -48,7 +73,6 @@ bool Enemy::Move() {
       direction_ = direction_raw / direction_raw.getLength();
     }
   }
-
   // Move towards the next node with the speed_
   place_ = place_ + (direction_ * speed_);
   distance_ += speed_;

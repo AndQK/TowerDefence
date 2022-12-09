@@ -20,3 +20,5 @@ const int& Player::GetMoney() const { return money_; }
 const int& Player::GetPoints() const { return points_; }
 
 void Player::reduceHealth() { --health_; }
+
+const int& Player::GetHealth() const { return health_; }
