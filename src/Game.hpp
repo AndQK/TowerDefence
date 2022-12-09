@@ -47,7 +47,7 @@ class Game {
   // Gets the current map the game is played on
   Map GetMap() const;
 
-  Map GetLevel() const;
+  Level& GetLevel();
 
   // Gets the enemies currently in the game.
   std::vector<Enemy*> GetEnemies();
@@ -63,7 +63,7 @@ class Game {
  private:
   Player player_;
   Map map_;
-  //Level level_ = Level(100, this);
+  Level level_;
 
   int FPS = 100;
 

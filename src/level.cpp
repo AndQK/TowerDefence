@@ -3,7 +3,7 @@
 
 #include "Game.hpp"
 
-Wave::Wave(int spawnRate, Game* game) : spawnRate_(spawnRate), game_(game) {
+Wave::Wave(float spawnRate, Game* game) : spawnRate_(spawnRate), game_(game) {
   lastSpawn_ = std::chrono::steady_clock::now();
 }
 
@@ -16,23 +16,56 @@ bool Wave::started() { return started_; }
 
 void Wave::startWave() { started_ = true; }
 
+void Wave::updateLastSpawn() { lastSpawn_ = std::chrono::steady_clock::now(); }
+
 void Wave::update() {
-  auto elapsedTimeInMicroseconds =
-      1.0f * std::chrono::duration_cast<std::chrono::microseconds>(
-                 std::chrono::steady_clock::now() - lastSpawn_)
-                 .count();
+  auto elapsedTimeInSeconds =
+      1.0f *
+      std::chrono::duration_cast<std::chrono::microseconds>(
+          std::chrono::steady_clock::now() - lastSpawn_)
+          .count() /
+      1000000.0f;
+
   // if enough time passed spawn new enemy and add it to the game_.
-  if (elapsedTimeInMicroseconds > 1000000.0f / spawnRate_) {
+  if (elapsedTimeInSeconds > 1.0f / spawnRate_) {
     game_->AddEnemy(enemies_.at(enemiesSpawned));
+    updateLastSpawn();
     enemiesSpawned++;
   }
 }
 
 bool Wave::ended() { return enemiesSpawned == enemyAmount; }
 
+Level::Level() : initial_money_(100), game_(nullptr), currentWave_(0) {}
+
 Level::Level(int initial_money, Game* game)
     : initial_money_(initial_money), game_(game), currentWave_(0) {
-  auto w1 = new Wave(1, game);
+  float spawnRate = 1.0f;
+  float hpFactor = 1;
+  int enemiesPerWave = 5;
+  int amountOfWaves = 10;
+  while (amountOfWaves > 0) {
+    auto w1 = new Wave(spawnRate, game);
+    int i = enemiesPerWave;
+    while (i > 0) {
+      auto e1 = new EasyEnemy(game_->GetMap().GetNode(0), 1, game_);
+      auto e2 = new HardEnemy(game_->GetMap().GetNode(0), 10 * hpFactor, game_);
+      auto e3 =
+          new SplittingEnemy(game_->GetMap().GetNode(0), 40 * hpFactor, game_);
+      w1->addEnemy(e1);
+      w1->addEnemy(e2);
+      w1->addEnemy(e3);
+      i--;
+    }
+    waves_.push_back(w1);
+    hpFactor *= 1.1;
+    spawnRate *= 1.1;
+    enemiesPerWave++;
+    amountOfWaves--;
+  }
+  waves_.size();
+  /*
+  auto w1 = new Wave(1.0, game);
   auto e1 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
   auto e2 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
   auto e3 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
@@ -43,13 +76,20 @@ Level::Level(int initial_money, Game* game)
   auto w3 = new Wave(7, game);
   waves_.push_back(w1);
   waves_.push_back(w2);
-  waves_.push_back(w3);
+  waves_.push_back(w3);*/
+}
+
+Level::~Level() {
+  for (auto w : waves_) {
+    delete w;
+  }
 }
 
 void Level::update() {
   bool waveActive = false;
   for (auto wave : waves_) {
     if (wave->ended()) {
+      std::cout << "wave ended" << std::endl;
       removeWave(wave);
     } else if (wave->started()) {
       waveActive = true;
@@ -59,6 +99,7 @@ void Level::update() {
 
   if (!waveActive) {
     if (currentWave_ < waves_.size()) {
+      waves_.at(currentWave_)->updateLastSpawn();
       waves_.at(currentWave_)->startWave();
     }
     currentWave_++;

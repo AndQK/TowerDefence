@@ -92,6 +92,8 @@ Game::~Game() {
   for (auto t : towers_) delete t;
 }
 
+Level& Game::GetLevel() { return level_; }
+
 std::vector<Enemy*> Game::GetEnemies() { return enemies_; }
 
 std::vector<Tower*> Game::GetTowers() { return towers_; }

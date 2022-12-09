@@ -42,6 +42,10 @@ class Enemy {
 
   int getCurrentNode() { return currentNode_; }
 
+  void setCurrentNode(int node) { currentNode_ = node; }
+
+  void setDistance(int dist) { distance_ = dist; }
+
   // Get the enemy's type
   const int& GetType() const;
 
@@ -82,7 +86,7 @@ class Enemy {
 class HardEnemy : public Enemy {
  public:
   HardEnemy(Coordinate place, int health, Game* game)
-      : Enemy(3.0, health, place, 10, game, 0){};
+      : Enemy(1.5, health, place, 10, game, 1){};
 };
 
 class EasyEnemy : public Enemy {
@@ -94,7 +98,7 @@ class EasyEnemy : public Enemy {
 class SplittingEnemy : public Enemy {
  public:
   SplittingEnemy(Coordinate place, int health, Game* game)
-      : Enemy(2.0, health, place, 5, game, 0){};
+      : Enemy(0.7, health, place, 5, game, 1){};
 };
 
 #endif

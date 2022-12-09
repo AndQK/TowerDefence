@@ -32,3 +32,18 @@ void Projectile::Move() {
     game_->RemoveProjectile(this);
   }
 }
+
+float Projectile::getAngle() {
+  double PI = 3.1415926535;
+  double y = direction_.getY();
+  double x = -direction_.getX();
+  double angle = 0;
+  if ((std::atan2(y, x) * 180 / 3.1415926535) > 0) {
+    angle = -360 + std::atan2(y, x) * 180 / 3.1415926535;
+  } else {
+    angle = std::atan2(y, x) * 180 / 3.1415926535;
+  }
+  angle = std::fmod((-angle + 270), 360);
+
+  return angle;
+}
