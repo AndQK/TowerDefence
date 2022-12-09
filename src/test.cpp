@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "Coordinate.hpp"
 #include "Enemy.hpp"
 #include "Game.hpp"
 #include "Gui.hpp"
@@ -431,9 +432,10 @@ class test {
   void testGui() {
     auto map = Map();
     map.loadCoordinates("../path3.txt");
-    for (auto i : map.GetNodes()) {
+    std::cout << map.GetNofNodes() << std::endl;
+    /*for (auto i : map.GetNodes()) {
       std::cout << i << std::endl;
-    }
+    }*/
     Game game = Game("Gargamel", map);
     //Level level = Level(100, &game);
     auto enemy = new Enemy(1.0, 3, map.GetNodes().front(), 5, &game, 0);
