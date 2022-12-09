@@ -251,8 +251,6 @@ void Gui::run() {
         drawEnemies(game_->GetEnemies());
         game_->GetLevel().update();
         game_->Update();
-        if (game_->GetEnemies().size() > 0)
-          game_->GetEnemies().front()->getHit(1);
         break;
     }
     sf::Event event;

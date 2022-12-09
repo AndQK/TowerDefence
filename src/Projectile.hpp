@@ -20,6 +20,8 @@ class Projectile {
   // Moves the projectiles towards direction_ with speed_.
   void Move();
 
+  float getAngle();
+
  private:
   // Direction the projectile is heading.
   // Stored as a unit vector.
