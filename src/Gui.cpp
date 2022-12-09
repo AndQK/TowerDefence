@@ -1,6 +1,6 @@
 #include "Gui.hpp"
 
-Gui::Gui(Game &game) {
+Gui::Gui(Game *game) {
   if (!level_1_Texture_.loadFromFile("graphics/Level1.png")) {
     std::cout << "unable to load texture from file" << std::endl;
     exit(-1);
@@ -51,12 +51,16 @@ Gui::Gui(Game &game) {
     exit(-1);
   }
   if (!brownTurtle_.loadFromFile("graphics/brownTurtle.png")) {
-    std::cout << "unable to load enemy texture form file" << std::endl;
+    std::cout << "unable to load enemy texture from file" << std::endl;
     exit(-1);
   }
 
   if (!font_.loadFromFile("graphics/ARLRDBD.TTF")) {
     std::cout << "unable to load font from file" << std::endl;
+    exit(-1);
+  }
+  if (!bulletTexture_.loadFromFile("graphics/bullet.png")) {
+    std::cout << "unable to load bullet texture from file" << std::endl;
     exit(-1);
   }
 
@@ -69,6 +73,7 @@ Gui::Gui(Game &game) {
                                          level_1_Texture_.getSize().y / 2),
                            "TowerDefence");
   window_->setPosition(sf::Vector2(50, 50));
+  window_->setFramerateLimit(100);
 
   game_ = game;
 
@@ -219,28 +224,37 @@ std::vector<sf::Vector2f> Gui::createAndDrawGameScreen() {
 
   // Create buttons. Should be inside sidePanel area and the size is 50x50
   // pixels.
-  btnLocations.push_back(sf::Vector2f(x + 15, 300));
+  /*btnLocations.push_back(sf::Vector2f(x + 15, 300));
   btnLocations.push_back(sf::Vector2f(x + 75, 300));
   btnLocations.push_back(sf::Vector2f(x + 135, 300));
   btnLocations.push_back(sf::Vector2f(x + 33, 365));
   btnLocations.push_back(sf::Vector2f(x + 116, 365));
-
+*/
   // draw the level
   window_->draw(mapSprite);
 
   // draw the panel
   window_->draw(panel);
 
-  for (unsigned int i = 0; i < btnLocations.size(); i++) {
+  for (unsigned int i = 0; i < buttons_.size(); i++) {
     btnSizes.push_back(sf::Vector2f(50, 50));
   }
-  for (unsigned int i = 0; i < btnLocations.size(); i++) {
-    createAndDrawTowerBtn(btnLocations[i], btnSizes[i], towerTextures_[i]);
+  for (unsigned int i = 0; i < buttons_.size(); i++) {
+    createAndDrawTowerBtn(buttons_[i], btnSizes[i], towerTextures_[i]);
   }
-  return btnLocations;
+  return buttons_;
 }
 
 void Gui::run() {
+  // a variable that stores information of tower bought by the player
+  bool isBought = false;
+
+  int whichTower = -1;  // no tower is selected by default
+
+  // coordinates for the tower
+  int towerX = 0;
+  int towerY = 0;
+
   while (window_->isOpen()) {
     window_->clear();
     switch (currentScreen_) {
@@ -249,10 +263,16 @@ void Gui::run() {
         break;
       case gameScreen:  // game screen:
         std::vector<sf::Vector2f> coordinates = createAndDrawGameScreen();
-        createAndDrawPlayerInfo(0, 0, 0);
-        drawEnemies(game_.GetEnemies());
-        drawTowers(game_.GetTowers());
-        game_.Update();
+
+        int health = game_->GetPlayer().GetHealth();
+
+        int gold = game_->GetPlayer().GetMoney();
+
+        createAndDrawPlayerInfo(health, 0, gold);
+        drawEnemies();
+        drawTowers();
+        drawProjectiles();
+        game_->Update();
         break;
     }
     sf::Event event;
@@ -274,6 +294,12 @@ void Gui::run() {
               }
               break;
             case gameScreen:
+              if (!isBought) {
+                whichTower = towerButtonPoller(x, y);
+                isBought = customPollListener(whichTower);
+              } else {
+                isBought = createTower(whichTower, x, y);
+              }
 
               break;
             default:
@@ -283,12 +309,11 @@ void Gui::run() {
       }
     }
     window_->display();
-    usleep(10000);
   }
 }
 
-void Gui::drawEnemies(std::vector<Enemy *> enemies) {
-  for (auto enemy : enemies) {
+void Gui::drawEnemies() {
+  for (auto enemy : game_->GetEnemies()) {
     sf::Sprite enemySprite;
     switch ((*enemy).GetType()) {
       case greenTurtle:
@@ -315,8 +340,8 @@ void Gui::drawEnemies(std::vector<Enemy *> enemies) {
   }
 }
 
-void Gui::drawTowers(std::vector<Tower *> towers) {
-  for (auto tower : towers) {
+void Gui::drawTowers() {
+  for (auto tower : game_->GetTowers()) {
     sf::Sprite towerSprite;
     switch (tower->GetType()) {
       case iceTower:
@@ -350,7 +375,7 @@ void Gui::drawTowers(std::vector<Tower *> towers) {
     }
 
     towerSprite.setScale(0.09f, 0.09f);
-    towerSprite.setPosition(tower->GetPlace());
+    towerSprite.setPosition(tower->GetPlace().getX(), tower->GetPlace().getY());
 
     window_->draw(towerSprite);
   }
@@ -358,47 +383,92 @@ void Gui::drawTowers(std::vector<Tower *> towers) {
 
 void Gui::setUpCoordinates() {
   int x = window_->getSize().x - 200;
-  buttons_.push_back(Coordinate(x + 15, 300));
-  buttons_.push_back(Coordinate(x + 75, 300));
-  buttons_.push_back(Coordinate(x + 135, 300));
-  buttons_.push_back(Coordinate(x + 33, 365));
-  buttons_.push_back(Coordinate(x + 116, 365));
+  buttons_.push_back(sf::Vector2f(x + 15, 300));
+  buttons_.push_back(sf::Vector2f(x + 75, 300));
+  buttons_.push_back(sf::Vector2f(x + 135, 300));
+  buttons_.push_back(sf::Vector2f(x + 33, 365));
+  buttons_.push_back(sf::Vector2f(x + 116, 365));
 }
 
 int Gui::towerButtonPoller(int x, int y) {
   for (size_t i = 0; i < buttons_.size(); i++) {
     auto button = buttons_[i];
-    if ((x >= button.getX() && x <= button.getX() + 50) &&
-        (y >= button.getY() && y <= button.getY() + 50)) {
+    if ((x >= button.x && x <= button.x + 50) &&
+        (y >= button.y && y <= button.y + 50)) {
+      std::cout << x << ", " << y << std::endl;
       return i;
     }
   }
   return -1;
 }
 
-void Gui::customPollListener(int button) {
+bool Gui::customPollListener(int button) {
   switch (button) {
     case diamondGun:
-      if (game_.GetPlayer().Pay(50)) {
+      if (game_->GetPlayer().Pay(50)) {
+        return true;
       }
       break;
     case tesla:
-      if (game_.GetPlayer().Pay(100)) {
+      if (game_->GetPlayer().Pay(100)) {
+        return true;
       }
       break;
     case turret:
-      if (game_.GetPlayer().Pay(130)) {
+      if (game_->GetPlayer().Pay(130)) {
+        return true;
       }
       break;
     case rocketGreen:
-      if (game_.GetPlayer().Pay(150)) {
+      if (game_->GetPlayer().Pay(150)) {
+        return true;
       }
       break;
     case iceTower:
-      if (game_.GetPlayer().Pay(210)) {
+      if (game_->GetPlayer().Pay(210)) {
+        return true;
       }
       break;
     default:
+      return false;
       break;
+  }
+  return false;
+}
+
+bool Gui::createTower(int whatTower, int x, int y) {
+  switch (whatTower) {
+    /*case diamondGun:
+      game_.AddTower(new Tower(50, 2, 50, Coordinate(x, y), 50, game_, 0));
+      break;
+    case tesla:
+      game_.AddTower(new Tower(100, 2, 50, Coordinate(x, y), 50, game_, 1));
+      break;
+    case turret:
+      game_.AddTower(new BasicTower(Coordinate(x, y), &game_));
+      break;
+    case rocketGreen:
+      game_.AddTower(new BombTower(Coordinate(x, y), &game_));
+      break;*/
+    case iceTower:
+      game_->AddTower(new SlowingTower(Coordinate(x, y), game_));
+      break;
+    default:
+      // don't create a tower
+      break;
+  }
+  return false;
+}
+
+void Gui::drawProjectiles() {
+  for (auto proj: game_->GetProjectiles()) {
+    sf::Sprite projectileSprite;
+    projectileSprite.setTexture(bulletTexture_);
+    projectileSprite.setOrigin(bulletTexture_.getSize().x / 2,
+                               bulletTexture_.getSize().y / 2);
+    projectileSprite.setPosition(proj->GetPosition().getX(),
+                                 proj->GetPosition().getY());
+    projectileSprite.setScale(0.1f, 0.1f);
+    window_->draw(projectileSprite);
   }
 }

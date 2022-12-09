@@ -14,6 +14,8 @@
 #include "Projectile.hpp"
 #include "SlowingTower.hpp"
 #include "Tower.hpp"
+#include "guiFunctions.hpp"
+#include "level.hpp"
 
 class test {
  public:
@@ -106,6 +108,8 @@ class test {
     map.AddCoordinate(Coordinate(750, 50));
 
     Game game = Game("Gargamel", map);
+    auto level = Level(100, &game);
+
     auto enemy = new Enemy(2.5, 34, Coordinate(0, 0), 5, &game, 0);
     game.AddEnemy(enemy);
     auto tower = new SlowingTower(Coordinate(100, 100), &game);
@@ -157,7 +161,7 @@ class test {
     std::vector<sf::CircleShape> projectiles;
 
     sf::CircleShape enemyShape(20.f);
-    enemyShape.setPosition(enemy->GetCoord().getX(), enemy->GetCoord().getY());
+    enemyShape.setPosition(0, 0);
     enemyShape.setFillColor(sf::Color::Red);
     sf::Event event;
     while (window.isOpen()) {
@@ -185,6 +189,7 @@ class test {
             game.GetProjectiles().at(i)->GetPosition().getY() - 5);
         window.draw(projectiles.at(i));
       }
+      level.update();
 
       window.display();
       for (auto t : game.GetTowers()) t->Defend();
@@ -426,13 +431,14 @@ class test {
   void testGui() {
     auto map = Map();
     map.loadCoordinates("path3.txt");
-    for (auto i: map.GetNodes()) {
-      std::cout << i << std::endl;
-    }
+    //for (auto i : map.GetNodes()) {
+    //  std::cout << i << std::endl;
+    //}
     Game game = Game("Gargamel", map);
+    //Level level = Level(100, &game);
     auto enemy = new Enemy(1.0, 3, map.GetNodes().front(), 5, &game, 0);
     game.AddEnemy(enemy);
-    Gui gui = Gui(game);
+    Gui gui = Gui(&game);
     gui.run();
   }
 };

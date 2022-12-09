@@ -17,7 +17,6 @@ Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game, i
 }
 
 void Enemy::getHit(int amount) {
-  std::cout << "Enemy has " << health_ << " health." << std::endl;
   if (health_ < amount) {
     health_ = 0;
     game_->RemoveEnemy(this);
