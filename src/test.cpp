@@ -191,7 +191,7 @@ class test {
         window.draw(projectiles.at(i));
       }
       level.update();
-      std::cout<< game.GetProjectiles().size() << std::endl;
+      std::cout << game.GetProjectiles().size() << std::endl;
 
       window.display();
       for (auto t : game.GetTowers()) t->Defend();
@@ -333,7 +333,7 @@ class test {
 
     sf::RenderWindow window(sf::VideoMode(x / 2, y / 2), "TowerDefence");
     sf::Texture enemyTexture;
-    if (!enemyTexture.loadFromFile("../graphics/enemy1.png")) {
+    if (!enemyTexture.loadFromFile("../graphics/greenTurtle.png")) {
       std::cout << "unable to load enemy texture from file" << std::endl;
       exit(-1);
     }
@@ -437,8 +437,8 @@ class test {
       std::cout << i << std::endl;
     }*/
     Game game = Game("Gargamel", map);
-    //Level level = Level(100, &game);
-    //game.SetLevel(level);
+    // Level level = Level(100, &game);
+    // game.SetLevel(level);
     auto enemy = new Enemy(1.0, 3, map.GetNodes().front(), 5, &game, 0);
     game.AddEnemy(enemy);
     Gui gui = Gui(&game);

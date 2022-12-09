@@ -240,40 +240,42 @@ void Gui::run() {
         std::vector<sf::Vector2f> coordinates = createAndDrawGameScreen();
         createAndDrawPlayerInfo(0, 0, 0);
         drawEnemies(game_->GetEnemies());
-        if(game_->GetEnemies().size() == 1) {
+        std::cout << "updating" << std::endl;
+        if (game_->GetEnemies().size() == 1) {
           auto i = game_->GetEnemies().front()->GetCoord();
           std::cout << i << std::endl;
-        
-        game_->GetLevel().update();
-        game_->Update();
-        break;
-    }
-    sf::Event event;
-    while (window_->pollEvent(event)) {
-      if (sf::Event::Closed == event.type) {
-        window_->close();
-      }
-      if (sf::Event::MouseButtonPressed == event.type) {
-        if (event.mouseButton.button == sf::Mouse::Left) {
-          int x = event.mouseButton.x;
-          int y = event.mouseButton.y;
-          switch (currentScreen_) {
-            case gameMenu:
 
-              // checking that the click happened in the right place
-              if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
-                currentScreen_ = 2;
-                std::cout << "changing screen" << std::endl;
+          game_->GetLevel().update();
+          game_->Update();
+          break;
+        }
+        sf::Event event;
+        while (window_->pollEvent(event)) {
+          if (sf::Event::Closed == event.type) {
+            window_->close();
+          }
+          if (sf::Event::MouseButtonPressed == event.type) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+              int x = event.mouseButton.x;
+              int y = event.mouseButton.y;
+              switch (currentScreen_) {
+                case gameMenu:
+
+                  // checking that the click happened in the right place
+                  if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
+                    currentScreen_ = 2;
+                    std::cout << "changing screen" << std::endl;
+                  }
+                  break;
+                default:
+                  break;
               }
-              break;
-            default:
-              break;
+            }
           }
         }
-      }
+        window_->display();
+        usleep(10000);
     }
-    window_->display();
-    usleep(10000);
   }
 }
 
