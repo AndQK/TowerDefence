@@ -1,15 +1,21 @@
 #ifndef TOWER_DEFENSE_GUI
 #define TOWER_DEFENSE_GUI
 
+#include <unistd.h>
+
 #include <iostream>
 #include <vector>
 
+#include "Coordinate.hpp"
+#include "Enemy.hpp"
 #include "Game.hpp"
 #include "Map.hpp"
 #include "SFML/Graphics.hpp"
 #include "level.hpp"
 
 enum Screens { gameMenu, gameLevelMenu, gameScreen, gameEndScreen };
+
+enum Screen { greenTurtle, brownTurtle };
 
 class Gui {
  public:
@@ -39,17 +45,21 @@ class Gui {
   // runs the loop for the window.
   void run();
 
+  void drawEnemies(std::vector<Enemy *> enemies);
+
  private:
-  sf::RenderWindow* window_;
+  sf::RenderWindow *window_;
   sf::Texture level_1_Texture_;
   sf::Texture level_2_Texture_;
-  // sf::Texture level_3_Texture_;
+  sf::Texture level_3_Texture_;
   sf::Texture mainMenuTexture_;
   sf::Texture diamondTowerTexture_;
   sf::Texture teslaTowerTexture_;
   sf::Texture turretTowerTexture_;
   sf::Texture rocketTowerTexture_;
   sf::Texture iceTowerTexture_;
+  sf::Texture greenTurtle_;
+  sf::Texture brownTurtle_;
   sf::Font font_;
   Game game_;
   sf::Texture currentLevel_;

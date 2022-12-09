@@ -8,12 +8,14 @@
 
 #include "Enemy.hpp"
 #include "Game.hpp"
+#include "Gui.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
 #include "Projectile.hpp"
 #include "SlowingTower.hpp"
 #include "Tower.hpp"
-#include "Gui.hpp"
+#include "guiFunctions.hpp"
+#include "level.hpp"
 
 class test {
  public:
@@ -106,7 +108,9 @@ class test {
     map.AddCoordinate(Coordinate(750, 50));
 
     Game game = Game("Gargamel", map);
-    auto enemy = new Enemy(2.5, 34, Coordinate(0, 0), 5, &game);
+    auto level = Level(100, &game);
+
+    auto enemy = new Enemy(2.5, 34, Coordinate(0, 0), 5, &game, 0);
     game.AddEnemy(enemy);
     auto tower = new SlowingTower(Coordinate(100, 100), &game);
     auto tower2 = new SlowingTower(Coordinate(620, 300), &game);
@@ -157,7 +161,7 @@ class test {
     std::vector<sf::CircleShape> projectiles;
 
     sf::CircleShape enemyShape(20.f);
-    enemyShape.setPosition(enemy->GetCoord().getX(), enemy->GetCoord().getY());
+    enemyShape.setPosition(0, 0);
     enemyShape.setFillColor(sf::Color::Red);
     sf::Event event;
     while (window.isOpen()) {
@@ -185,6 +189,7 @@ class test {
             game.GetProjectiles().at(i)->GetPosition().getY() - 5);
         window.draw(projectiles.at(i));
       }
+      level.update();
 
       window.display();
       for (auto t : game.GetTowers()) t->Defend();
@@ -196,7 +201,7 @@ class test {
                                e->GetCoord().getY() - 20);
       }
       if (game.GetEnemies().empty()) {
-        game.AddEnemy(new Enemy(2.5, 34, Coordinate(0, 0), 5, &game));
+        game.AddEnemy(new Enemy(2.5, 34, Coordinate(0, 0), 5, &game, 0));
       }
 
       usleep(10000);
@@ -207,7 +212,7 @@ class test {
     Map map = Map();
     map.AddCoordinate(Coordinate(700, 300));
     Game game = Game("Gargamel", map);
-    auto enemy = new Enemy(1.0, 3, Coordinate(0, 300), 5, &game);
+    auto enemy = new Enemy(1.0, 3, Coordinate(0, 300), 5, &game, 0);
     game.AddEnemy(enemy);
     Projectile projectile = Projectile(2.0, 50, Coordinate(800, 300),
                                        Coordinate(-1, 0), bomb, &game);
@@ -312,7 +317,7 @@ class test {
     nodes.push_back(node11);
 
     Game game = Game("Gargamel", map);
-    auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game);
+    auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game, 0);
     sf::Texture mapTexture;
     if (!mapTexture.loadFromFile("../graphics/Level1.png")) {
       std::cout << "unable to load texture from file" << std::endl;
@@ -425,7 +430,14 @@ class test {
   }
   void testGui() {
     auto map = Map();
+    map.loadCoordinates("../path3.txt");
+    for (auto i : map.GetNodes()) {
+      std::cout << i << std::endl;
+    }
     Game game = Game("Gargamel", map);
+    //Level level = Level(100, &game);
+    auto enemy = new Enemy(1.0, 3, map.GetNodes().front(), 5, &game, 0);
+    game.AddEnemy(enemy);
     Gui gui = Gui(game);
     gui.run();
   }

@@ -4,19 +4,19 @@
 
 #include "Game.hpp"
 
-Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game)
+Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game, int type)
     : speed_(speed),
       health_(health),
       place_(place),
       worth_(worth),
       currentNode_(0),
-      game_(game) {
+      game_(game),
+      type_(type) {
   auto direction_raw = game_->GetMap().GetNode(currentNode_) - place_;
   direction_ = direction_raw / direction_raw.getLength();
 }
 
 void Enemy::getHit(int amount) {
-  std::cout << "Enemy has " << health_ << " health." << std::endl;
   if (health_ < amount) {
     health_ = 0;
     game_->RemoveEnemy(this);
@@ -87,3 +87,5 @@ const Coordinate& Enemy::GetCoord() const { return place_; }
 const int& Enemy::GetWorth() const { return worth_; }
 
 const int& Enemy::GetDistance() const { return distance_; }
+
+const int& Enemy::GetType() const { return type_; }
