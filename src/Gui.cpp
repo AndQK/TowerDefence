@@ -1,6 +1,6 @@
 #include "Gui.hpp"
 
-Gui::Gui(Game &game) {
+Gui::Gui(Game *game) {
   if (!level_1_Texture_.loadFromFile("../graphics/Level1.png")) {
     std::cout << "unable to load texture from file" << std::endl;
     exit(-1);
@@ -248,8 +248,9 @@ void Gui::run() {
       case gameScreen:  // game screen:
         std::vector<sf::Vector2f> coordinates = createAndDrawGameScreen();
         createAndDrawPlayerInfo(0, 0, 0);
-        drawEnemies(game_.GetEnemies());
-        game_.Update();
+        drawEnemies(game_->GetEnemies());
+        game_->GetLevel().update();
+        game_->Update();
         break;
     }
     sf::Event event;

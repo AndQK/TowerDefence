@@ -12,7 +12,7 @@ class Game;
 
 class Wave {
  public:
-  Wave(int spawnRate, Game* game);
+  Wave(float spawnRate, Game* game);
 
   void addEnemy(Enemy* e);
 
@@ -24,9 +24,11 @@ class Wave {
 
   bool started();
 
+  void updateLastSpawn();
+
  private:
   // Enemies' spawn rate (spawns per second.)
-  int spawnRate_;
+  float spawnRate_;
 
   Game* game_;
 
@@ -46,6 +48,8 @@ class Level {
   Level(int initial_money, Game* game);
 
   Level();
+
+  ~Level();
 
   int initial_money() const;
 

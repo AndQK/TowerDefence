@@ -20,7 +20,7 @@ enum Screen { greenTurtle, brownTurtle };
 class Gui {
  public:
   // Constructor
-  Gui(Game &game);
+  Gui(Game *game);
 
   // destructor
 
@@ -61,7 +61,7 @@ class Gui {
   sf::Texture greenTurtle_;
   sf::Texture brownTurtle_;
   sf::Font font_;
-  Game game_;
+  Game *game_;
   sf::Texture currentLevel_;
   int currentScreen_;
   std::vector<sf::Texture> towerTextures_;
