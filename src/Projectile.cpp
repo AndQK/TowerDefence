@@ -18,7 +18,10 @@ bool Projectile::hitTarget() {
   std::vector<Enemy*> e = game_->GetEnemies();
   for (auto enemy : e) {
     if ((pos_ - enemy->GetCoord()).getLength() < COLLISION_DISTANCE) {
-      enemy->getHit(damage_);
+      if (type_ == slow)
+        enemy->getHit(-1);
+      else
+        enemy->getHit(damage_);
       return true;
     }
   }
@@ -35,4 +38,19 @@ void Projectile::Move() {
   } else {
     game_->RemoveProjectile(this);
   }
+}
+
+float Projectile::getAngle() {
+  double PI = 3.1415926535;
+  double y = direction_.getY();
+  double x = -direction_.getX();
+  double angle = 0;
+  if ((std::atan2(y, x) * 180 / 3.1415926535) > 0) {
+    angle = -360 + std::atan2(y, x) * 180 / 3.1415926535;
+  } else {
+    angle = std::atan2(y, x) * 180 / 3.1415926535;
+  }
+  angle = std::fmod((-angle + 270), 360);
+
+  return angle;
 }

@@ -437,9 +437,9 @@ class test {
       std::cout << i << std::endl;
     }*/
     Game game = Game("Gargamel", map);
-    // Level level = Level(100, &game);
-    // game.SetLevel(level);
-    auto enemy = new Enemy(1.0, 3, map.GetNodes().front(), 5, &game, 0);
+    Level level = Level(100, &game);
+    game.SetLevel(level);
+    auto enemy = new SplittingEnemy(map.GetNodes().front(), 50, &game);
     game.AddEnemy(enemy);
     Gui gui = Gui(&game);
     gui.run();
