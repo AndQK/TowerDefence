@@ -191,6 +191,7 @@ class test {
         window.draw(projectiles.at(i));
       }
       level.update();
+      std::cout<< game.GetProjectiles().size() << std::endl;
 
       window.display();
       for (auto t : game.GetTowers()) t->Defend();

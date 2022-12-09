@@ -27,7 +27,11 @@ bool Projectile::hitTarget() {
 
 void Projectile::Move() {
   if (!this->hitTarget()) {
-    pos_ = pos_ + (direction_ * speed_);
+    if (pos_.getX() < 0 || pos_.getY() < 0 || pos_.getX() > 843 ||
+        pos_.getY() > 657)
+      game_->RemoveProjectile(this);
+    else
+      pos_ = pos_ + (direction_ * speed_);
   } else {
     game_->RemoveProjectile(this);
   }

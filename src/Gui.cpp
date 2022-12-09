@@ -46,7 +46,7 @@ Gui::Gui(Game &game) {
     exit(-1);
   }
 
-  if (!font_.loadFromFile("graphics/ARLRDBD.TTF")) {
+  if (!font_.loadFromFile("../graphics/ARLRDBD.TTF")) {
     std::cout << "unable to load font from file" << std::endl;
     exit(-1);
   }
