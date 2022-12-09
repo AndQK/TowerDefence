@@ -40,7 +40,7 @@ Level::Level() : initial_money_(100), game_(nullptr), currentWave_(0) {}
 
 Level::Level(int initial_money, Game* game)
     : initial_money_(initial_money), game_(game), currentWave_(0) {
-  float spawnRate = 0.5f;
+  float spawnRate = 1.0f;
   float hpFactor = 1;
   int enemiesPerWave = 5;
   int amountOfWaves = 10;
