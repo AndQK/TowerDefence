@@ -187,7 +187,7 @@ void Gui::createAndDrawPlayerInfo(int health, int wave, int gold) {
   drawDrawables(drawables);
 }
 
-std::vector<sf::Vector2f> Gui::createAndDrawGameScreen() {
+void Gui::createAndDrawGameScreen() {
   // Width and height for buttons
   std::vector<sf::Vector2f> btnSizes;
 
@@ -227,7 +227,6 @@ std::vector<sf::Vector2f> Gui::createAndDrawGameScreen() {
   for (unsigned int i = 0; i < buttons_.size(); i++) {
     createAndDrawTowerBtn(buttons_[i], btnSizes[i], towerTextures_[i]);
   }
-  return buttons_;
 }
 
 void Gui::run() {
@@ -247,15 +246,10 @@ void Gui::run() {
         createAndDrawGameMenu();
         break;
       case gameScreen:  // game screen:
-        std::vector<sf::Vector2f> coordinates = createAndDrawGameScreen();
-
-        int health = game_->GetPlayer().GetHealth();
-
-        int gold = game_->GetPlayer().GetMoney();
-
-        int wave = game_->GetLevel().getCurrentWave();
-
-        createAndDrawPlayerInfo(health, wave, gold);
+        createAndDrawGameScreen();
+        createAndDrawPlayerInfo(game_->GetPlayer().GetHealth(),
+                                game_->GetLevel().getCurrentWave(),
+                                game_->GetPlayer().GetMoney());
         drawEnemies();
         drawTowers();
         drawProjectiles();
@@ -263,7 +257,13 @@ void Gui::run() {
         game_->Update();
         std::cout << game_->GetProjectiles().size() << std::endl;
         break;
+      case gameEndScreen:  // Game Over screen
+        drawGameOver();
+        break;
+      default:
+        break;
     }
+
     sf::Event event;
     while (window_->pollEvent(event)) {
       if (sf::Event::Closed == event.type) {
@@ -289,7 +289,8 @@ void Gui::run() {
               } else {
                 isBought = createTower(whichTower, x, y);
               }
-
+              break;
+            case gameEndScreen:
               break;
             default:
               break;
@@ -367,7 +368,7 @@ void Gui::setUpCoordinates() {
 }
 
 int Gui::towerButtonPoller(int x, int y) {
-  for (size_t i = 0; i < buttons_.size(); i++) {
+  for (size_t i = 0; i < buttons_.size(); ++i) {
     auto button = buttons_[i];
     if ((x >= button.x && x <= button.x + 50) &&
         (y >= button.y && y <= button.y + 50)) {
@@ -447,4 +448,31 @@ void Gui::drawProjectiles() {
     projectileSprite.setRotation(proj->getAngle());
     window_->draw(projectileSprite);
   }
+}
+
+void Gui::drawGameOver() {
+  // width and height of the window
+  float width = window_->getSize().x;
+  float height = window_->getSize().y;
+
+  // Initialize the screen to black
+  sf::RectangleShape gameOverBox;
+  gameOverBox.setFillColor(sf::Color::Black);
+  gameOverBox.setSize(sf::Vector2f(width, height));
+
+  // create text
+  sf::Text gameOverText("Game Over", font_, 50);
+  gameOverText.setFillColor(sf::Color::White);
+  gameOverText.setStyle(sf::Text::Bold);
+
+  // set Text's position so that the text is at the center of the screen
+  auto size = gameOverText.getGlobalBounds();
+
+  gameOverText.setOrigin(size.width / 2, size.height / 2);
+  gameOverText.setPosition(width / 2, height / 2);
+
+  std::vector<sf::Drawable *> drawables;
+  drawables.push_back(&gameOverBox);
+  drawables.push_back(&gameOverText);
+  drawDrawables(drawables);
 }
