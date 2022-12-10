@@ -33,7 +33,7 @@ class Game {
 
   void AddProjectile(Projectile* projectile);
 
-  //void SetLevel(Level& level);
+  void SetLevel(Level& level);
 
   void sustainFramerate(std::chrono::steady_clock::time_point beg,
                         std::chrono::steady_clock::time_point end);

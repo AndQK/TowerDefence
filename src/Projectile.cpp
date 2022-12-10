@@ -18,7 +18,10 @@ bool Projectile::hitTarget() {
   std::vector<Enemy*> e = game_->GetEnemies();
   for (auto enemy : e) {
     if ((pos_ - enemy->GetCoord()).getLength() < COLLISION_DISTANCE) {
-      enemy->getHit(damage_);
+      if (type_ = slow)
+        enemy->getHit(-1);
+      else
+        enemy->getHit(damage_);
       return true;
     }
   }

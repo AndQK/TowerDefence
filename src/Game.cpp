@@ -55,7 +55,7 @@ void Game::Update() {
   for (auto tower : this->towers_) tower->Defend();
 }
 
-//void Game::SetLevel(Level& level) { level_ = level; }
+void Game::SetLevel(Level& level) { level_ = level; }
 
 void Game::AddEnemy(Enemy* enemy) { enemies_.push_back(enemy); }
 

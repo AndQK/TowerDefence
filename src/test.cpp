@@ -320,7 +320,7 @@ class test {
     Game game = Game("Gargamel", map);
     auto enemy = Enemy(1.0, 3, Coordinate(35.f, 339.f), 5, &game, 0);
     sf::Texture mapTexture;
-    if (!mapTexture.loadFromFile("../graphics/Level1.png")) {
+    if (!mapTexture.loadFromFile("graphics/Level1.png")) {
       std::cout << "unable to load texture from file" << std::endl;
       exit(-1);
     }
@@ -332,7 +332,7 @@ class test {
 
     sf::RenderWindow window(sf::VideoMode(x / 2, y / 2), "TowerDefence");
     sf::Texture enemyTexture;
-    if (!enemyTexture.loadFromFile("../graphics/enemy1.png")) {
+    if (!enemyTexture.loadFromFile("graphics/enemy1.png")) {
       std::cout << "unable to load enemy texture from file" << std::endl;
       exit(-1);
     }
@@ -431,7 +431,7 @@ class test {
   }
   void testGui() {
     auto map = Map();
-    map.loadCoordinates("../path3.txt");
+    map.loadCoordinates("path3.txt");
     /*for (auto i : map.GetNodes()) {
       std::cout << i << std::endl;
     }*/

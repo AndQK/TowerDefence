@@ -272,6 +272,7 @@ void Gui::run() {
         drawEnemies();
         drawTowers();
         drawProjectiles();
+        game_->GetLevel().update();
         game_->Update();
         break;
     }

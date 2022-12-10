@@ -18,23 +18,27 @@ Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game,
 }
 
 void Enemy::getHit(int amount) {
-  if (health_ < amount) {
+  if (amount < 0)
+    this->Slow();
+  else if (health_ < amount) {
     health_ = 0;
-    if (this->GetType() != 1)
+    if (this->GetType() != 1) {
       game_->RemoveEnemy(this);
-    else {
+      this->game_->GetPlayer().AddMoney(this->GetWorth());
+    } else {
       Coordinate c = this->place_;
       auto n = this->getCurrentNode();
       auto dist = this->GetDistance();
       auto a =
-          new EasyEnemy(Coordinate(c.getX() + 15, c.getY() + 15), 100, game_);
-      auto b = new EasyEnemy(c, 100, game_);
+          new EasyEnemy(Coordinate(c.getX() + 15, c.getY() + 15), 1, game_);
+      auto b = new EasyEnemy(c, 1, game_);
       auto d =
-          new EasyEnemy(Coordinate(c.getX() - 15, c.getY() - 15), 100, game_);
+          new EasyEnemy(Coordinate(c.getX() - 15, c.getY() - 15), 1, game_);
       a->setCurrentNode(n);
       b->setCurrentNode(n);
       d->setCurrentNode(n);
       a->setDistance(dist);
+      std::cout << "DISTANCE" << a->GetDistance() << std::endl;
       b->setDistance(dist);
       d->setDistance(dist);
       game_->AddEnemy(a);
@@ -75,13 +79,17 @@ bool Enemy::Move() {
   }
   // Move towards the next node with the speed_
   place_ = place_ + (direction_ * speed_);
+
+  std::cout << "Adding following vector: " << direction_ << " * " << speed_
+            << std::endl;
+
   distance_ += speed_;
   return true;
 }
 
-void Enemy::Slow(double s) {
-  auto t = s;
-  if (speed_ - t > 0) speed_ -= s;
+void Enemy::Slow() {
+  speed_ *= 0.9;
+  if (speed_ < 0.5) speed_ = 0.5;
 }
 
 float Enemy::getAngle() {
@@ -110,6 +118,6 @@ const Coordinate& Enemy::GetCoord() const { return place_; }
 // Get the enemy's worth
 const int& Enemy::GetWorth() const { return worth_; }
 
-const int& Enemy::GetDistance() const { return distance_; }
+const float& Enemy::GetDistance() const { return distance_; }
 
 const int& Enemy::GetType() const { return type_; }
