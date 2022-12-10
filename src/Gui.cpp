@@ -262,11 +262,6 @@ void Gui::run() {
         break;
       default:
         break;
-      case gameEndScreen:  // Game Over screen
-        drawGameOver();
-        break;
-      default:
-        break;
     }
 
     sf::Event event;
@@ -404,6 +399,7 @@ bool Gui::customPollListener(int button) {
       return false;
       break;
   }
+  return false;
 }
 
 bool Gui::createTower(int whatTower, int x, int y) {
