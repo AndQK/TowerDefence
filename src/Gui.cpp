@@ -255,6 +255,12 @@ void Gui::run() {
         drawProjectiles();
         game_->GetLevel().update();
         game_->Update();
+        std::cout << game_->GetProjectiles().size() << std::endl;
+        break;
+      case gameEndScreen:  // Game Over screen
+        drawGameOver();
+        break;
+      default:
         break;
       case gameEndScreen:  // Game Over screen
         drawGameOver();
@@ -371,7 +377,6 @@ int Gui::towerButtonPoller(int x, int y) {
     auto button = buttons_[i];
     if ((x >= button.x && x <= button.x + 50) &&
         (y >= button.y && y <= button.y + 50)) {
-      std::cout << i << std::endl;
       return i;
     }
   }

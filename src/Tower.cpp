@@ -19,8 +19,6 @@ void Tower::Attack(Enemy& e) { e.getHit(damage_); }
 
 void Tower::Slow(Enemy& e) { e.Slow(); }
 
-// Towers: torneille sitten kyvyn ammuskella noita projectileja vihollisia päin
-
 void Tower::Move(Coordinate c) { place_ = c; }
 
 void Tower::Shoot(ProjectileType type) {
@@ -57,18 +55,6 @@ void Tower::Shoot(ProjectileType type) {
         maxDist = e->GetDistance();
         c = e->GetCoord();
       }
-    }
-
-    /**auto enemy = inRange.front();
-    std::cout << std::endl;
-    auto a = enemy->GetCoord(); */
-    for (auto i : inRange) {
-      std::cout << i->GetDistance() << ", ";
-    }
-    std::cout << std::endl;
-    std::cout << maxDist << std::endl;
-    if (maxDist > 100000) {
-      std::cout << "error" << std::endl;
     }
 
     auto b = this->GetPlace();

@@ -23,9 +23,6 @@ class Game {
 
   ~Game();
 
-  // Starting the game, the main loop is in this function
-  void StartGame();
-
   // Adds enemy to the current game
   void AddEnemy(Enemy* enemy);
 
@@ -34,9 +31,6 @@ class Game {
   void AddProjectile(Projectile* projectile);
 
   void SetLevel(Level& level);
-
-  void sustainFramerate(std::chrono::steady_clock::time_point beg,
-                        std::chrono::steady_clock::time_point end);
 
   // Update enemies, projectiles and towers in the game.
   void Update();

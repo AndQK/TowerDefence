@@ -69,14 +69,6 @@ class test {
     std::cout << "End!" << std::endl;
   }
 
-  void testGame() {
-    auto game = Game("Matias", Map());
-    game.GetPlayer().AddMoney(50);
-    std::cout << "Get the players money: " << game.GetPlayer().GetMoney()
-              << " Should be 50." << std::endl;
-    game.StartGame();
-  }
-
   void testGraphics() {
     int pos = 0;
     sf::RenderWindow window(sf::VideoMode(800, 600), "Ando on paras!");
@@ -191,6 +183,7 @@ class test {
         window.draw(projectiles.at(i));
       }
       level.update();
+      std::cout << game.GetProjectiles().size() << std::endl;
 
       window.display();
       for (auto t : game.GetTowers()) t->Defend();
@@ -332,7 +325,7 @@ class test {
 
     sf::RenderWindow window(sf::VideoMode(x / 2, y / 2), "TowerDefence");
     sf::Texture enemyTexture;
-    if (!enemyTexture.loadFromFile("graphics/enemy1.png")) {
+    if (!enemyTexture.loadFromFile("../graphics/greenTurtle.png")) {
       std::cout << "unable to load enemy texture from file" << std::endl;
       exit(-1);
     }
@@ -428,20 +421,6 @@ class test {
       r += 2.f;
       // usleep(1000);
     }
-  }
-  void testGui() {
-    auto map = Map();
-    map.loadCoordinates("path3.txt");
-    /*for (auto i : map.GetNodes()) {
-      std::cout << i << std::endl;
-    }*/
-    Game game = Game("Gargamel", map);
-    Level level = Level(100, &game);
-    game.SetLevel(level);
-    auto enemy = new SplittingEnemy(map.GetNodes().front(), 50, &game);
-    game.AddEnemy(enemy);
-    Gui gui = Gui(&game);
-    gui.run();
   }
 };
 

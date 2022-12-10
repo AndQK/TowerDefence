@@ -7,9 +7,6 @@ class Game;
 
 class Enemy {
  public:
-  /**explicit Enemy(float speed, int health, Coordinate place,
-                 int worth);  */
-
   Enemy(float speed, int health, Coordinate place, int worth, Game* game,
         int type);
 
@@ -76,11 +73,7 @@ class Enemy {
   float distance_;
 
   // the type of the enemy
-
   int type_;
-
-  // The image of the enemy.
-  // PNG image;
 };
 
 class HardEnemy : public Enemy {
