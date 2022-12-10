@@ -9,21 +9,15 @@
 #include "test.cpp"
 
 int main(int, char**) {
-  auto t = test();
-  // t.testEnemies();
-  // t.testMap();
-  // t.testPlayer();
-  //t.testSprites();
-  // t.testGame();
-  // t.testGraphics();
-  // t.testEnemyMovement();
-  // t.testProjectiles();
-  // t.testRotate();
-  //t.testGui();
-  // t.testEnemyMovement();
-  // t.testProjectiles();
-  // t.testRotate();
-  t.testGui();
+  auto map = Map();
+  map.loadCoordinates("path3.txt");
+  Game game = Game("Gargamel", map);
+  Level level = Level(100, &game);
+  game.SetLevel(level);
+  auto enemy = new SplittingEnemy(map.GetNodes().front(), 50, &game);
+  game.AddEnemy(enemy);
+  Gui gui = Gui(&game);
+  gui.run();
   return 0;
 }
 

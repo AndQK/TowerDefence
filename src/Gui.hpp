@@ -14,13 +14,15 @@
 #include "level.hpp"
 #include "Tower.hpp"
 #include "SlowingTower.hpp"
+#include "BasicTower.hpp"
+#include "BombTower.hpp"
 #include "Player.hpp"
 
 enum Screens { gameMenu, gameLevelMenu, gameScreen, gameEndScreen };
 
 enum Enemies { greenTurtle, brownTurtle };
 
-enum Towers { diamondGun, tesla, turret, rocketGreen, iceTower };
+enum Towers { turret, rocketGreen, iceTower };
 
 class Gui {
  public:
@@ -79,14 +81,14 @@ class Gui {
   sf::Texture level_2_Texture_;
   sf::Texture level_3_Texture_;
   sf::Texture mainMenuTexture_;
-  sf::Texture diamondTowerTexture_;
-  sf::Texture teslaTowerTexture_;
   sf::Texture turretTowerTexture_;
   sf::Texture rocketTowerTexture_;
   sf::Texture iceTowerTexture_;
   sf::Texture greenTurtle_;
   sf::Texture brownTurtle_;
   sf::Texture bulletTexture_;
+  sf::Texture rocketTexture_;
+  sf::Texture iceTexture_;
   sf::Font font_;
 
   Game *game_;

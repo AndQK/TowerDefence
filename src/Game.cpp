@@ -9,45 +9,6 @@ Game::Game(const std::string& name, const Map& map)
 
 Game::Game() : player_(Player("Default name")), map_(Map()) {}
 
-void Game::StartGame() {
-  int i = 0;
-  double timeElapsed = 0;
-  int microSecondsPerFrame = (1.0f / this->FPS) * 1000000;
-  std::cout << "microSecondsPerFrame" << microSecondsPerFrame << std::endl;
-  std::chrono::steady_clock::time_point beg = std::chrono::steady_clock::now();
-  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-  // Simulates the frames
-  while (i <= 1000) {
-    if (i % 100 == 0) {
-      double seconds = timeElapsed / 1000000;
-      std::cout << "Game running for " << seconds
-                << "seconds. Current frame: " << i << "." << std::endl;
-    }
-    i++;
-
-    // Update the elements in the game.
-    this->Update();
-
-    // Calculate, how much sleep is required to hold the desired FPS
-    end = std::chrono::steady_clock::now();
-    sustainFramerate(beg, end);
-    timeElapsed += microSecondsPerFrame;
-    beg = std::chrono::steady_clock::now();
-  }
-}
-
-// Sleeps for the correct amount
-void Game::sustainFramerate(std::chrono::steady_clock::time_point beg,
-                            std::chrono::steady_clock::time_point end) {
-  int microSecondsPerFrame = (1.0f / this->FPS) * 1000000;
-  auto elapsedTimeInMicroseconds =
-      std::chrono::duration_cast<std::chrono::microseconds>(end - beg).count();
-  if (elapsedTimeInMicroseconds < microSecondsPerFrame)
-    usleep(microSecondsPerFrame - elapsedTimeInMicroseconds);
-  else
-    std::cout << "Doing under 100fps" << std::endl;
-}
-
 void Game::Update() {
   // Update stuff related to game.
   for (auto enemy : this->enemies_) enemy->Move();
@@ -75,6 +36,8 @@ Map Game::GetMap() const {
 void Game::RemoveProjectile(Projectile* projectile) {
   auto remove = std::find_if(projectiles_.begin(), projectiles_.end(),
                              [&](Projectile* p) { return p == projectile; });
+  auto a = (*remove)->GetPosition();
+  std::cout << a << std::endl;
   delete (*remove);
   projectiles_.erase(remove);
 }
