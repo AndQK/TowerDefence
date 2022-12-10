@@ -431,7 +431,7 @@ class test {
   }
   void testGui() {
     auto map = Map();
-    map.loadCoordinates("path3.txt");
+    map.loadCoordinates("../path3.txt");
     /*for (auto i : map.GetNodes()) {
       std::cout << i << std::endl;
     }*/

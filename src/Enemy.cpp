@@ -38,7 +38,6 @@ void Enemy::getHit(int amount) {
       b->setCurrentNode(n);
       d->setCurrentNode(n);
       a->setDistance(dist);
-      std::cout << "DISTANCE" << a->GetDistance() << std::endl;
       b->setDistance(dist);
       d->setDistance(dist);
       game_->AddEnemy(a);
@@ -58,6 +57,9 @@ bool operator<(const Enemy& e1, const Enemy& e2) {
 }
 
 bool Enemy::Move() {
+  if (distance_ > 10000) {
+    std::cout << "Error" << std::endl;
+  }
   auto nextNode = (*game_).GetMap().GetNode(currentNode_);
   double distance = (nextNode - this->place_).getLength();
   auto direction_raw = (*game_).GetMap().GetNode(currentNode_) - this->place_;
@@ -80,10 +82,6 @@ bool Enemy::Move() {
   // Move towards the next node with the speed_
   place_ = place_ + (direction_ * speed_);
 
-  std::cout << "Adding following vector: " << direction_ << " * " << speed_
-            << std::endl;
-
-  distance_ += speed_;
   return true;
 }
 

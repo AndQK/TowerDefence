@@ -1,65 +1,65 @@
 #include "Gui.hpp"
 
 Gui::Gui(Game *game) {
-  if (!level_1_Texture_.loadFromFile("graphics/Level1.png")) {
+  if (!level_1_Texture_.loadFromFile("../graphics/Level1.png")) {
     std::cout << "unable to load texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!level_2_Texture_.loadFromFile("graphics/Level2.png")) {
+  if (!level_2_Texture_.loadFromFile("../graphics/Level2.png")) {
     std::cout << "unable to load texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!level_3_Texture_.loadFromFile("graphics/Level3.png")) {
+  if (!level_3_Texture_.loadFromFile("../graphics/Level3.png")) {
     std::cout << "unable to load texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!mainMenuTexture_.loadFromFile("graphics/mainMenu.png")) {
+  if (!mainMenuTexture_.loadFromFile("../graphics/mainMenu.png")) {
     std::cout << "unable to load texture form file" << std::endl;
     exit(-1);
   }
 
-  if (!diamondTowerTexture_.loadFromFile("graphics/diamondGun.png")) {
+  if (!diamondTowerTexture_.loadFromFile("../graphics/diamondGun.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!teslaTowerTexture_.loadFromFile("graphics/tesla.png")) {
+  if (!teslaTowerTexture_.loadFromFile("../graphics/tesla.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!turretTowerTexture_.loadFromFile("graphics/turret.png")) {
+  if (!turretTowerTexture_.loadFromFile("../graphics/turret.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!rocketTowerTexture_.loadFromFile("graphics/rocketGreen.png")) {
+  if (!rocketTowerTexture_.loadFromFile("../graphics/rocketGreen.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!iceTowerTexture_.loadFromFile("graphics/iceTower.png")) {
+  if (!iceTowerTexture_.loadFromFile("../graphics/iceTower.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!greenTurtle_.loadFromFile("graphics/greenTurtle.png")) {
+  if (!greenTurtle_.loadFromFile("../graphics/greenTurtle.png")) {
     std::cout << "unable to load enemy texture from file" << std::endl;
     exit(-1);
   }
-  if (!brownTurtle_.loadFromFile("graphics/brownTurtle.png")) {
+  if (!brownTurtle_.loadFromFile("../graphics/brownTurtle.png")) {
     std::cout << "unable to load enemy texture from file" << std::endl;
     exit(-1);
   }
 
-  if (!font_.loadFromFile("graphics/ARLRDBD.TTF")) {
+  if (!font_.loadFromFile("../graphics/ARLRDBD.TTF")) {
     std::cout << "unable to load font from file" << std::endl;
     exit(-1);
   }
-  if (!bulletTexture_.loadFromFile("graphics/bullet.png")) {
+  if (!bulletTexture_.loadFromFile("../graphics/bullet.png")) {
     std::cout << "unable to load bullet texture from file" << std::endl;
     exit(-1);
   }
@@ -462,7 +462,7 @@ bool Gui::createTower(int whatTower, int x, int y) {
 }
 
 void Gui::drawProjectiles() {
-  for (auto proj: game_->GetProjectiles()) {
+  for (auto proj : game_->GetProjectiles()) {
     sf::Sprite projectileSprite;
     projectileSprite.setTexture(bulletTexture_);
     projectileSprite.setOrigin(bulletTexture_.getSize().x / 2,
