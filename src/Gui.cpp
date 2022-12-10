@@ -396,7 +396,6 @@ int Gui::towerButtonPoller(int x, int y) {
     auto button = buttons_[i];
     if ((x >= button.x && x <= button.x + 50) &&
         (y >= button.y && y <= button.y + 50)) {
-      std::cout << x << ", " << y << std::endl;
       return i;
     }
   }

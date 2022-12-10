@@ -12,7 +12,8 @@ Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game,
       worth_(worth),
       currentNode_(0),
       game_(game),
-      type_(type) {
+      type_(type),
+      distance_(0) {
   auto direction_raw = game_->GetMap().GetNode(currentNode_) - place_;
   direction_ = direction_raw / direction_raw.getLength();
 }
@@ -38,7 +39,6 @@ void Enemy::getHit(int amount) {
       b->setCurrentNode(n);
       d->setCurrentNode(n);
       a->setDistance(dist);
-      std::cout << "DISTANCE" << a->GetDistance() << std::endl;
       b->setDistance(dist);
       d->setDistance(dist);
       game_->AddEnemy(a);
@@ -68,7 +68,6 @@ bool Enemy::Move() {
     if (currentNode_ >= (*game_).GetMap().GetNofNodes() - 1) {
       game_->RemoveEnemy(this);
       game_->GetPlayer().reduceHealth();
-      std::cout << game_->GetPlayer().GetHealth() << std::endl;
       return false;
     } else {
       currentNode_++;
@@ -79,9 +78,6 @@ bool Enemy::Move() {
   }
   // Move towards the next node with the speed_
   place_ = place_ + (direction_ * speed_);
-
-  std::cout << "Adding following vector: " << direction_ << " * " << speed_
-            << std::endl;
 
   distance_ += speed_;
   return true;

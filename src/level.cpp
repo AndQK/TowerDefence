@@ -40,10 +40,10 @@ Level::Level() : initial_money_(100), game_(nullptr), currentWave_(0) {}
 
 Level::Level(int initial_money, Game* game)
     : initial_money_(initial_money), game_(game), currentWave_(0) {
-  float spawnRate = 1.0f;
+  float spawnRate =0.3f;
   float hpFactor = 1;
   int enemiesPerWave = 5;
-  int amountOfWaves = 10;
+  int amountOfWaves = 100;
   while (amountOfWaves > 0) {
     auto w1 = new Wave(spawnRate, game);
     int i = enemiesPerWave;
@@ -64,19 +64,6 @@ Level::Level(int initial_money, Game* game)
     amountOfWaves--;
   }
   waves_.size();
-  /*
-  auto w1 = new Wave(1.0, game);
-  auto e1 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
-  auto e2 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
-  auto e3 = new Enemy(2.0, 5.0, Coordinate(0, 0), 5.0, game_, 0);
-  w1->addEnemy(e1);
-  w1->addEnemy(e2);
-  w1->addEnemy(e3);
-  auto w2 = new Wave(6, game);
-  auto w3 = new Wave(7, game);
-  waves_.push_back(w1);
-  waves_.push_back(w2);
-  waves_.push_back(w3);*/
 }
 
 Level::~Level() {
