@@ -10,15 +10,6 @@
 
 int main(int, char**) {
   auto t = test();
-  // t.testEnemies();
-  // t.testMap();
-  // t.testPlayer();
-  // t.testSprites();
-  // t.testGame();
-  // t.testGraphics();
-  // t.testEnemyMovement();
-  // t.testProjectiles();
-  // t.testRotate();
   t.testGui();
   return 0;
 }

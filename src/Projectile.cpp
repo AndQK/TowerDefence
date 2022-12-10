@@ -50,3 +50,5 @@ float Projectile::getAngle() {
 
   return angle;
 }
+
+ProjectileType Projectile::GetType() { return type_; }

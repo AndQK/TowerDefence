@@ -21,16 +21,6 @@ Gui::Gui(Game *game) {
     exit(-1);
   }
 
-  if (!diamondTowerTexture_.loadFromFile("graphics/diamondGun.png")) {
-    std::cout << "unable to load tower texture from file" << std::endl;
-    exit(-1);
-  }
-
-  if (!teslaTowerTexture_.loadFromFile("graphics/tesla.png")) {
-    std::cout << "unable to load tower texture from file" << std::endl;
-    exit(-1);
-  }
-
   if (!turretTowerTexture_.loadFromFile("graphics/turret.png")) {
     std::cout << "unable to load tower texture from file" << std::endl;
     exit(-1);
@@ -63,6 +53,13 @@ Gui::Gui(Game *game) {
     std::cout << "unable to load bullet texture from file" << std::endl;
     exit(-1);
   }
+  if (!rocketTexture_.loadFromFile("graphics/rocket.png")) {
+    std::cout << "unable to load rocket texture from file" << std::endl;
+    exit(-1);
+  }
+  if (!iceTexture_.loadFromFile("graphics/ice.png")) {
+    std::cout << "unable to load ice texture from file" << std::endl;
+  }
 
   // by default:
   currentScreen_ = Screens::gameMenu;
@@ -77,8 +74,6 @@ Gui::Gui(Game *game) {
 
   game_ = game;
 
-  towerTextures_.push_back(diamondTowerTexture_);
-  towerTextures_.push_back(teslaTowerTexture_);
   towerTextures_.push_back(turretTowerTexture_);
   towerTextures_.push_back(rocketTowerTexture_);
   towerTextures_.push_back(iceTowerTexture_);
@@ -193,8 +188,6 @@ void Gui::createAndDrawPlayerInfo(int health, int wave, int gold) {
 }
 
 std::vector<sf::Vector2f> Gui::createAndDrawGameScreen() {
-  // Upper left corner
-  std::vector<sf::Vector2f> btnLocations;
   // Width and height for buttons
   std::vector<sf::Vector2f> btnSizes;
 
@@ -222,14 +215,6 @@ std::vector<sf::Vector2f> Gui::createAndDrawGameScreen() {
   panel.setFillColor(darkerGrey);
   panel.setPosition(x, y);
 
-  // Create buttons. Should be inside sidePanel area and the size is 50x50
-  // pixels.
-  /*btnLocations.push_back(sf::Vector2f(x + 15, 300));
-  btnLocations.push_back(sf::Vector2f(x + 75, 300));
-  btnLocations.push_back(sf::Vector2f(x + 135, 300));
-  btnLocations.push_back(sf::Vector2f(x + 33, 365));
-  btnLocations.push_back(sf::Vector2f(x + 116, 365));
-*/
   // draw the level
   window_->draw(mapSprite);
 
@@ -268,7 +253,9 @@ void Gui::run() {
 
         int gold = game_->GetPlayer().GetMoney();
 
-        createAndDrawPlayerInfo(health, 0, gold);
+        int wave = game_->GetLevel().getCurrentWave();
+
+        createAndDrawPlayerInfo(health, wave, gold);
         drawEnemies();
         drawTowers();
         drawProjectiles();
@@ -355,21 +342,10 @@ void Gui::drawTowers() {
         towerSprite.setOrigin(rocketTowerTexture_.getSize().x / 2,
                               rocketTowerTexture_.getSize().y / 2);
         break;
-
-      case tesla:
-        towerSprite.setTexture(teslaTowerTexture_);
-        towerSprite.setOrigin(teslaTowerTexture_.getSize().x / 2,
-                              teslaTowerTexture_.getSize().y / 2);
-        break;
       case turret:
         towerSprite.setTexture(turretTowerTexture_);
         towerSprite.setOrigin(turretTowerTexture_.getSize().x / 2,
                               turretTowerTexture_.getSize().y / 2);
-        break;
-      case diamondGun:
-        towerSprite.setTexture(diamondTowerTexture_);
-        towerSprite.setOrigin(diamondTowerTexture_.getSize().x / 2,
-                              diamondTowerTexture_.getSize().y / 2);
         break;
       default:
         break;
@@ -387,8 +363,6 @@ void Gui::setUpCoordinates() {
   buttons_.push_back(sf::Vector2f(x + 15, 300));
   buttons_.push_back(sf::Vector2f(x + 75, 300));
   buttons_.push_back(sf::Vector2f(x + 135, 300));
-  buttons_.push_back(sf::Vector2f(x + 33, 365));
-  buttons_.push_back(sf::Vector2f(x + 116, 365));
 }
 
 int Gui::towerButtonPoller(int x, int y) {
@@ -405,28 +379,18 @@ int Gui::towerButtonPoller(int x, int y) {
 
 bool Gui::customPollListener(int button) {
   switch (button) {
-    case diamondGun:
-      if (game_->GetPlayer().Pay(50)) {
-        return true;
-      }
-      break;
-    case tesla:
-      if (game_->GetPlayer().Pay(100)) {
-        return true;
-      }
-      break;
     case turret:
-      if (game_->GetPlayer().Pay(130)) {
+      if (game_->GetPlayer().Pay(200)) {
         return true;
       }
       break;
     case rocketGreen:
-      if (game_->GetPlayer().Pay(150)) {
+      if (game_->GetPlayer().Pay(500)) {
         return true;
       }
       break;
     case iceTower:
-      if (game_->GetPlayer().Pay(210)) {
+      if (game_->GetPlayer().Pay(300)) {
         return true;
       }
       break;
@@ -439,18 +403,12 @@ bool Gui::customPollListener(int button) {
 
 bool Gui::createTower(int whatTower, int x, int y) {
   switch (whatTower) {
-    /*case diamondGun:
-      game_.AddTower(new Tower(50, 2, 50, Coordinate(x, y), 50, game_, 0));
-      break;
-    case tesla:
-      game_.AddTower(new Tower(100, 2, 50, Coordinate(x, y), 50, game_, 1));
-      break;
     case turret:
-      game_.AddTower(new BasicTower(Coordinate(x, y), &game_));
+      game_->AddTower(new BasicTower(Coordinate(x, y), game_));
       break;
     case rocketGreen:
-      game_.AddTower(new BombTower(Coordinate(x, y), &game_));
-      break;*/
+      game_->AddTower(new BombTower(Coordinate(x, y), game_));
+      break;
     case iceTower:
       game_->AddTower(new SlowingTower(Coordinate(x, y), game_));
       break;
@@ -462,14 +420,31 @@ bool Gui::createTower(int whatTower, int x, int y) {
 }
 
 void Gui::drawProjectiles() {
-  for (auto proj: game_->GetProjectiles()) {
+  for (auto proj : game_->GetProjectiles()) {
     sf::Sprite projectileSprite;
-    projectileSprite.setTexture(bulletTexture_);
-    projectileSprite.setOrigin(bulletTexture_.getSize().x / 2,
-                               bulletTexture_.getSize().y / 2);
+    switch (proj->GetType()) {
+      case ProjectileType::normal:
+        projectileSprite.setTexture(bulletTexture_);
+        projectileSprite.setOrigin(bulletTexture_.getSize().x / 2,
+                                   bulletTexture_.getSize().y / 2);
+        break;
+      case ProjectileType::bomb:
+        projectileSprite.setTexture(rocketTexture_);
+        projectileSprite.setOrigin(rocketTexture_.getSize().x / 2,
+                                   rocketTexture_.getSize().y / 2);
+        break;
+      case ProjectileType::slow:
+        projectileSprite.setTexture(iceTexture_);
+        projectileSprite.setOrigin(iceTexture_.getSize().x / 2,
+                                   iceTexture_.getSize().y / 2);
+        break;
+      default:
+        break;
+    }
     projectileSprite.setPosition(proj->GetPosition().getX(),
                                  proj->GetPosition().getY());
     projectileSprite.setScale(0.1f, 0.1f);
+    projectileSprite.setRotation(proj->getAngle());
     window_->draw(projectileSprite);
   }
 }

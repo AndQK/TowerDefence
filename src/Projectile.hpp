@@ -22,6 +22,8 @@ class Projectile {
 
   float getAngle();
 
+  ProjectileType GetType();
+
  private:
   // Direction the projectile is heading.
   // Stored as a unit vector.
