@@ -6,13 +6,14 @@
 #include "Game.hpp"
 
 Tower::Tower(int cost, int speed, int damage, Coordinate place, int range,
-             Game* game)
+             Game* game, int type)
     : cost_(cost),
       speed_(speed),
       damage_(damage),
       place_(place),
       range_(range),
-      game_(game) {}
+      game_(game),
+      type_(type) {}
 
 void Tower::Attack(Enemy& e) { e.getHit(damage_); }
 

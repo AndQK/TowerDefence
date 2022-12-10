@@ -13,7 +13,7 @@ class Game;
 class Tower {
  public:
   Tower(int cost, int speed, int damage, Coordinate place, int range,
-        Game* game);
+        Game* game, int type);
 
   // Attacks the enemies in its range.
   void Attack(Enemy& e);
@@ -66,6 +66,8 @@ class Tower {
 
   // The radius of the circular area that the tower can shoot enemies in.
   int range_;
+
+  int type_;
 
   Game* game_;
 };
