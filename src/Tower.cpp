@@ -19,8 +19,6 @@ void Tower::Attack(Enemy& e) { e.getHit(damage_); }
 
 void Tower::Slow(Enemy& e) { e.Slow(); }
 
-// Towers: torneille sitten kyvyn ammuskella noita projectileja vihollisia päin
-
 void Tower::Move(Coordinate c) { place_ = c; }
 
 void Tower::Shoot(ProjectileType type) {
@@ -45,14 +43,35 @@ void Tower::Shoot(ProjectileType type) {
     auto dist = (a - b).getLength();
     if (dist < this->GetRange()) inRange.push_back(i);
   }
-  std::sort(inRange.begin(), inRange.end());
+
+  // std::sort(inRange.begin(), inRange.end());
 
   if (!inRange.empty()) {
-    auto enemy = inRange.front();
-    auto a = enemy->GetCoord();
+    Coordinate c;
+    float maxDist = 0.0;
+
+    for (auto e : inRange) {
+      if (maxDist < e->GetDistance()) {
+        maxDist = e->GetDistance();
+        c = e->GetCoord();
+      }
+    }
+
+    /**auto enemy = inRange.front();
+    std::cout << std::endl;
+    auto a = enemy->GetCoord(); */
+    for (auto i : inRange) {
+      std::cout << i->GetDistance() << ", ";
+    }
+    std::cout << std::endl;
+    std::cout << maxDist << std::endl;
+    if (maxDist > 100000) {
+      std::cout << "error" << std::endl;
+    }
+
     auto b = this->GetPlace();
-    auto dist = (a - b).getLength();
-    auto dir = (a - b) / dist;
+    auto dist = (c - b).getLength();
+    auto dir = (c - b) / dist;
     auto proj = new Projectile(5, this->GetDamage(), this->GetPlace(), dir,
                                type, this->GetGame());
     game->AddProjectile(proj);
@@ -70,3 +89,5 @@ const Coordinate& Tower::GetPlace() const { return place_; }
 const int& Tower::GetRange() const { return range_; }
 
 Game* Tower::GetGame() const { return game_; }
+
+const int& Tower::GetType() const { return type_; }

@@ -1,7 +1,7 @@
 #include "Player.hpp"
 
 Player::Player(std::string username)
-    : username_(username), points_(0), money_(100), health_(15) {}
+    : username_(username), points_(0), money_(400), health_(15) {}
 
 void Player::AddMoney(int a) { money_ += a; }
 
@@ -22,3 +22,10 @@ const int& Player::GetPoints() const { return points_; }
 void Player::reduceHealth() { --health_; }
 
 const int& Player::GetHealth() const { return health_; }
+
+bool Player::GameLost() {
+  if (health_ <= 0)
+    return true;
+  else
+    return false;
+}

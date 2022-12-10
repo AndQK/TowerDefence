@@ -47,6 +47,9 @@ class Tower {
 
   Game* GetGame() const;
 
+  // Gets the type of the tower
+  const int& GetType() const;
+
  private:
   // The cost of buying the tower.
   int cost_;
@@ -66,6 +69,8 @@ class Tower {
 
   // The radius of the circular area that the tower can shoot enemies in.
   int range_;
+
+  // The tower's type
 
   int type_;
 

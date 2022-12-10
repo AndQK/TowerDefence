@@ -12,10 +12,15 @@
 #include "Map.hpp"
 #include "SFML/Graphics.hpp"
 #include "level.hpp"
+#include "Tower.hpp"
+#include "SlowingTower.hpp"
+#include "Player.hpp"
 
 enum Screens { gameMenu, gameLevelMenu, gameScreen, gameEndScreen };
 
-enum Screen { greenTurtle, brownTurtle };
+enum Enemies { greenTurtle, brownTurtle };
+
+enum Towers { diamondGun, tesla, turret, rocketGreen, iceTower };
 
 class Gui {
  public:
@@ -45,9 +50,30 @@ class Gui {
   // runs the loop for the window.
   void run();
 
-  void drawEnemies(std::vector<Enemy *> enemies);
+  // draws enemies
+  void drawEnemies();
+
+  // draws towers
+  void drawTowers();
+
+  // set ups the coordinates for the clickable buttons
+  void setUpCoordinates();
+
+  // Event poller for finding out which button was pressed
+  int towerButtonPoller(int x, int y);
+
+  // listens to user's clicks and acts accordingly
+  bool customPollListener(int button);
+
+  // calls game object to create new tower if bying was successful
+  bool createTower(int whichTower, int x, int y);
+
+  // draws projectiles
+
+  void drawProjectiles();
 
  private:
+
   sf::RenderWindow *window_;
   sf::Texture level_1_Texture_;
   sf::Texture level_2_Texture_;
@@ -60,11 +86,16 @@ class Gui {
   sf::Texture iceTowerTexture_;
   sf::Texture greenTurtle_;
   sf::Texture brownTurtle_;
+  sf::Texture bulletTexture_;
   sf::Font font_;
+
   Game *game_;
   sf::Texture currentLevel_;
   int currentScreen_;
   std::vector<sf::Texture> towerTextures_;
+
+  // the locations for buttons
+  std::vector<sf::Vector2f> buttons_;
 };
 
 #endif
