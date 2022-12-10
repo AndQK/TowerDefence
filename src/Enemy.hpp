@@ -22,7 +22,7 @@ class Enemy {
   bool Move();
 
   // Slows the enemy down.
-  void Slow(double s);
+  void Slow();
 
   // Get the enemy's speed
   const float& GetSpeed() const;
