@@ -25,7 +25,7 @@ void Enemy::getHit(int amount) {
     health_ = 0;
     if (this->GetType() != 1) {
       game_->RemoveEnemy(this);
-      this->game_->GetPlayer().AddMoney(this->GetWorth());
+      this->game_->GetPlayer().AddMoney(worth_);
     } else {
       Coordinate c = this->place_;
       auto n = this->getCurrentNode();
@@ -44,6 +44,7 @@ void Enemy::getHit(int amount) {
       game_->AddEnemy(a);
       game_->AddEnemy(b);
       game_->AddEnemy(d);
+      this->game_->GetPlayer().AddMoney(worth_);
       game_->RemoveEnemy(this);
     }
   } else
