@@ -3,7 +3,8 @@
 
 #include "Game.hpp"
 
-Wave::Wave(float spawnRate, Game* game) : spawnRate_(spawnRate), game_(game) {
+Wave::Wave(float spawnRate, Game* game)
+    : spawnRate_(spawnRate), game_(game), enemyAmount(0) {
   lastSpawn_ = std::chrono::steady_clock::now();
 }
 
@@ -28,9 +29,12 @@ void Wave::update() {
 
   // if enough time passed spawn new enemy and add it to the game_.
   if (elapsedTimeInSeconds > 1.0f / spawnRate_) {
-    game_->AddEnemy(enemies_.at(enemiesSpawned));
-    updateLastSpawn();
-    enemiesSpawned++;
+    // HOX: take if out
+    if (enemies_.size() > enemiesSpawned) {
+      game_->AddEnemy(enemies_.at(enemiesSpawned));
+      updateLastSpawn();
+      enemiesSpawned++;
+    }
   }
 }
 
