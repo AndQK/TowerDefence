@@ -32,6 +32,9 @@ class Player {
   // reduces players health
   void reduceHealth();
 
+  //is Game lost?
+  bool GameLost();
+
  private:
   // Username of the player
   std::string username_;

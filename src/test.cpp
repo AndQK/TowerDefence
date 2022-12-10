@@ -191,6 +191,7 @@ class test {
         window.draw(projectiles.at(i));
       }
       level.update();
+      std::cout << game.GetProjectiles().size() << std::endl;
 
       window.display();
       for (auto t : game.GetTowers()) t->Defend();
@@ -332,7 +333,7 @@ class test {
 
     sf::RenderWindow window(sf::VideoMode(x / 2, y / 2), "TowerDefence");
     sf::Texture enemyTexture;
-    if (!enemyTexture.loadFromFile("graphics/enemy1.png")) {
+    if (!enemyTexture.loadFromFile("../graphics/greenTurtle.png")) {
       std::cout << "unable to load enemy texture from file" << std::endl;
       exit(-1);
     }

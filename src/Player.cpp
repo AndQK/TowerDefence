@@ -22,3 +22,10 @@ const int& Player::GetPoints() const { return points_; }
 void Player::reduceHealth() { --health_; }
 
 const int& Player::GetHealth() const { return health_; }
+
+bool Player::GameLost() {
+  if (health_ <= 0)
+    return true;
+  else
+    return false;
+}
