@@ -255,7 +255,6 @@ void Gui::run() {
         drawProjectiles();
         game_->GetLevel().update();
         game_->Update();
-        std::cout << game_->GetProjectiles().size() << std::endl;
         break;
       case gameEndScreen:  // Game Over screen
         drawGameOver();

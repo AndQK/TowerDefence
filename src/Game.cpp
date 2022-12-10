@@ -36,10 +36,10 @@ Map Game::GetMap() const {
 void Game::RemoveProjectile(Projectile* projectile) {
   auto remove = std::find_if(projectiles_.begin(), projectiles_.end(),
                              [&](Projectile* p) { return p == projectile; });
-  auto a = (*remove)->GetPosition();
-  std::cout << a << std::endl;
-  delete (*remove);
-  projectiles_.erase(remove);
+  if (remove != projectiles_.end()) {
+    delete (*remove);
+    projectiles_.erase(remove);
+  }
 }
 
 void Game::RemoveEnemy(Enemy* enemy) {
