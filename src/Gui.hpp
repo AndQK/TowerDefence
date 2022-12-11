@@ -44,7 +44,7 @@ class Gui {
                              sf::Texture &texture);
 
   // creates the game screen
-  std::vector<sf::Vector2f> createAndDrawGameScreen();
+  void createAndDrawGameScreen();
 
   // draws everything that is drawable on the window.
   void drawDrawables(std::vector<sf::Drawable *> drawables);
@@ -71,24 +71,36 @@ class Gui {
   bool createTower(int whichTower, int x, int y);
 
   // draws projectiles
-
   void drawProjectiles();
+
+  // draws "Game Over" screen
+  void drawGameOver();
 
  private:
 
   sf::RenderWindow *window_;
+
+  // Textures for levels
   sf::Texture level_1_Texture_;
   sf::Texture level_2_Texture_;
   sf::Texture level_3_Texture_;
+
   sf::Texture mainMenuTexture_;
+
+  // Textures for towers
   sf::Texture turretTowerTexture_;
   sf::Texture rocketTowerTexture_;
   sf::Texture iceTowerTexture_;
+  
+  // Textures for enemies
   sf::Texture greenTurtle_;
   sf::Texture brownTurtle_;
+
+  // Textures for projectiles
   sf::Texture bulletTexture_;
   sf::Texture rocketTexture_;
   sf::Texture iceTexture_;
+
   sf::Font font_;
 
   Game *game_;

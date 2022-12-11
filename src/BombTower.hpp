@@ -6,7 +6,7 @@
 class BombTower : public Tower {
  public:
   BombTower(Coordinate place, Game* game)
-      : Tower(500, 10, 3, place, 3, game, 2){};
+      : Tower(500, 10, 3, place, 200, game, 1){};
 
   void Defend() { this->Shoot(bomb); }
 };
