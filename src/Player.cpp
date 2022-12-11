@@ -1,7 +1,7 @@
 #include "Player.hpp"
 
 Player::Player(std::string username)
-    : username_(username), points_(0), money_(400), health_(15) {}
+    : username_(username), points_(0), money_(500), health_(15) {}
 
 void Player::AddMoney(int a) { money_ += a; }
 

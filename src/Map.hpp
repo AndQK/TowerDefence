@@ -29,7 +29,7 @@ class Map {
   int GetNofNodes() const;
 
   // loads enemy's path from a file
-  void loadCoordinates(std::string file);
+  bool loadCoordinates(std::string file);
 
  private:
   // Enemies path
