@@ -57,18 +57,6 @@ void Tower::Shoot(ProjectileType type) {
       }
     }
 
-    /**auto enemy = inRange.front();
-    std::cout << std::endl;
-    auto a = enemy->GetCoord(); */
-    for (auto i : inRange) {
-      std::cout << i->GetDistance() << ", ";
-    }
-    std::cout << std::endl;
-    std::cout << maxDist << std::endl;
-    if (maxDist > 100000) {
-      std::cout << "error" << std::endl;
-    }
-
     auto b = this->GetPlace();
     auto dist = (c - b).getLength();
     auto dir = (c - b) / dist;

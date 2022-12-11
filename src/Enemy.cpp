@@ -12,7 +12,8 @@ Enemy::Enemy(float speed, int health, Coordinate place, int worth, Game* game,
       worth_(worth),
       currentNode_(0),
       game_(game),
-      type_(type) {
+      type_(type),
+      distance_(0) {
   auto direction_raw = game_->GetMap().GetNode(currentNode_) - place_;
   direction_ = direction_raw / direction_raw.getLength();
 }
@@ -24,7 +25,7 @@ void Enemy::getHit(int amount) {
     health_ = 0;
     if (this->GetType() != 1) {
       game_->RemoveEnemy(this);
-      this->game_->GetPlayer().AddMoney(this->GetWorth());
+      this->game_->GetPlayer().AddMoney(worth_);
     } else {
       Coordinate c = this->place_;
       auto n = this->getCurrentNode();
@@ -43,6 +44,7 @@ void Enemy::getHit(int amount) {
       game_->AddEnemy(a);
       game_->AddEnemy(b);
       game_->AddEnemy(d);
+      this->game_->GetPlayer().AddMoney(worth_);
       game_->RemoveEnemy(this);
     }
   } else
@@ -70,7 +72,6 @@ bool Enemy::Move() {
     if (currentNode_ >= (*game_).GetMap().GetNofNodes() - 1) {
       game_->RemoveEnemy(this);
       game_->GetPlayer().reduceHealth();
-      std::cout << game_->GetPlayer().GetHealth() << std::endl;
       return false;
     } else {
       currentNode_++;
@@ -82,6 +83,7 @@ bool Enemy::Move() {
   // Move towards the next node with the speed_
   place_ = place_ + (direction_ * speed_);
 
+  distance_ += speed_;
   return true;
 }
 
