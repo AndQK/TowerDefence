@@ -6,21 +6,21 @@
 #include <iostream>
 #include <vector>
 
+#include "BasicTower.hpp"
+#include "BombTower.hpp"
 #include "Coordinate.hpp"
 #include "Enemy.hpp"
 #include "Game.hpp"
 #include "Map.hpp"
-#include "SFML/Graphics.hpp"
-#include "level.hpp"
-#include "Tower.hpp"
-#include "SlowingTower.hpp"
-#include "BasicTower.hpp"
-#include "BombTower.hpp"
 #include "Player.hpp"
+#include "SFML/Graphics.hpp"
+#include "SlowingTower.hpp"
+#include "Tower.hpp"
+#include "level.hpp"
 
 enum Screens { gameMenu, gameLevelMenu, gameScreen, gameEndScreen };
 
-enum Enemies { greenTurtle, brownTurtle };
+enum Enemies { greenTurtle, brownTurtle, bondMobile };
 
 enum Towers { turret, rocketGreen, iceTower };
 
@@ -41,7 +41,7 @@ class Gui {
 
   // function for drawing all pressable buttons.
   void createAndDrawTowerBtn(sf::Vector2f btnLocation, sf::Vector2f btnSize,
-                             sf::Texture &texture);
+                             sf::Texture &texture, std::pair<std::string,std::string> &tag, int &price);
 
   // creates the game screen
   void createAndDrawGameScreen();
@@ -76,8 +76,10 @@ class Gui {
   // draws "Game Over" screen
   void drawGameOver();
 
- private:
+  // draws Level Selector screen
+  void drawLevelSelector();
 
+ private:
   sf::RenderWindow *window_;
 
   // Textures for levels
@@ -91,10 +93,11 @@ class Gui {
   sf::Texture turretTowerTexture_;
   sf::Texture rocketTowerTexture_;
   sf::Texture iceTowerTexture_;
-  
+
   // Textures for enemies
   sf::Texture greenTurtle_;
   sf::Texture brownTurtle_;
+  sf::Texture bondMobile_;
 
   // Textures for projectiles
   sf::Texture bulletTexture_;
@@ -110,6 +113,12 @@ class Gui {
 
   // the locations for buttons
   std::vector<sf::Vector2f> buttons_;
+
+  // name-price pair for towers used when creating tags
+  std::vector<std::pair<std::string, std::string>> tags_;
+
+  // towers price in int format
+  std::vector<int> prices_;
 };
 
 #endif

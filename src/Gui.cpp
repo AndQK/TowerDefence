@@ -44,6 +44,10 @@ Gui::Gui(Game *game) {
     std::cout << "unable to load enemy texture from file" << std::endl;
     exit(-1);
   }
+  if (!bondMobile_.loadFromFile("graphics/bondMobile.png")) {
+    std::cout << "unable to load enemy texture from file" << std::endl;
+    exit(-1);
+  }
 
   if (!font_.loadFromFile("graphics/ARLRDBD.TTF")) {
     std::cout << "unable to load font from file" << std::endl;
@@ -79,10 +83,22 @@ Gui::Gui(Game *game) {
   towerTextures_.push_back(iceTowerTexture_);
   // set ups coordinates for buttons
   setUpCoordinates();
+
+  // add name-price tags
+  tags_.push_back(std::make_pair("Turret", "200"));
+  tags_.push_back(std::make_pair("Bomber", "800"));
+  tags_.push_back(std::make_pair("Freezer", "300"));
+
+  // add prices in int format
+  prices_.push_back(200);
+  prices_.push_back(800);
+  prices_.push_back(300);
 }
 
 void Gui::createAndDrawTowerBtn(sf::Vector2f btnLocation, sf::Vector2f btnSize,
-                                sf::Texture &texture) {
+                                sf::Texture &texture,
+                                std::pair<std::string, std::string> &tag,
+                                int &price) {
   std::vector<sf::Drawable *> drawables;
 
   sf::RectangleShape btn(btnSize);
@@ -101,7 +117,28 @@ void Gui::createAndDrawTowerBtn(sf::Vector2f btnLocation, sf::Vector2f btnSize,
   btnSprite.setScale(0.09, 0.09);
   btnSprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
   btnSprite.setPosition(btnLocation.x + 25, btnLocation.y + 25);
+
+  if (game_->GetPlayer().GetMoney() < price) {
+    btnSprite.setColor(sf::Color(255, 0, 0));
+  }
+
   drawables.push_back(&btnSprite);
+
+  // create a name tag for the button
+  sf::Text nameText(tag.first, font_, 13);
+  auto textSize = nameText.getGlobalBounds();
+  nameText.setFillColor(sf::Color::White);
+  nameText.setOrigin(textSize.width / 2, textSize.height / 2);
+  nameText.setPosition(btnLocation.x + 25, btnLocation.y - 15);
+  drawables.push_back(&nameText);
+
+  // create a price tag for the button
+  sf::Text priceText(tag.second, font_, 13);
+  auto textSize1 = priceText.getGlobalBounds();
+  priceText.setFillColor(sf::Color::White);
+  priceText.setOrigin(textSize1.width / 2, textSize1.height / 2);
+  priceText.setPosition(btnLocation.x + 25, btnLocation.y + 65);
+  drawables.push_back(&priceText);
 
   drawDrawables(drawables);
 }
@@ -225,7 +262,8 @@ void Gui::createAndDrawGameScreen() {
     btnSizes.push_back(sf::Vector2f(50, 50));
   }
   for (unsigned int i = 0; i < buttons_.size(); i++) {
-    createAndDrawTowerBtn(buttons_[i], btnSizes[i], towerTextures_[i]);
+    createAndDrawTowerBtn(buttons_[i], btnSizes[i], towerTextures_[i], tags_[i],
+                          prices_[i]);
   }
 }
 
@@ -244,6 +282,9 @@ void Gui::run() {
     switch (currentScreen_) {
       case gameMenu:  // main menu:
         createAndDrawGameMenu();
+        break;
+      case gameLevelMenu:  // Level Selector:
+        drawLevelSelector();
         break;
       case gameScreen:  // game screen:
         createAndDrawGameScreen();
@@ -278,8 +319,18 @@ void Gui::run() {
 
               // checking that the click happened in the right place
               if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
-                currentScreen_ = 2;
+                currentScreen_ = 1;
                 std::cout << "changing screen" << std::endl;
+              }
+              break;
+            case gameLevelMenu:
+              if ((x >= 150 && x <= 390) && (y >= 300 && y <= 540)) {
+                currentLevel_ = level_1_Texture_;
+                currentScreen_ = 2;
+              }
+              else if ((x >= 453 && x <= 693) && (y >= 300 && y <= 540)) {
+                currentLevel_ = level_3_Texture_;
+                currentScreen_ = 2;
               }
               break;
             case gameScreen:
@@ -317,6 +368,10 @@ void Gui::drawEnemies() {
         enemySprite.setOrigin(brownTurtle_.getSize().x / 2,
                               brownTurtle_.getSize().y / 2);
         break;
+      case bondMobile:
+        enemySprite.setTexture(bondMobile_);
+        enemySprite.setOrigin(bondMobile_.getSize().x / 2,
+                              bondMobile_.getSize().y / 2);
       default:
         break;
     }
@@ -332,6 +387,7 @@ void Gui::drawEnemies() {
 
 void Gui::drawTowers() {
   for (auto tower : game_->GetTowers()) {
+    sf::CircleShape area;
     sf::Sprite towerSprite;
     switch (tower->GetType()) {
       case iceTower:
@@ -352,10 +408,20 @@ void Gui::drawTowers() {
       default:
         break;
     }
+    // towers position
+    auto posX = tower->GetPlace().getX();
+    auto posY = tower->GetPlace().getY();
+
+    // an area that shows tower's reach
+    area.setRadius(tower->GetRange());
+    area.setFillColor(sf::Color(255, 255, 255, 22));
+    area.setOrigin(area.getRadius(), area.getRadius());
+    area.setPosition(posX, posY);
 
     towerSprite.setScale(0.09f, 0.09f);
-    towerSprite.setPosition(tower->GetPlace().getX(), tower->GetPlace().getY());
+    towerSprite.setPosition(posX, posY);
 
+    window_->draw(area);
     window_->draw(towerSprite);
   }
 }
@@ -386,7 +452,7 @@ bool Gui::customPollListener(int button) {
       }
       break;
     case rocketGreen:
-      if (game_->GetPlayer().Pay(500)) {
+      if (game_->GetPlayer().Pay(800)) {
         return true;
       }
       break;
@@ -474,5 +540,67 @@ void Gui::drawGameOver() {
   std::vector<sf::Drawable *> drawables;
   drawables.push_back(&gameOverBox);
   drawables.push_back(&gameOverText);
+  drawDrawables(drawables);
+}
+
+void Gui::drawLevelSelector() {
+  // container for drawables which will be passed to drawDrawables method
+  std::vector<sf::Drawable *> drawables;
+
+  sf::Color green(126, 217, 87);
+
+  sf::RectangleShape selectorScreen;
+  selectorScreen.setSize(
+      sf::Vector2f(window_->getSize().x, window_->getSize().y));
+  selectorScreen.setFillColor(green);
+
+  // create two 100x100 boxes for levels
+  sf::RectangleShape level_1_box;
+  sf::RectangleShape level_2_box;
+
+  sf::Color metallicGrey(142, 142, 142);
+  level_1_box.setFillColor(metallicGrey);
+  level_2_box.setFillColor(metallicGrey);
+
+  level_1_box.setSize(sf::Vector2f(240, 240));
+  level_2_box.setSize(sf::Vector2f(240, 240));
+
+  level_1_box.setPosition(150, 300);
+  level_2_box.setPosition(453, 300);
+
+  // create text "Select Level"
+  sf::Text select("SELECT MAP", font_, 80);
+  select.setFillColor(sf::Color::White);
+  select.setStyle(sf::Text::Bold);
+  select.setOrigin(select.getGlobalBounds().width / 2,
+                   select.getGlobalBounds().height / 2);
+  select.setPosition(422, 100);
+
+  // create sprites for boxes
+  sf::Sprite level_1_sprite;
+  sf::Sprite level_2_sprite;
+
+  level_1_sprite.setTexture(level_1_Texture_);
+  level_2_sprite.setTexture(level_3_Texture_);
+
+  level_1_sprite.setOrigin(level_1_Texture_.getSize().x / 2,
+                           level_1_Texture_.getSize().y / 2);
+  level_2_sprite.setOrigin(level_3_Texture_.getSize().x / 2,
+                           level_3_Texture_.getSize().y / 2);
+
+  level_1_sprite.setScale(0.175f, 0.175f);
+  level_2_sprite.setScale(0.23f, 0.21f);
+
+  level_1_sprite.setPosition(270, 420);
+  level_2_sprite.setPosition(573, 420);
+
+  // add all into the container
+  drawables.push_back(&selectorScreen);
+  drawables.push_back(&select);
+  drawables.push_back(&level_1_box);
+  drawables.push_back(&level_2_box);
+  drawables.push_back(&level_1_sprite);
+  drawables.push_back(&level_2_sprite);
+
   drawDrawables(drawables);
 }
