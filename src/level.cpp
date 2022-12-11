@@ -102,8 +102,10 @@ void Level::update() {
 void Level::removeWave(Wave* w) {
   auto remove = std::find_if(waves_.begin(), waves_.end(),
                              [&](Wave* wave) { return w == wave; });
+  if (remove != waves_.end()) {
   delete (*remove);
   waves_.erase(remove);
+  }
 }
 
 int Level::getCurrentWave() { return currentWave_; }

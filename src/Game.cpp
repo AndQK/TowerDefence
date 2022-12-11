@@ -45,8 +45,10 @@ void Game::RemoveProjectile(Projectile* projectile) {
 void Game::RemoveEnemy(Enemy* enemy) {
   auto remove = std::find_if(enemies_.begin(), enemies_.end(),
                              [&](Enemy* e) { return e == enemy; });
+  if (remove != enemies_.end()) {
   delete (*remove);
   enemies_.erase(remove);
+  }
 }
 
 Game::~Game() {

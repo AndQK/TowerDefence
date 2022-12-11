@@ -79,7 +79,7 @@ class Enemy {
 class HardEnemy : public Enemy {
  public:
   HardEnemy(Coordinate place, int health, Game* game)
-      : Enemy(1.5, health, place, 30, game, 1){};
+      : Enemy(1.5, health, place, 30, game, 2){};
 };
 
 class EasyEnemy : public Enemy {

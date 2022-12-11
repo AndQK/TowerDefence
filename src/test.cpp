@@ -15,7 +15,6 @@
 #include "Projectile.hpp"
 #include "SlowingTower.hpp"
 #include "Tower.hpp"
-#include "guiFunctions.hpp"
 #include "level.hpp"
 
 class test {
