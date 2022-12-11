@@ -44,26 +44,29 @@ Level::Level() : initial_money_(100), game_(nullptr), currentWave_(0) {}
 
 Level::Level(int initial_money, Game* game)
     : initial_money_(initial_money), game_(game), currentWave_(0) {
-  float spawnRate = 0.3f;
+  float spawnRate = 0.7f;
   float hpFactor = 1;
-  int enemiesPerWave = 3;
+  int enemiesPerWave = 7;
   int amountOfWaves = 100;
   while (amountOfWaves > 0) {
     auto w1 = new Wave(spawnRate, game);
     int i = enemiesPerWave;
     while (i > 0) {
       auto e1 = new EasyEnemy(game_->GetMap().GetNode(0), 1, game_);
-      auto e2 = new HardEnemy(game_->GetMap().GetNode(0), 10 * hpFactor, game_);
-      auto e3 =
-          new SplittingEnemy(game_->GetMap().GetNode(0), 40 * hpFactor, game_);
+      auto e3 = new SplittingEnemy(game_->GetMap().GetNode(0),
+                                   int(1.0f * 15 * hpFactor), game_);
+      if (waves_.size() > 6) {
+        auto e2 = new HardEnemy(game_->GetMap().GetNode(0),
+                                int(1.0f * 5 * hpFactor), game_);
+        w1->addEnemy(e2);
+      }
       w1->addEnemy(e1);
-      w1->addEnemy(e2);
       w1->addEnemy(e3);
       i -= 3;
     }
     waves_.push_back(w1);
-    hpFactor *= 1.1;
-    spawnRate *= 1.1;
+    hpFactor *= 1.08;
+    spawnRate *= 1.03;
     enemiesPerWave++;
     amountOfWaves--;
   }
@@ -80,7 +83,6 @@ void Level::update() {
   bool waveActive = false;
   for (auto wave : waves_) {
     if (wave->ended()) {
-      std::cout << "wave ended" << std::endl;
       removeWave(wave);
     } else if (wave->started()) {
       waveActive = true;

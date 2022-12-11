@@ -385,7 +385,7 @@ bool Gui::customPollListener(int button) {
       }
       break;
     case rocketGreen:
-      if (game_->GetPlayer().Pay(500)) {
+      if (game_->GetPlayer().Pay(1000)) {
         return true;
       }
       break;
