@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <vector>
-#include <memory>
 
 #include "BasicTower.hpp"
 #include "BombTower.hpp"

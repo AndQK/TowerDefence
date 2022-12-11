@@ -57,4 +57,5 @@ bool Map::loadCoordinates(std::string file) {
     std::cout << "Couldn't open file" << std::endl;
     return false;
   }
+  return false;
 }
