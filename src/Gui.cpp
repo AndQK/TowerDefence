@@ -65,12 +65,12 @@ Gui::Gui() {
     std::cout << "unable to load ice texture from file" << std::endl;
     exit(-1);
   }
-  map1_ = std::make_shared<Map>();
-  map2_ = std::make_shared<Map>();
-  if (!((map1_.get())->loadCoordinates("path1.txt"))) {
+  map1_ = new Map();
+  map2_ = new Map();
+  if (!(map1_->loadCoordinates("path1.txt"))) {
     exit(-1);
   }
-  if (!((map2_.get())->loadCoordinates("path3.txt"))) {
+  if (!(map2_->loadCoordinates("path3.txt"))) {
     exit(-1);
   }
 
@@ -78,7 +78,7 @@ Gui::Gui() {
   currentScreen_ = gameMenu;
   currentLevel_ = level_3_Texture_;
   mapToInt_ = 1;
-  level_ = std::make_shared<Level>();
+  level_ = new Level();
 
   window_ =
       new sf::RenderWindow(sf::VideoMode(level_1_Texture_.getSize().x / 2 + 200,
@@ -127,7 +127,7 @@ void Gui::createAndDrawTowerBtn(sf::Vector2f btnLocation, sf::Vector2f btnSize,
   btnSprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
   btnSprite.setPosition(btnLocation.x + 25, btnLocation.y + 25);
 
-  if (game_.get()->GetPlayer().GetMoney() < price) {
+  if (game_->GetPlayer().GetMoney() < price) {
     btnSprite.setColor(sf::Color(255, 0, 0));
   }
 
@@ -297,17 +297,17 @@ void Gui::run() {
         break;
       case gameScreen:  // game screen:
         createAndDrawGameScreen();
-        createAndDrawPlayerInfo(game_.get()->GetPlayer().GetHealth(),
-                                game_.get()->GetLevel().getCurrentWave(),
-                                game_.get()->GetPlayer().GetMoney());
+        createAndDrawPlayerInfo(game_->GetPlayer().GetHealth(),
+                                game_->GetLevel().getCurrentWave(),
+                                game_->GetPlayer().GetMoney());
         drawEnemies();
         drawTowers();
         drawProjectiles();
-        game_.get()->GetLevel().update();
-        game_.get()->Update();
+        game_->GetLevel().update();
+        game_->Update();
 
         // Check if player has lost the game
-        if (game_.get()->GetPlayer().GameLost()) {
+        if (game_->GetPlayer().GameLost()) {
           currentScreen_ = gameEndScreen;
         }
         break;
@@ -360,7 +360,7 @@ void Gui::run() {
 }
 
 void Gui::drawEnemies() {
-  for (auto enemy : game_.get()->GetEnemies()) {
+  for (auto enemy : game_->GetEnemies()) {
     sf::Sprite enemySprite;
     switch ((*enemy).GetType()) {
       case greenTurtle:
@@ -392,7 +392,7 @@ void Gui::drawEnemies() {
 }
 
 void Gui::drawTowers() {
-  for (auto tower : game_.get()->GetTowers()) {
+  for (auto tower : game_->GetTowers()) {
     sf::CircleShape area;
     sf::Sprite towerSprite;
     switch (tower->GetType()) {
@@ -447,17 +447,17 @@ int Gui::towerButtonPoller(int x, int y) {
 bool Gui::customPollListener(int button) {
   switch (button) {
     case turret:
-      if (game_.get()->GetPlayer().Pay(200)) {
+      if (game_->GetPlayer().Pay(200)) {
         return true;
       }
       break;
     case rocketGreen:
-      if (game_.get()->GetPlayer().Pay(1000)) {
+      if (game_->GetPlayer().Pay(1000)) {
         return true;
       }
       break;
     case iceTower:
-      if (game_.get()->GetPlayer().Pay(300)) {
+      if (game_->GetPlayer().Pay(300)) {
         return true;
       }
       break;
@@ -471,13 +471,13 @@ bool Gui::customPollListener(int button) {
 bool Gui::createTower(int whatTower, int x, int y) {
   switch (whatTower) {
     case turret:
-      game_.get()->AddTower(new BasicTower(Coordinate(x, y), game_.get()));
+      game_->AddTower(new BasicTower(Coordinate(x, y), game_));
       break;
     case rocketGreen:
-      game_.get()->AddTower(new BombTower(Coordinate(x, y), game_.get()));
+      game_->AddTower(new BombTower(Coordinate(x, y), game_));
       break;
     case iceTower:
-      game_.get()->AddTower(new SlowingTower(Coordinate(x, y), game_.get()));
+      game_->AddTower(new SlowingTower(Coordinate(x, y), game_));
       break;
     default:
       // don't create a tower
@@ -487,7 +487,7 @@ bool Gui::createTower(int whatTower, int x, int y) {
 }
 
 void Gui::drawProjectiles() {
-  for (auto proj : game_.get()->GetProjectiles()) {
+  for (auto proj : game_->GetProjectiles()) {
     sf::Sprite projectileSprite;
     switch (proj->GetType()) {
       case ProjectileType::normal:
@@ -648,17 +648,17 @@ void Gui::drawLevelSelector() {
 void Gui::gameLevelHandler(int x, int y) {
   if ((x >= 150 && x <= 390) && (y >= 300 && y <= 540)) {
     currentLevel_ = level_1_Texture_;
-    game_ = std::make_shared<Game>("Tower Defence", *(map1_.get()));
-    level_ = std::make_shared<Level>(100, game_.get());
+    game_ = new Game("Tower Defence", *map1_);
+    level_ = new Level(100, game_);
     mapToInt_ = 0;
-    game_.get()->SetLevel(*(level_.get()));
+    game_->SetLevel(*level_);
     currentScreen_ = gameScreen;
   } else if ((x >= 453 && x <= 693) && (y >= 300 && y <= 540)) {
     currentLevel_ = level_3_Texture_;
-    game_ = std::make_shared<Game>("Tower Defence", *(map2_.get()));
-    level_ = std::make_shared<Level>(100, game_.get());
+    game_ = new Game("Tower Defence", *map2_);
+    level_ = new Level(100, game_);
     mapToInt_ = 1;
-    game_.get()->SetLevel(*(level_.get()));
+    game_->SetLevel(*level_);
     currentScreen_ = gameScreen;
   }
 }
@@ -666,19 +666,17 @@ void Gui::gameLevelHandler(int x, int y) {
 void Gui::gameOverHandler(int x, int y) {
   // check if click happened inside restart button
   if ((x >= 346 && x <= 497) && (y >= 374 && y <= 424)) {
-    // delete game_;
     switch (mapToInt_) {
       case 0:
-        game_ = std::make_shared<Game>("Tower Defence", *(map1_.get()));
-        level_ = std::make_shared<Level>(100, game_.get());
-        game_.get()->SetLevel(*(level_.get()));
+        game_ = new Game("Tower Defence", *map1_);
+        level_ = new Level(100, game_);
+        game_->SetLevel(*level_);
         currentScreen_ = gameScreen;
         break;
       case 1:
-      // tried two different approaches
-        game_.reset(new Game("Tower Defence", *(map2_.get())));
-        level_.reset(new Level(100, game_.get()));
-        game_.get()->SetLevel(*(level_.get()));
+        game_ = new Game("Tower Defence", *map2_);
+        level_ = new Level(100, game_);
+        game_->SetLevel(*level_);
         currentScreen_ = gameScreen;
       default:
         break;

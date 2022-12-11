@@ -34,6 +34,9 @@ class Gui {
 
   ~Gui() {
     delete window_;
+    delete game_;
+    delete map1_;
+    delete map2_;
   }
 
   // Main menu function.
@@ -92,13 +95,13 @@ class Gui {
 
  private:
   sf::RenderWindow *window_;
-  std::shared_ptr<Game> game_;
+  Game* game_;
   // paths for enemies
-  std::shared_ptr<Map> map1_;
+  Map* map1_;
 
-  std::shared_ptr<Map> map2_;
+  Map* map2_;
 
-  std::shared_ptr<Level> level_;
+  Level* level_;
 
   // Textures for levels
   sf::Texture level_1_Texture_;
