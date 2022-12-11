@@ -59,6 +59,9 @@ bool operator<(const Enemy& e1, const Enemy& e2) {
 }
 
 bool Enemy::Move() {
+  if (distance_ > 10000) {
+    std::cout << "Error" << std::endl;
+  }
   auto nextNode = (*game_).GetMap().GetNode(currentNode_);
   double distance = (nextNode - this->place_).getLength();
   auto direction_raw = (*game_).GetMap().GetNode(currentNode_) - this->place_;
