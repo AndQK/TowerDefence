@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "BasicTower.hpp"
 #include "BombTower.hpp"
@@ -27,11 +28,13 @@ enum Towers { turret, rocketGreen, iceTower };
 class Gui {
  public:
   // Constructor
-  Gui(Game *game);
+  Gui();
 
   // destructor
 
-  ~Gui() { delete window_; }
+  ~Gui() {
+    delete window_;
+  }
 
   // Main menu function.
   void createAndDrawGameMenu();
@@ -41,7 +44,9 @@ class Gui {
 
   // function for drawing all pressable buttons.
   void createAndDrawTowerBtn(sf::Vector2f btnLocation, sf::Vector2f btnSize,
-                             sf::Texture &texture, std::pair<std::string,std::string> &tag, int &price);
+                             sf::Texture &texture,
+                             std::pair<std::string, std::string> &tag,
+                             int &price);
 
   // creates the game screen
   void createAndDrawGameScreen();
@@ -67,7 +72,7 @@ class Gui {
   // listens to user's clicks and acts accordingly
   bool customPollListener(int button);
 
-  // calls game object to create new tower if bying was successful
+  // calls game object to create new tower if buying was successful
   bool createTower(int whichTower, int x, int y);
 
   // draws projectiles
@@ -79,8 +84,21 @@ class Gui {
   // draws Level Selector screen
   void drawLevelSelector();
 
+  //sets the gui's level variables according to the button that was clicked by the player
+  void gameLevelHandler(int x, int y);
+
+  // checks player's input and restarts the game or brings player back to main menu
+  void gameOverHandler(int x, int y);
+
  private:
   sf::RenderWindow *window_;
+  std::shared_ptr<Game> game_;
+  // paths for enemies
+  std::shared_ptr<Map> map1_;
+
+  std::shared_ptr<Map> map2_;
+
+  std::shared_ptr<Level> level_;
 
   // Textures for levels
   sf::Texture level_1_Texture_;
@@ -106,10 +124,12 @@ class Gui {
 
   sf::Font font_;
 
-  Game *game_;
   sf::Texture currentLevel_;
   int currentScreen_;
   std::vector<sf::Texture> towerTextures_;
+
+  // current map in int format
+  int mapToInt_;
 
   // the locations for buttons
   std::vector<sf::Vector2f> buttons_;
@@ -119,6 +139,7 @@ class Gui {
 
   // towers price in int format
   std::vector<int> prices_;
+
 };
 
 #endif

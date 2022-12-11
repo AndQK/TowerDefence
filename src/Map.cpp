@@ -18,7 +18,7 @@ Coordinate Map::GetNode(const int& index) const { return nodes_.at(index); }
 
 int Map::GetNofNodes() const { return nOfNodes_; }
 
-void Map::loadCoordinates(std::string file) {
+bool Map::loadCoordinates(std::string file) {
   std::string coordinate;
   std::ifstream myFile(file);
   if (myFile.is_open()) {
@@ -48,10 +48,13 @@ void Map::loadCoordinates(std::string file) {
       } else {
         std::cout << "there was a problem reading data for coordinates"
                   << std::endl;
+        return false;
       }
     }
+    return true;
     myFile.close();
   } else {
     std::cout << "Couldn't open file" << std::endl;
+    return false;
   }
 }

@@ -79,7 +79,7 @@ class Enemy {
 class HardEnemy : public Enemy {
  public:
   HardEnemy(Coordinate place, int health, Game* game)
-      : Enemy(1.5, health, place, 50, game, 1){};
+      : Enemy(1.5, health, place, 30, game, 2){};
 };
 
 class EasyEnemy : public Enemy {
@@ -91,7 +91,7 @@ class EasyEnemy : public Enemy {
 class SplittingEnemy : public Enemy {
  public:
   SplittingEnemy(Coordinate place, int health, Game* game)
-      : Enemy(0.7, health, place, 20, game, 1){};
+      : Enemy(0.7, health, place, 5, game, 1){};
 };
 
 #endif

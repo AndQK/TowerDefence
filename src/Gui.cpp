@@ -1,6 +1,6 @@
 #include "Gui.hpp"
 
-Gui::Gui(Game *game) {
+Gui::Gui() {
   if (!level_1_Texture_.loadFromFile("graphics/Level1.png")) {
     std::cout << "unable to load texture from file" << std::endl;
     exit(-1);
@@ -63,11 +63,22 @@ Gui::Gui(Game *game) {
   }
   if (!iceTexture_.loadFromFile("graphics/ice.png")) {
     std::cout << "unable to load ice texture from file" << std::endl;
+    exit(-1);
+  }
+  map1_ = std::make_shared<Map>();
+  map2_ = std::make_shared<Map>();
+  if (!((map1_.get())->loadCoordinates("path1.txt"))) {
+    exit(-1);
+  }
+  if (!((map2_.get())->loadCoordinates("path3.txt"))) {
+    exit(-1);
   }
 
   // by default:
-  currentScreen_ = Screens::gameMenu;
+  currentScreen_ = gameMenu;
   currentLevel_ = level_3_Texture_;
+  mapToInt_ = 1;
+  level_ = std::make_shared<Level>();
 
   window_ =
       new sf::RenderWindow(sf::VideoMode(level_1_Texture_.getSize().x / 2 + 200,
@@ -75,8 +86,6 @@ Gui::Gui(Game *game) {
                            "TowerDefence");
   window_->setPosition(sf::Vector2(50, 50));
   window_->setFramerateLimit(100);
-
-  game_ = game;
 
   towerTextures_.push_back(turretTowerTexture_);
   towerTextures_.push_back(rocketTowerTexture_);
@@ -86,12 +95,12 @@ Gui::Gui(Game *game) {
 
   // add name-price tags
   tags_.push_back(std::make_pair("Turret", "200"));
-  tags_.push_back(std::make_pair("Bomber", "800"));
+  tags_.push_back(std::make_pair("Bomber", "1000"));
   tags_.push_back(std::make_pair("Freezer", "300"));
 
   // add prices in int format
   prices_.push_back(200);
-  prices_.push_back(800);
+  prices_.push_back(1000);
   prices_.push_back(300);
 }
 
@@ -118,7 +127,7 @@ void Gui::createAndDrawTowerBtn(sf::Vector2f btnLocation, sf::Vector2f btnSize,
   btnSprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
   btnSprite.setPosition(btnLocation.x + 25, btnLocation.y + 25);
 
-  if (game_->GetPlayer().GetMoney() < price) {
+  if (game_.get()->GetPlayer().GetMoney() < price) {
     btnSprite.setColor(sf::Color(255, 0, 0));
   }
 
@@ -288,15 +297,19 @@ void Gui::run() {
         break;
       case gameScreen:  // game screen:
         createAndDrawGameScreen();
-        createAndDrawPlayerInfo(game_->GetPlayer().GetHealth(),
-                                game_->GetLevel().getCurrentWave(),
-                                game_->GetPlayer().GetMoney());
+        createAndDrawPlayerInfo(game_.get()->GetPlayer().GetHealth(),
+                                game_.get()->GetLevel().getCurrentWave(),
+                                game_.get()->GetPlayer().GetMoney());
         drawEnemies();
         drawTowers();
         drawProjectiles();
-        game_->GetLevel().update();
-        game_->Update();
-        std::cout << game_->GetProjectiles().size() << std::endl;
+        game_.get()->GetLevel().update();
+        game_.get()->Update();
+
+        // Check if player has lost the game
+        if (game_.get()->GetPlayer().GameLost()) {
+          currentScreen_ = gameEndScreen;
+        }
         break;
       case gameEndScreen:  // Game Over screen
         drawGameOver();
@@ -319,19 +332,11 @@ void Gui::run() {
 
               // checking that the click happened in the right place
               if ((x >= 334 && x <= 506) && (y >= 490 && y <= 528)) {
-                currentScreen_ = 1;
-                std::cout << "changing screen" << std::endl;
+                currentScreen_ = gameLevelMenu;
               }
               break;
             case gameLevelMenu:
-              if ((x >= 150 && x <= 390) && (y >= 300 && y <= 540)) {
-                currentLevel_ = level_1_Texture_;
-                currentScreen_ = 2;
-              }
-              else if ((x >= 453 && x <= 693) && (y >= 300 && y <= 540)) {
-                currentLevel_ = level_3_Texture_;
-                currentScreen_ = 2;
-              }
+              gameLevelHandler(x, y);
               break;
             case gameScreen:
               if (!isBought) {
@@ -342,6 +347,7 @@ void Gui::run() {
               }
               break;
             case gameEndScreen:
+              gameOverHandler(x, y);
               break;
             default:
               break;
@@ -354,7 +360,7 @@ void Gui::run() {
 }
 
 void Gui::drawEnemies() {
-  for (auto enemy : game_->GetEnemies()) {
+  for (auto enemy : game_.get()->GetEnemies()) {
     sf::Sprite enemySprite;
     switch ((*enemy).GetType()) {
       case greenTurtle:
@@ -386,7 +392,7 @@ void Gui::drawEnemies() {
 }
 
 void Gui::drawTowers() {
-  for (auto tower : game_->GetTowers()) {
+  for (auto tower : game_.get()->GetTowers()) {
     sf::CircleShape area;
     sf::Sprite towerSprite;
     switch (tower->GetType()) {
@@ -411,12 +417,6 @@ void Gui::drawTowers() {
     // towers position
     auto posX = tower->GetPlace().getX();
     auto posY = tower->GetPlace().getY();
-
-    // an area that shows tower's reach
-    area.setRadius(tower->GetRange());
-    area.setFillColor(sf::Color(255, 255, 255, 22));
-    area.setOrigin(area.getRadius(), area.getRadius());
-    area.setPosition(posX, posY);
 
     towerSprite.setScale(0.09f, 0.09f);
     towerSprite.setPosition(posX, posY);
@@ -447,17 +447,17 @@ int Gui::towerButtonPoller(int x, int y) {
 bool Gui::customPollListener(int button) {
   switch (button) {
     case turret:
-      if (game_->GetPlayer().Pay(200)) {
+      if (game_.get()->GetPlayer().Pay(200)) {
         return true;
       }
       break;
     case rocketGreen:
-      if (game_->GetPlayer().Pay(800)) {
+      if (game_.get()->GetPlayer().Pay(1000)) {
         return true;
       }
       break;
     case iceTower:
-      if (game_->GetPlayer().Pay(300)) {
+      if (game_.get()->GetPlayer().Pay(300)) {
         return true;
       }
       break;
@@ -471,13 +471,13 @@ bool Gui::customPollListener(int button) {
 bool Gui::createTower(int whatTower, int x, int y) {
   switch (whatTower) {
     case turret:
-      game_->AddTower(new BasicTower(Coordinate(x, y), game_));
+      game_.get()->AddTower(new BasicTower(Coordinate(x, y), game_.get()));
       break;
     case rocketGreen:
-      game_->AddTower(new BombTower(Coordinate(x, y), game_));
+      game_.get()->AddTower(new BombTower(Coordinate(x, y), game_.get()));
       break;
     case iceTower:
-      game_->AddTower(new SlowingTower(Coordinate(x, y), game_));
+      game_.get()->AddTower(new SlowingTower(Coordinate(x, y), game_.get()));
       break;
     default:
       // don't create a tower
@@ -487,7 +487,7 @@ bool Gui::createTower(int whatTower, int x, int y) {
 }
 
 void Gui::drawProjectiles() {
-  for (auto proj : game_->GetProjectiles()) {
+  for (auto proj : game_.get()->GetProjectiles()) {
     sf::Sprite projectileSprite;
     switch (proj->GetType()) {
       case ProjectileType::normal:
@@ -535,11 +535,51 @@ void Gui::drawGameOver() {
   auto size = gameOverText.getGlobalBounds();
 
   gameOverText.setOrigin(size.width / 2, size.height / 2);
-  gameOverText.setPosition(width / 2, height / 2);
+  gameOverText.setPosition(width / 2, height / 2 - 200);
+
+  // create buttons for restarting the game and going back to main menu
+  sf::RectangleShape restartBox;
+  sf::RectangleShape mainMenuBox;
+  restartBox.setSize(sf::Vector2f(150, 50));
+  mainMenuBox.setSize(sf::Vector2f(150, 50));
+
+  restartBox.setOrigin(150 / 2, 50 / 2);
+  mainMenuBox.setOrigin(150 / 2, 50 / 2);
+
+  restartBox.setPosition(width / 2, height / 2 + 70);
+  mainMenuBox.setPosition(width / 2, height / 2 + 150);
+
+  restartBox.setFillColor(sf::Color(90, 90, 90));
+  mainMenuBox.setFillColor(sf::Color(90, 90, 90));
+
+  restartBox.setOutlineColor(sf::Color(110, 110, 110));
+  mainMenuBox.setOutlineColor(sf::Color(110, 110, 110));
+
+  restartBox.setOutlineThickness(5);
+  mainMenuBox.setOutlineThickness(5);
+
+  // create text for buttons
+  sf::Text restartText("Restart", font_, 25);
+  sf::Text mainMenuText("Main Menu", font_, 25);
+
+  restartText.setFillColor(sf::Color::White);
+  mainMenuText.setFillColor(sf::Color::White);
+
+  restartText.setOrigin(restartText.getGlobalBounds().width / 2,
+                        restartText.getGlobalBounds().height / 2);
+  mainMenuText.setOrigin(mainMenuText.getGlobalBounds().width / 2,
+                         mainMenuText.getGlobalBounds().height / 2);
+
+  restartText.setPosition(width / 2, height / 2 + 65);
+  mainMenuText.setPosition(width / 2, height / 2 + 145);
 
   std::vector<sf::Drawable *> drawables;
   drawables.push_back(&gameOverBox);
   drawables.push_back(&gameOverText);
+  drawables.push_back(&restartBox);
+  drawables.push_back(&mainMenuBox);
+  drawables.push_back(&restartText);
+  drawables.push_back(&mainMenuText);
   drawDrawables(drawables);
 }
 
@@ -603,4 +643,49 @@ void Gui::drawLevelSelector() {
   drawables.push_back(&level_2_sprite);
 
   drawDrawables(drawables);
+}
+
+void Gui::gameLevelHandler(int x, int y) {
+  if ((x >= 150 && x <= 390) && (y >= 300 && y <= 540)) {
+    currentLevel_ = level_1_Texture_;
+    game_ = std::make_shared<Game>("Tower Defence", *(map1_.get()));
+    level_ = std::make_shared<Level>(100, game_.get());
+    mapToInt_ = 0;
+    game_.get()->SetLevel(*(level_.get()));
+    currentScreen_ = gameScreen;
+  } else if ((x >= 453 && x <= 693) && (y >= 300 && y <= 540)) {
+    currentLevel_ = level_3_Texture_;
+    game_ = std::make_shared<Game>("Tower Defence", *(map2_.get()));
+    level_ = std::make_shared<Level>(100, game_.get());
+    mapToInt_ = 1;
+    game_.get()->SetLevel(*(level_.get()));
+    currentScreen_ = gameScreen;
+  }
+}
+
+void Gui::gameOverHandler(int x, int y) {
+  // check if click happened inside restart button
+  if ((x >= 346 && x <= 497) && (y >= 374 && y <= 424)) {
+    // delete game_;
+    switch (mapToInt_) {
+      case 0:
+        game_ = std::make_shared<Game>("Tower Defence", *(map1_.get()));
+        level_ = std::make_shared<Level>(100, game_.get());
+        game_.get()->SetLevel(*(level_.get()));
+        currentScreen_ = gameScreen;
+        break;
+      case 1:
+      // tried two different approaches
+        game_.reset(new Game("Tower Defence", *(map2_.get())));
+        level_.reset(new Level(100, game_.get()));
+        game_.get()->SetLevel(*(level_.get()));
+        currentScreen_ = gameScreen;
+      default:
+        break;
+    }
+  }
+  // check if click happened inside main menu button
+  if ((x >= 346 && x <= 497) && (y >= 453 && y <= 504)) {
+    currentScreen_ = gameMenu;
+  }
 }
